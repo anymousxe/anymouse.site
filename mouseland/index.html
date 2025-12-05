@@ -3,257 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouseland | Official Government Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Mouseland Asset Viewer</title>
+    <link rel="stylesheet" href="style.css">
     <style>
+        /* Basic styling just to make sure they display right away */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #111827; /* Dark mode bg */
-        }
-        .town-card:hover {
-            transform: translateY(-5px);
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
-        .placeholder-img {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #374151;
-            color: #9ca3af;
-            font-weight: bold;
+            background-color: #1a1a1a;
+            color: white;
+            font-family: monospace;
             text-align: center;
+        }
+        .logo-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 2px solid #333;
+        }
+        .main-logo {
+            max-width: 300px;
+            height: auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .card p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #ccc;
         }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col">
+<body>
 
-    <!-- Navigation / Header -->
-    <nav class="bg-gray-800 shadow-lg border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <!-- PFP / Logo area -->
-                    <div class="flex-shrink-0 flex items-center gap-3">
-                        <img class="h-10 w-10 rounded-full object-cover border-2 border-indigo-500" 
-                             src="anymousxe.png" 
-                             alt="Anymousxe PFP"
-                             onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Anymousxe';">
-                        <span class="font-extrabold text-xl tracking-tight text-white">MOUSELAND</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm font-semibold text-green-400 bg-green-900/30 border border-green-800 px-3 py-1 rounded-full animate-pulse">
-                        Status: PEACEFUL
-                    </span>
-                </div>
-            </div>
+    <div class="logo-section">
+        <img src="anymousxe.png" alt="Anymousxe Logo" class="main-logo">
+        <h1>MOUSELAND ASSETS</h1>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <img src="rodentiamajor.png" alt="Rodentia Major">
+            <p>rodentiamajor.png</p>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        
-        <!-- Leadership Section -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-indigo-500 pl-4">Current Leadership</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- MIC Card -->
-                <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 flex items-center gap-6 hover:border-indigo-500/50 transition">
-                    <img class="h-24 w-24 rounded-full object-cover border-4 border-indigo-900" 
-                         src="anymousxe.png" 
-                         alt="MIC Anymousxe"
-                         onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Anymousxe';">
-                    <div>
-                        <p class="text-sm font-bold text-indigo-400 tracking-wide uppercase">M.I.C. (Mice In Charge)</p>
-                        <h3 class="text-2xl font-extrabold text-white">Anymousxe</h3>
-                        <p class="text-gray-400 mt-1">Leading with vision and extra cheese.</p>
-                    </div>
-                </div>
-
-                <!-- VMIC Card -->
-                <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 flex items-center gap-6 hover:border-pink-500/50 transition">
-                    <img class="h-24 w-24 rounded-full object-cover border-4 border-pink-900" 
-                         src="color.png" 
-                         alt="VMIC Color"
-                         onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Color';">
-                    <div>
-                        <p class="text-sm font-bold text-pink-400 tracking-wide uppercase">V.M.I.C. (Vice Mice In Charge)</p>
-                        <h3 class="text-2xl font-extrabold text-white">Color</h3>
-                        <p class="text-gray-400 mt-1">Keeping things bright and organized.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- News Feed Grid -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-red-500 pl-4">News & Alerts</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-                <!-- Article 1: Feline War -->
-                <div class="bg-red-900/10 border-l-4 border-red-600 rounded-r-xl p-6 shadow-sm border border-gray-800">
-                    <div class="flex items-start gap-4">
-                        <div class="bg-red-900/20 p-2 rounded-full min-w-[40px] text-center">
-                            ⚔️
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-red-400">Victory: Feline Attack Repelled</h3>
-                            <p class="text-gray-300 mt-2 text-sm leading-relaxed">
-                                Mouseland was targeted by a hostile feline group. Thanks to leadership and our ally <strong>Tom and his gang</strong>, the invaders were fought off.
-                            </p>
-                            <div class="mt-4 p-3 bg-red-900/20 rounded border border-red-900/30">
-                                <p class="text-red-300 font-bold text-sm">🕊️ RIP Moc Miang</p>
-                                <p class="text-red-400 text-xs mt-1">5 others injured. We will rebuild.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Article 2: Laced Cheese Scandal -->
-                <div class="bg-yellow-900/10 border-l-4 border-yellow-500 rounded-r-xl p-6 shadow-sm border border-gray-800">
-                    <div class="flex items-start gap-4">
-                        <div class="bg-yellow-900/20 p-2 rounded-full min-w-[40px] text-center">
-                            ⚠️
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-yellow-400">Public Health Alert: Toxic Cheese</h3>
-                            <p class="text-gray-300 mt-2 text-sm leading-relaxed">
-                                <strong>DO NOT EAT THE CHEAP CHEDDAR.</strong> A rogue vendor was caught selling fake cheese laced with non-dairy fillers and rat poison (ironic, right?). 
-                            </p>
-                            <p class="text-gray-300 mt-2 text-sm">
-                                Over <strong>10,000 mice</strong> are currently sick. The vendor has been arrested and is awaiting trial in Rodentia Major.
-                            </p>
-                            <div class="mt-4">
-                                <span class="text-xs font-mono text-yellow-500 bg-yellow-900/30 px-2 py-1 rounded">#CheeseGate2024</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Towns Grid -->
-        <section>
-            <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-indigo-500 pl-4">The 5 Towns</h2>
-            <p class="text-gray-400 mb-6">Explore the diverse districts of Mouseland.</p>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                
-                <!-- Town 1: Boxborough -->
-                <div class="town-card bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 transition duration-300">
-                    <div class="h-40 w-full bg-gray-700 relative">
-                        <img src="boxborough.png" 
-                             alt="Boxborough" 
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-img w-full h-full absolute top-0 left-0" style="display:none;">Boxborough</div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-white">Boxborough</h3>
-                        <p class="text-sm text-gray-400 mt-1">The industrial heart, built from the finest cardboard.</p>
-                        <button onclick="alert('Entering Boxborough...')" class="mt-4 w-full py-2 bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 rounded text-sm font-semibold hover:bg-indigo-900 transition">Visit</button>
-                    </div>
-                </div>
-
-                <!-- Town 2: Corrugate Crossing -->
-                <div class="town-card bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 transition duration-300">
-                    <div class="h-40 w-full bg-gray-700 relative">
-                        <img src="corrugatecrossing.png" 
-                             alt="Corrugate Crossing" 
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-img w-full h-full absolute top-0 left-0" style="display:none;">Corrugate Crossing</div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-white">Corrugate Crossing</h3>
-                        <p class="text-sm text-gray-400 mt-1">Where all paths meet. The central trading hub.</p>
-                        <button onclick="alert('Entering Corrugate Crossing...')" class="mt-4 w-full py-2 bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 rounded text-sm font-semibold hover:bg-indigo-900 transition">Visit</button>
-                    </div>
-                </div>
-
-                <!-- Town 3: MEC -->
-                <div class="town-card bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 transition duration-300">
-                    <div class="h-40 w-full bg-gray-700 relative">
-                        <img src="mec.png" 
-                             alt="M.E.C." 
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-img w-full h-full absolute top-0 left-0" style="display:none;">M.E.C.</div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-white">M.E.C.</h3>
-                        <p class="text-sm text-gray-400 mt-1">Mouse Engineering Center. High-tech cheese labs.</p>
-                        <button onclick="alert('Entering M.E.C...')" class="mt-4 w-full py-2 bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 rounded text-sm font-semibold hover:bg-indigo-900 transition">Visit</button>
-                    </div>
-                </div>
-
-                <!-- Town 4: Rodentia Major -->
-                <div class="town-card bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 transition duration-300">
-                    <div class="h-40 w-full bg-gray-700 relative">
-                        <img src="rodentiamajor.png" 
-                             alt="Rodentia Major" 
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-img w-full h-full absolute top-0 left-0" style="display:none;">Rodentia Major</div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-white">Rodentia Major</h3>
-                        <p class="text-sm text-gray-400 mt-1">The capital district. Grand halls and history.</p>
-                        <button onclick="alert('Entering Rodentia Major...')" class="mt-4 w-full py-2 bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 rounded text-sm font-semibold hover:bg-indigo-900 transition">Visit</button>
-                    </div>
-                </div>
-
-                <!-- Town 5: Rubbish Heights -->
-                <div class="town-card bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 transition duration-300">
-                    <div class="h-40 w-full bg-gray-700 relative">
-                        <img src="rubbishheights.png" 
-                             alt="Rubbish Heights" 
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="placeholder-img w-full h-full absolute top-0 left-0" style="display:none;">Rubbish Heights</div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg text-white">Rubbish Heights</h3>
-                        <p class="text-sm text-gray-400 mt-1">Don't let the name fool you. It's up-and-coming.</p>
-                        <button onclick="alert('Entering Rubbish Heights...')" class="mt-4 w-full py-2 bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 rounded text-sm font-semibold hover:bg-indigo-900 transition">Visit</button>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-900 text-gray-500 py-8 mt-12 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2024 Mouseland Government. All cheese reserved.</p>
-            <div class="mt-2 text-sm text-gray-600">
-                Authorized by MIC Anymousxe & VMIC Color
-            </div>
+        <div class="card">
+            <img src="rubbishheights.png" alt="Rubbish Heights">
+            <p>rubbishheights.png</p>
         </div>
-    </footer>
 
-    <script>
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('error', function() {
-                console.log('Image failed to load:', this.src);
-            });
-        });
-    </script>
+        <div class="card">
+            <img src="corrugatecrossing.png" alt="Corrugate Crossing">
+            <p>corrugatecrossing.png</p>
+        </div>
+
+        <div class="card">
+            <img src="boxborough.png" alt="Boxborough">
+            <p>boxborough.png</p>
+        </div>
+
+        <div class="card">
+            <img src="mec.png" alt="MEC">
+            <p>mec.png</p>
+        </div>
+
+        <div class="card">
+            <img src="color.png" alt="Color Reference">
+            <p>color.png</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 </html>
