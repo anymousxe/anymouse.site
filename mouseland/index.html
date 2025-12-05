@@ -3,88 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouseland Asset Viewer</title>
+    <title>Mouseland | Official Site</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Basic styling just to make sure they display right away */
-        body {
-            background-color: #1a1a1a;
-            color: white;
-            font-family: monospace;
-            text-align: center;
-        }
-        .logo-section {
-            margin-bottom: 40px;
-            padding: 20px;
-            border-bottom: 2px solid #333;
-        }
-        .main-logo {
-            max-width: 300px;
-            height: auto;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .card {
-            background: #2a2a2a;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #444;
-        }
-        .card img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-        .card p {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-    </style>
 </head>
 <body>
 
-    <div class="logo-section">
-        <img src="anymousxe.png" alt="Anymousxe Logo" class="main-logo">
-        <h1>MOUSELAND ASSETS</h1>
+    <!-- Header -->
+    <header class="ml-header animate-fade">
+        <div class="container">
+            <h1>🐀 Welcome to Mouseland</h1>
+            <p>Unity. Cheese. Strength.</p>
+            <br>
+            <a href="/" class="btn btn-primary">Back to Home</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Government Section -->
+        <section class="animate-fade delay-1">
+            <h2 style="text-align:center; margin-bottom: 2rem;">Government Leadership</h2>
+            <div class="leadership-section">
+                <!-- MIC -->
+                <div class="leader-card">
+                    <img src="anymousxe.png" alt="Anymousxe" class="leader-img">
+                    <h3>Anymousxe</h3>
+                    <p style="color: var(--mouseland-accent); font-weight: bold;">MIC (Mice In Charge)</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Leading Mouseland into a new era of prosperity.</p>
+                </div>
+
+                <!-- VMIC -->
+                <div class="leader-card">
+                    <img src="color.png" alt="Color" class="leader-img">
+                    <h3>Color</h3>
+                    <p style="color: #a855f7; font-weight: bold;">VMIC (Vice Mice In Charge)</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Right-hand mouse. Ensuring order across the cities.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cities Section -->
+        <section class="animate-fade delay-2">
+            <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">The 5 Great Cities</h2>
+            <div class="cities-grid">
+                
+                <div class="city-card">
+                    <img src="boxborough.png" alt="Boxborough">
+                    <div class="city-name">Boxborough</div>
+                </div>
+
+                <div class="city-card">
+                    <img src="corrugatecrossing.png" alt="Corrugate Crossing">
+                    <div class="city-name">Corrugate Crossing</div>
+                </div>
+
+                <div class="city-card">
+                    <img src="rodentiamajor.png" alt="Rodentia Major">
+                    <div class="city-name">Rodentia Major</div>
+                </div>
+
+                <div class="city-card">
+                    <img src="rubbishheights.png" alt="Rubbish Heights">
+                    <div class="city-name">Rubbish Heights</div>
+                </div>
+
+                <div class="city-card">
+                    <img src="mec.png" alt="Mec City">
+                    <div class="city-name">Mec</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section class="news-section animate-fade delay-3">
+            <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Network</h2>
+
+            <article class="news-item">
+                <h3>🚨 BREAKING: Fake Cheese Scandal Exposes Black Market</h3>
+                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Hours Ago</p>
+                <p>
+                    A massive sting operation has revealed that a group of rogue mice was selling "Discount Cheddar" laced with sawdust and expired dairy. 
+                    Over <strong>10,000 mice</strong> have fallen ill across Rubbish Heights. The MIC has declared this "absolutely cooked behavior" and vowed justice.
+                </p>
+            </article>
+
+            <article class="news-item" style="border-color: #f59e0b;">
+                <h3>⚠️ Feline Attack Repelled by Ally Forces</h3>
+                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Days Ago</p>
+                <p>
+                    A coordinate attack by the Stray Cat Coalition was halted yesterday. Our ally, <strong>Tom the Cat</strong>, pulled up with his gang and fought them off in the streets of Rodentia Major. 
+                    Sadly, 5 brave mice were injured, and we lost a real one, <strong>Moc Miang</strong>. Rest in Power. 🕊️
+                </p>
+            </article>
+
+        </section>
+        
+        <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">
+            &copy; 2025 Mouseland Gov. All Rights Reserved.
+        </footer>
+
     </div>
-
-    <div class="grid">
-        <div class="card">
-            <img src="rodentiamajor.png" alt="Rodentia Major">
-            <p>rodentiamajor.png</p>
-        </div>
-
-        <div class="card">
-            <img src="rubbishheights.png" alt="Rubbish Heights">
-            <p>rubbishheights.png</p>
-        </div>
-
-        <div class="card">
-            <img src="corrugatecrossing.png" alt="Corrugate Crossing">
-            <p>corrugatecrossing.png</p>
-        </div>
-
-        <div class="card">
-            <img src="boxborough.png" alt="Boxborough">
-            <p>boxborough.png</p>
-        </div>
-
-        <div class="card">
-            <img src="mec.png" alt="MEC">
-            <p>mec.png</p>
-        </div>
-
-        <div class="card">
-            <img src="color.png" alt="Color Reference">
-            <p>color.png</p>
-        </div>
-    </div>
-
     <script src="main.js"></script>
 </body>
 </html>
