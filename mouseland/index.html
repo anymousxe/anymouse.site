@@ -47,6 +47,77 @@
             object-fit: cover;
             border: 1px solid #555;
         }
+
+        /* --- Login Modal Styles --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #1a1a1e;
+            padding: 2rem; 
+            border: 1px solid var(--mouseland-accent); 
+            width: 90%; 
+            max-width: 400px;
+            border-radius: 12px;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-modal:hover { color: #fff; }
+
+        .auth-divider { 
+            margin: 1.5rem 0; 
+            color: #666; 
+            font-size: 0.9rem; 
+            position: relative;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #333;
+        }
+        .auth-divider::before { left: 0; }
+        .auth-divider::after { right: 0; }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: white;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--mouseland-accent);
+        }
     </style>
 </head>
 <body>
@@ -57,7 +128,7 @@
             <nav class="nav-bar">
                 <a href="https://anymousxe.site" class="btn btn-sm btn-ghost">← anymousxe.site</a>
                 <div id="auth-container" class="user-controls">
-                    <button id="login-btn" class="btn btn-sm btn-primary">Log In (Google)</button>
+                    <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
                 </div>
             </nav>
             
@@ -202,10 +273,36 @@
 
     </div>
 
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 0.5rem;">Citizen Identify</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1.5rem;">Show your papers to enter.</p>
+            
+            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+            
+            <div class="auth-divider">OR</div>
+            
+            <form id="email-auth-form">
+                <input type="email" id="auth-email" class="auth-input" placeholder="Email Address" required>
+                <input type="password" id="auth-password" class="auth-input" placeholder="Password" required>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" id="email-login-btn" class="btn btn-mouseland" style="flex: 1;">Login</button>
+                    <button type="button" id="email-signup-btn" class="btn btn-ghost" style="flex: 1;">Sign Up</button>
+                </div>
+            </form>
+            <p id="auth-error" style="color:var(--danger); font-size:0.8rem; margin-top:1rem; display:none;"></p>
+        </div>
+    </div>
+
     <!-- FIREBASE MODULE SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -228,36 +325,104 @@
             "ColorViceMouseInCharge@proton.me"
         ];
 
-        const loginBtn = document.getElementById('login-btn');
+        // UI Elements
         const authContainer = document.getElementById('auth-container');
         const adminPanel = document.getElementById('admin-panel');
         const postForm = document.getElementById('post-form');
         const newsFeed = document.getElementById('news-feed');
+        
+        // Modal Elements
+        const modal = document.getElementById('login-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const googleBtn = document.getElementById('google-auth-btn');
+        const emailForm = document.getElementById('email-auth-form');
+        const signupBtn = document.getElementById('email-signup-btn');
+        const authError = document.getElementById('auth-error');
 
-        // --- AUTH ---
+        // --- AUTH LOGIC ---
+
+        // Toggle Modal
         document.body.addEventListener('click', (e) => {
-            if (e.target && e.target.id === 'login-btn') {
-                signInWithPopup(auth, provider).catch((error) => console.error("Login failed:", error));
+            if (e.target.id === 'login-trigger-btn') {
+                modal.style.display = 'flex';
             }
-            if (e.target && e.target.id === 'logout-btn') {
+            if (e.target.id === 'logout-btn') {
                 signOut(auth);
             }
         });
 
+        closeModal.onclick = () => { modal.style.display = "none"; authError.style.display = "none"; }
+        window.onclick = (e) => { if (e.target == modal) { modal.style.display = "none"; authError.style.display = "none"; }}
+
+        // Google Login
+        googleBtn.onclick = () => {
+            signInWithPopup(auth, provider)
+                .then(() => modal.style.display = "none")
+                .catch((error) => {
+                    console.error("Login failed:", error);
+                    authError.textContent = "Google Sign-In Failed: " + error.message;
+                    authError.style.display = "block";
+                });
+        };
+
+        // Email Login
+        emailForm.onsubmit = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    modal.style.display = "none";
+                    emailForm.reset();
+                })
+                .catch((error) => {
+                    authError.textContent = "Login Failed: " + error.message;
+                    authError.style.display = "block";
+                });
+        };
+
+        // Email Signup
+        signupBtn.onclick = () => {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            
+            if(!email || !pass) {
+                authError.textContent = "Please enter email and password to sign up.";
+                authError.style.display = "block";
+                return;
+            }
+
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    modal.style.display = "none";
+                    emailForm.reset();
+                    alert("Citizenship Granted! Welcome to Mouseland.");
+                })
+                .catch((error) => {
+                    authError.textContent = "Signup Failed: " + error.message;
+                    authError.style.display = "block";
+                });
+        };
+
+        // Monitor Auth State
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const isAdmin = WHITELIST.includes(user.email);
+                // Use generic name if displayName is null (common in email auth without updateProfile)
+                const displayName = user.displayName || user.email.split('@')[0];
+                
                 authContainer.innerHTML = `
                     <div style="text-align:right;">
                         <div style="font-size:0.8rem; color:#888;">Logged in as</div>
-                        <div style="font-weight:bold;">${user.displayName || user.email}</div>
+                        <div style="font-weight:bold;">${displayName}</div>
                     </div>
-                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User">
+                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User" onerror="this.src='anymousxe.png'">
                     <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:0.5rem;">Logout</button>
                 `;
                 adminPanel.style.display = isAdmin ? "block" : "none";
             } else {
-                authContainer.innerHTML = `<button id="login-btn" class="btn btn-sm btn-primary">Log In (Google)</button>`;
+                authContainer.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>`;
                 adminPanel.style.display = "none";
             }
         });
@@ -273,7 +438,7 @@
             }
 
             // Custom Identity Logic
-            let authorName = user.displayName;
+            let authorName = user.displayName || "Mouseland Official";
             let authorPFP = user.photoURL;
             let authorRole = "";
 
@@ -339,9 +504,12 @@
 
                 let deleteBtn = isAdmin ? `<span class="delete-btn" data-id="${docSnap.id}">[Delete]</span>` : "";
 
+                // Fallback pfp for posts
+                const postPfpSrc = data.pfp || 'anymousxe.png';
+
                 postEl.innerHTML = `
                     <div class="post-header">
-                        <img src="${data.pfp || 'anymousxe.png'}" class="post-pfp" alt="pfp">
+                        <img src="${postPfpSrc}" class="post-pfp" alt="pfp" onerror="this.src='anymousxe.png'">
                         <div>
                             <div style="font-weight:bold; font-size:0.95rem;">
                                 ${data.author} ${roleBadge}
