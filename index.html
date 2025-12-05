@@ -3,7 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANYMOUSXE | Linktree</title>
+    <title>ANYMOUSXE</title>
+    
+    <!-- --- TWITTER / DISCORD EMBED FIX --- -->
+    <!-- You MUST change 'yourdomain.com' to your actual website URL for the image to work on Discord/Twitter! -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ANYMOUSXE">
+    <meta name="twitter:description" content="Dev // Creator // Chaos Manager">
+    <meta name="twitter:image" content="https://yourdomain.com/boxborough.png">
+    
+    <!-- Open Graph (for Discord/Facebook etc) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ANYMOUSXE">
+    <meta property="og:description" content="Dev // Creator // Chaos Manager">
+    <meta property="og:image" content="https://yourdomain.com/boxborough.png">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta name="theme-color" content="#8a2be2"> 
+    <!-- ----------------------------------- -->
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
@@ -13,15 +30,11 @@
             --card-hover: rgba(138, 43, 226, 0.15);
             --text-main: #ffffff;
             --text-sub: #a0a0a0;
-            --accent: #8a2be2; /* BlueViolet/Purple */
+            --accent: #8a2be2;
             --danger: #ff4444;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
@@ -36,26 +49,25 @@
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px; /* Slightly tighter width for cleaner look */
             text-align: center;
             padding-bottom: 50px;
         }
 
-        /* Header Section */
         h1 {
             font-weight: 900;
             font-size: 3rem;
             text-transform: uppercase;
             letter-spacing: -1px;
             margin-bottom: 5px;
-            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            text-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
         }
 
         .subtitle {
             font-family: 'Space Mono', monospace;
             color: var(--text-sub);
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
         }
 
         .badges {
@@ -66,53 +78,59 @@
         }
 
         .badge {
-            background: linear-gradient(45deg, #4b0082, #8a2be2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            color: #d8b4fe;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
-        /* Links / Cards */
         .links {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .card {
+        /* The Button Style */
+        .link-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 20px;
-            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             text-decoration: none;
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
         }
 
-        .card:hover {
+        .link-card:hover {
             background: var(--card-hover);
-            transform: translateY(-2px);
             border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .link-card:active {
+            transform: scale(0.98);
         }
 
         .icon-box {
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
+            width: 42px;
+            height: 42px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-right: 15px;
             flex-shrink: 0;
         }
@@ -124,82 +142,77 @@
 
         .card-title {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: block;
+            line-height: 1.2;
         }
 
         .card-desc {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-sub);
             display: block;
+            margin-top: 2px;
         }
 
-        /* Twitter Card Special Styling */
-        .twitter-card {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 0;
-        }
-        
-        .twitter-header {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            width: 100%;
+        /* Mouseland Footer */
+        .mouseland-footer {
+            margin-top: 50px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 30px;
         }
 
-        .twitter-embed-img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            object-fit: cover;
-        }
-
-        /* Discord Copy Toast */
-        .copy-toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            padding: 10px 20px;
-            border-radius: 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .copy-toast.show {
-            opacity: 1;
-        }
-
-        /* Mouseland Footer Button */
         .mouseland-btn {
-            margin-top: 40px;
-            display: block;
+            display: inline-block;
             width: 100%;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: transparent;
-            color: #555;
+            padding: 15px;
+            color: #444;
             font-family: 'Space Mono', monospace;
             text-decoration: none;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 2px;
             transition: 0.3s;
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 8px;
         }
 
         .mouseland-btn:hover {
             color: var(--danger);
             border-color: var(--danger);
             background: rgba(255, 68, 68, 0.05);
-            text-shadow: 0 0 10px var(--danger);
+            text-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
+            box-shadow: inset 0 0 20px rgba(255, 68, 68, 0.05);
+        }
+
+        /* Toast for Discord Copy */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #ffffff;
+            color: #000;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        footer {
+            margin-top: 20px;
+            color: #444;
+            font-size: 12px;
         }
 
     </style>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -209,68 +222,51 @@
         <div class="subtitle">Dev // Creator // Chaos Manager</div>
 
         <div class="badges">
-            <div class="badge"><i class="fas fa-code"></i> Developer</div>
+            <div class="badge"><i class="fas fa-terminal"></i> Developer</div>
             <div class="badge"><i class="fas fa-crown"></i> MIC</div>
         </div>
 
         <div class="links">
             
-            <a href="https://roblox.com/games/YOUR_GAME_ID" target="_blank" class="card">
-                <div class="icon-box" style="color: #a855f7;">
-                    <i class="fas fa-gamepad"></i>
-                </div>
+            <!-- Link 1 -->
+            <a href="https://roblox.com/games/YOUR_ID" target="_blank" class="link-card">
+                <div class="icon-box" style="color: #a855f7;"><i class="fas fa-gamepad"></i></div>
                 <div class="card-content">
                     <span class="card-title">Softworks Tycoon</span>
                     <span class="card-desc">Play my game</span>
                 </div>
             </a>
 
-            <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="card">
-                <div class="icon-box" style="color: #ff0000;">
-                    <i class="fab fa-youtube"></i>
-                </div>
+            <!-- Link 2 -->
+            <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="link-card">
+                <div class="icon-box" style="color: #ff4444;"><i class="fab fa-youtube"></i></div>
                 <div class="card-content">
                     <span class="card-title">YouTube</span>
                     <span class="card-desc">Watch the content</span>
                 </div>
             </a>
 
-            <a href="https://roblox.com/users/YOUR_USER_ID/profile" target="_blank" class="card">
-                <div class="icon-box" style="color: #ffffff;">
-                    <i class="fas fa-square"></i> </div>
+            <!-- Link 3 -->
+            <a href="https://roblox.com/users/YOUR_ID" target="_blank" class="link-card">
+                <div class="icon-box" style="color: #fff;"><i class="fas fa-square"></i></div>
                 <div class="card-content">
                     <span class="card-title">Roblox</span>
                     <span class="card-desc">View Profile</span>
                 </div>
             </a>
 
-            <a href="#" onclick="copyDiscord(event)" class="card">
-                <div class="icon-box" style="color: #5865F2;">
-                    <i class="fab fa-discord"></i>
-                </div>
+            <!-- Discord Copy Link -->
+            <a href="#" onclick="copyText('anymousxe._.')" class="link-card">
+                <div class="icon-box" style="color: #5865F2;"><i class="fab fa-discord"></i></div>
                 <div class="card-content">
                     <span class="card-title">Discord</span>
                     <span class="card-desc">anymousxe._.</span>
                 </div>
             </a>
 
-            <a href="https://twitter.com/YOUR_TWITTER" target="_blank" class="card twitter-card">
-                <div class="twitter-header">
-                    <div class="icon-box" style="color: #1DA1F2;">
-                        <i class="fab fa-twitter"></i>
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title">Twitter / X</span>
-                        <span class="card-desc">Check out the latest</span>
-                    </div>
-                </div>
-                <img src="boxborough.png" alt="Twitter Preview" class="twitter-embed-img">
-            </a>
-
-            <a href="mailto:your_email@example.com" class="card">
-                <div class="icon-box" style="color: #aa00ff;">
-                    <i class="fas fa-envelope"></i>
-                </div>
+            <!-- Email -->
+            <a href="mailto:your@email.com" class="link-card">
+                <div class="icon-box" style="color: #e0e0e0;"><i class="fas fa-envelope"></i></div>
                 <div class="card-content">
                     <span class="card-title">Email</span>
                     <span class="card-desc">Contact Me</span>
@@ -279,28 +275,39 @@
 
         </div>
 
-        <a href="mouseland.html" class="mouseland-btn">
-            ENTER MOUSELAND <i class="fas fa-exclamation-triangle"></i> RESTRICTED <i class="fas fa-exclamation-triangle"></i>
-        </a>
-        
-        <div style="margin-top: 10px; font-size: 0.7rem; color: #555;">
-            © 2025 Anymousxe. Built different.
+        <div class="mouseland-footer">
+            <!-- This points to the folder 'mouseland'. Make sure you have mouseland/index.html -->
+            <a href="/mouseland/" class="mouseland-btn">
+                <i class="fas fa-radiation"></i> ENTER MOUSELAND <i class="fas fa-radiation"></i>
+            </a>
+            <footer>
+                © 2025 Anymousxe. Built different.
+            </footer>
         </div>
-
     </div>
 
-    <div id="toast" class="copy-toast">Copied Discord!</div>
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> Copied to clipboard!</div>
 
     <script>
-        function copyDiscord(e) {
-            e.preventDefault();
-            navigator.clipboard.writeText("anymousxe._.");
+        function copyText(text) {
+            // Fallback for better mobile support
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text);
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
             
             const toast = document.getElementById("toast");
             toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 2000);
+            setTimeout(() => toast.classList.remove("show"), 2000);
         }
     </script>
 </body>
