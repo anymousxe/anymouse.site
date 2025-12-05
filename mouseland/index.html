@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mouseland | Official Site</title>
     <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <!-- Twitter Card & Open Graph Meta Tags -->
-    <!-- This makes the embed look sick on Discord/Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
@@ -25,14 +26,39 @@
     <!-- Header -->
     <header class="ml-header animate-fade">
         <div class="container">
-            <h1>🐀 Welcome to Mouseland</h1>
-            <p>Unity. Cheese. Strength.</p>
-            <br>
-            <a href="/" class="btn btn-primary">Back to Home</a>
+            <nav class="nav-bar">
+                <!-- Unimportant looking back link -->
+                <a href="https://anymousxe.site" class="btn btn-sm btn-ghost">← anymousxe.site</a>
+                
+                <div id="auth-container" class="user-controls">
+                    <!-- Login Button / User Info will be injected here by JS -->
+                    <button id="login-btn" class="btn btn-sm btn-primary">Log In (Google)</button>
+                </div>
+            </nav>
+            
+            <div style="text-align: center;">
+                <h1>🐀 Welcome to Mouseland</h1>
+                <p>Unity. Cheese. Strength.</p>
+            </div>
         </div>
     </header>
 
     <div class="container">
+
+        <!-- ADMIN PANEL (Hidden by default, only for you + Color) -->
+        <section id="admin-panel" class="admin-panel">
+            <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
+            <form id="post-form" class="admin-form">
+                <input type="text" id="post-title" class="admin-input" placeholder="Update Title (e.g., MSP Launch)" required>
+                <textarea id="post-content" class="admin-textarea" rows="4" placeholder="What's the news, leader?" required></textarea>
+                <select id="post-type" class="admin-input">
+                    <option value="standard">Standard News</option>
+                    <option value="urgent">🚨 Urgent / Breaking</option>
+                    <option value="decree">📜 Official Decree</option>
+                </select>
+                <button type="submit" class="btn btn-mouseland">Publish Update</button>
+            </form>
+        </section>
 
         <!-- Government Section -->
         <section class="animate-fade delay-1">
@@ -56,88 +82,44 @@
             </div>
         </section>
 
-        <!-- Official Decrees & Projects (New Section) -->
-        <section class="animate-fade delay-2" style="margin: 4rem 0;">
-            <h2 style="border-left: 5px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Official Decrees & National Projects</h2>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                <!-- MSP Card -->
-                <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                    <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> Project: SkyCheese (MSP)</h3>
-                    <p>
-                        <strong>Status: LAUNCHED</strong><br><br>
-                        The <strong>Mouse Space Program (MSP)</strong> has officially begun operations. Our scientists in Mec City have confirmed the moon might actually be made of a rare gouda. 
-                        We are sending the first rover, <em>Squeak-1</em>, to verify these claims. The sky is no longer the limit.
-                    </p>
-                </div>
+        <!-- Dynamic News Feed -->
+        <section class="news-section animate-fade delay-3">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: #fff;">📰 Mouseland News Network</h2>
+                <small style="color: #666;">Live Updates from the MIC</small>
+            </div>
 
-                <!-- Foreign Policy Card -->
-                <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                    <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Foreign Policy Update</h3>
-                    <p>
-                        <strong>Subject: Fryland & Nuggetland Conflict</strong><br><br>
-                        Due to the recent outbreak of war between <strong>Fryland</strong> and <strong>Nuggetland</strong>, Mouseland is officially closing its borders to military personnel from both nations. 
-                        We have trade relations with both, but we are distancing ourselves politically. We ain't picking sides in that beef. Neutrality is key.
-                    </p>
-                </div>
+            <div id="news-feed">
+                <!-- Posts will be loaded here by Firebase -->
+                <div style="text-align: center; color: #666; padding: 2rem;">Loading secure transmission...</div>
             </div>
         </section>
 
         <!-- Cities Section -->
-        <section class="animate-fade delay-2">
+        <section class="animate-fade delay-2" style="margin-top: 4rem;">
             <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">The 5 Great Cities</h2>
             <div class="cities-grid">
-                
                 <div class="city-card">
                     <img src="boxborough.png" alt="Boxborough">
                     <div class="city-name">Boxborough</div>
                 </div>
-
                 <div class="city-card">
                     <img src="corrugatecrossing.png" alt="Corrugate Crossing">
                     <div class="city-name">Corrugate Crossing</div>
                 </div>
-
                 <div class="city-card">
                     <img src="rodentiamajor.png" alt="Rodentia Major">
                     <div class="city-name">Rodentia Major</div>
                 </div>
-
                 <div class="city-card">
                     <img src="rubbishheights.png" alt="Rubbish Heights">
                     <div class="city-name">Rubbish Heights</div>
                 </div>
-
                 <div class="city-card">
                     <img src="mec.png" alt="Mec City">
                     <div class="city-name">Mec</div>
                 </div>
-
             </div>
-        </section>
-
-        <!-- News Section -->
-        <section class="news-section animate-fade delay-3">
-            <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Network</h2>
-
-            <article class="news-item">
-                <h3>🚨 BREAKING: Fake Cheese Scandal Exposes Black Market</h3>
-                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Hours Ago</p>
-                <p>
-                    A massive sting operation has revealed that a group of rogue mice was selling "Discount Cheddar" laced with sawdust and expired dairy. 
-                    Over <strong>10,000 mice</strong> have fallen ill across Rubbish Heights. The MIC has declared this "absolutely cooked behavior" and vowed justice.
-                </p>
-            </article>
-
-            <article class="news-item" style="border-color: #f59e0b;">
-                <h3>⚠️ Feline Attack Repelled by Ally Forces</h3>
-                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Days Ago</p>
-                <p>
-                    A coordinate attack by the Stray Cat Coalition was halted yesterday. Our ally, <strong>Tom the Cat</strong>, pulled up with his gang and fought them off in the streets of Rodentia Major. 
-                    Sadly, 5 brave mice were injured, and we lost a real one, <strong>Moc Miang</strong>. Rest in Power. 🕊️
-                </p>
-            </article>
-
         </section>
         
         <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">
@@ -145,6 +127,179 @@
         </footer>
 
     </div>
-    <script src="main.js"></script>
+
+    <!-- FIREBASE MODULE SCRIPT -->
+    <script type="module">
+        // Using stable v10 imports to ensure compatibility
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
+            authDomain: "mouseland-istuff.firebaseapp.com",
+            projectId: "mouseland-istuff",
+            storageBucket: "mouseland-istuff.firebasestorage.app",
+            messagingSenderId: "459629527486",
+            appId: "1:459629527486:web:0c038f1fad27ef288879ef",
+            measurementId: "G-HX18GW1CVG"
+        };
+
+        // Init Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Allowed Admins
+        const WHITELIST = [
+            "anymousxe.info@gmail.com",
+            "ColorViceMouseInCharge@proton.me"
+        ];
+
+        // HTML Elements
+        const loginBtn = document.getElementById('login-btn');
+        const authContainer = document.getElementById('auth-container');
+        const adminPanel = document.getElementById('admin-panel');
+        const postForm = document.getElementById('post-form');
+        const newsFeed = document.getElementById('news-feed');
+
+        // --- AUTHENTICATION ---
+        // Handle login click
+        // Note: Using event delegation or checking existence since button is dynamic
+        document.body.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'login-btn') {
+                signInWithPopup(auth, provider).catch((error) => {
+                    console.error("Login failed:", error);
+                    alert("Login failed. Check console.");
+                });
+            }
+            if (e.target && e.target.id === 'logout-btn') {
+                signOut(auth);
+            }
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                const isAdmin = WHITELIST.includes(user.email);
+                
+                authContainer.innerHTML = `
+                    <div style="text-align:right;">
+                        <div style="font-size:0.8rem; color:#888;">Logged in as</div>
+                        <div style="font-weight:bold;">${user.displayName || user.email}</div>
+                    </div>
+                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User">
+                    <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:0.5rem;">Logout</button>
+                `;
+                
+                if (isAdmin) {
+                    adminPanel.style.display = "block";
+                    console.log("Admin detected. Welcome back, Leader.");
+                } else {
+                    adminPanel.style.display = "none";
+                }
+            } else {
+                // User is signed out
+                authContainer.innerHTML = `<button id="login-btn" class="btn btn-sm btn-primary">Log In (Google)</button>`;
+                adminPanel.style.display = "none";
+            }
+        });
+
+        // --- POSTING SYSTEM (Admin Only) ---
+        postForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            
+            if (!user || !WHITELIST.includes(user.email)) {
+                alert("You don't have clearance for this, citizen.");
+                return;
+            }
+
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const type = document.getElementById('post-type').value;
+
+            try {
+                await addDoc(collection(db, "updates"), {
+                    title: title,
+                    content: content,
+                    type: type,
+                    author: user.displayName || "Mouseland Gov",
+                    uid: user.uid,
+                    email: user.email, // For security rules check
+                    createdAt: serverTimestamp()
+                });
+                postForm.reset();
+                alert("Decree published successfully.");
+            } catch (err) {
+                console.error("Error adding document: ", err);
+                alert("Error publishing. Check permissions.");
+            }
+        });
+
+        // --- READING UPDATES (Real-time) ---
+        const q = query(collection(db, "updates"), orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            newsFeed.innerHTML = ""; // Clear feed
+            
+            if (snapshot.empty) {
+                newsFeed.innerHTML = "<p style='text-align:center; color:#666;'>No updates yet. The wires are quiet.</p>";
+                return;
+            }
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const user = auth.currentUser;
+                const isAdmin = user && WHITELIST.includes(user.email);
+                
+                // Format Date
+                let timeString = "Just now";
+                if (data.createdAt) {
+                    timeString = data.createdAt.toDate().toLocaleDateString() + " " + data.createdAt.toDate().toLocaleTimeString();
+                }
+
+                // Create Post HTML
+                const postEl = document.createElement('article');
+                postEl.className = `news-item ${data.type || 'standard'}`;
+                
+                let icon = "";
+                if (data.type === "urgent") icon = "🚨 ";
+                if (data.type === "decree") icon = "📜 ";
+
+                let deleteBtn = "";
+                if (isAdmin) {
+                    deleteBtn = `<span class="delete-btn" data-id="${docSnap.id}">[Delete]</span>`;
+                }
+
+                postEl.innerHTML = `
+                    <h3>${icon}${data.title}</h3>
+                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">${timeString} • Posted by ${data.author}</p>
+                    <p>${data.content}</p>
+                    <div class="news-actions">
+                        ${deleteBtn}
+                    </div>
+                `;
+
+                newsFeed.appendChild(postEl);
+            });
+
+            // Attach Delete Listeners
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if(!confirm("Are you sure you want to delete this record?")) return;
+                    const id = e.target.getAttribute('data-id');
+                    try {
+                        await deleteDoc(doc(db, "updates", id));
+                    } catch (err) {
+                        alert("Error deleting.");
+                    }
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>
