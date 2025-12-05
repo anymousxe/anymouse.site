@@ -126,7 +126,7 @@
     <header class="ml-header animate-fade">
         <div class="container">
             <nav class="nav-bar">
-                <a href="https://anymousxe.site" class="btn btn-sm btn-ghost">← anymousxe.site</a>
+                <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
                 <div id="auth-container" class="user-controls">
                     <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
                 </div>
@@ -320,9 +320,10 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
+        // Storing lowercase versions for case-insensitive check
         const WHITELIST = [
             "anymousxe.info@gmail.com",
-            "ColorViceMouseInCharge@proton.me"
+            "colorvicemouseincharge@proton.me"
         ];
 
         // UI Elements
@@ -408,7 +409,10 @@
         // Monitor Auth State
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const isAdmin = WHITELIST.includes(user.email);
+                // Normalize email to lowercase for checking whitelist
+                const userEmailLower = user.email.toLowerCase();
+                const isAdmin = WHITELIST.includes(userEmailLower);
+                
                 // Use generic name if displayName is null (common in email auth without updateProfile)
                 const displayName = user.displayName || user.email.split('@')[0];
                 
@@ -432,7 +436,15 @@
             e.preventDefault();
             const user = auth.currentUser;
             
-            if (!user || !WHITELIST.includes(user.email)) {
+            if (!user) {
+                alert("You need to login first.");
+                return;
+            }
+
+            // Normalize for check
+            const userEmailLower = user.email.toLowerCase();
+
+            if (!WHITELIST.includes(userEmailLower)) {
                 alert("You don't have clearance.");
                 return;
             }
@@ -442,11 +454,11 @@
             let authorPFP = user.photoURL;
             let authorRole = "";
 
-            if (user.email === "anymousxe.info@gmail.com") {
+            if (userEmailLower === "anymousxe.info@gmail.com") {
                 authorName = "Anymousxe";
                 authorPFP = "anymousxe.png";
                 authorRole = "MIC";
-            } else if (user.email === "ColorViceMouseInCharge@proton.me") {
+            } else if (userEmailLower === "colorvicemouseincharge@proton.me") {
                 authorName = "Color";
                 authorPFP = "color.png";
                 authorRole = "VMIC";
@@ -486,7 +498,13 @@
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
                 const user = auth.currentUser;
-                const isAdmin = user && WHITELIST.includes(user.email);
+                
+                // Check admin status carefully for delete button visibility
+                let isAdmin = false;
+                if (user) {
+                    const userEmailLower = user.email.toLowerCase();
+                    isAdmin = WHITELIST.includes(userEmailLower);
+                }
                 
                 let timeString = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now";
                 let dateString = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
