@@ -3,142 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anymousxe | Dev & Creator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ANYMOUSXE | Linktree</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --bg-color: #1a1625;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-hover: rgba(138, 43, 226, 0.15);
+            --text-main: #ffffff;
+            --text-sub: #a0a0a0;
+            --accent: #8a2be2; /* BlueViolet/Purple */
+            --danger: #ff4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        /* Header Section */
+        h1 {
+            font-weight: 900;
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+
+        .subtitle {
+            font-family: 'Space Mono', monospace;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: linear-gradient(45deg, #4b0082, #8a2be2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Links / Cards */
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2);
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            display: block;
+        }
+
+        /* Twitter Card Special Styling */
+        .twitter-card {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0;
+        }
+        
+        .twitter-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            width: 100%;
+        }
+
+        .twitter-embed-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            object-fit: cover;
+        }
+
+        /* Discord Copy Toast */
+        .copy-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            padding: 10px 20px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+        }
+
+        /* Mouseland Footer Button */
+        .mouseland-btn {
+            margin-top: 40px;
+            display: block;
+            width: 100%;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: transparent;
+            color: #555;
+            font-family: 'Space Mono', monospace;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .mouseland-btn:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: rgba(255, 68, 68, 0.05);
+            text-shadow: 0 0 10px var(--danger);
+        }
+
+    </style>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <main id="main-interface">
-        <div class="glass-container">
-            <header class="profile-header">
-                <div class="pfp-wrapper">
-                    <img src="anymousxe.png" alt="Anymousxe" class="pfp">
-                    <div class="status-indicator"></div>
-                </div>
-                <h1>ANYMOUSXE</h1>
-                <p class="tagline">Dev // Creator // Chaos Manager</p>
-                <div class="badges">
-                    <span><i class="fa-solid fa-code"></i> Developer</span>
-                    <span><i class="fa-solid fa-crown"></i> MIC</span>
-                </div>
-            </header>
+    <div class="container">
+        <h1>ANYMOUSXE</h1>
+        <div class="subtitle">Dev // Creator // Chaos Manager</div>
 
-            <div class="links-grid">
-                <a href="https://softworks-tycoon.xyz" target="_blank" class="link-card project">
-                    <i class="fa-solid fa-gamepad"></i>
-                    <div class="link-text">
-                        <h3>Softworks Tycoon</h3>
-                        <p>Play my game</p>
-                    </div>
-                </a>
-
-                <a href="https://www.youtube.com/@anymousxe" target="_blank" class="link-card yt">
-                    <i class="fa-brands fa-youtube"></i>
-                    <div class="link-text">
-                        <h3>YouTube</h3>
-                        <p>Watch the content</p>
-                    </div>
-                </a>
-
-                <a href="https://www.roblox.com/users/868921271/profile" target="_blank" class="link-card rblx">
-                    <i class="fa-solid fa-square"></i> <div class="link-text">
-                        <h3>Roblox</h3>
-                        <p>View Profile</p>
-                    </div>
-                </a>
-
-                <div class="link-card discord" onclick="copyDiscord()">
-                    <i class="fa-brands fa-discord"></i>
-                    <div class="link-text">
-                        <h3>Discord</h3>
-                        <p id="discord-tag">anymousxe._.</p>
-                    </div>
-                    <span class="tooltip">Click to Copy</span>
-                </div>
-
-                <a href="mailto:anymousxe.info@gmail.com" class="link-card email">
-                    <i class="fa-solid fa-envelope"></i>
-                    <div class="link-text">
-                        <h3>Email</h3>
-                        <p>Contact Me</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="portal-section">
-                <button id="enter-mouseland-btn" class="glitch-btn">
-                    <span class="text">ENTER MOUSELAND</span>
-                    <span class="decoration">⚠ RESTRICTED ⚠</span>
-                </button>
-            </div>
+        <div class="badges">
+            <div class="badge"><i class="fas fa-code"></i> Developer</div>
+            <div class="badge"><i class="fas fa-crown"></i> MIC</div>
         </div>
-        
-        <footer class="main-footer">
-            <p>© 2025 Anymousxe. Built different.</p>
-        </footer>
-    </main>
 
+        <div class="links">
+            
+            <a href="https://roblox.com/games/YOUR_GAME_ID" target="_blank" class="card">
+                <div class="icon-box" style="color: #a855f7;">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-title">Softworks Tycoon</span>
+                    <span class="card-desc">Play my game</span>
+                </div>
+            </a>
 
-    <section id="mouseland-interface" class="hidden">
-        
-        <nav class="ml-nav">
-            <button id="exit-mouseland-btn">← RETURN TO REALITY</button>
-            <span class="gov-id">GOV_ID: MIC_001</span>
-        </nav>
+            <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="card">
+                <div class="icon-box" style="color: #ff0000;">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-title">YouTube</span>
+                    <span class="card-desc">Watch the content</span>
+                </div>
+            </a>
 
-        <div class="ml-content">
-            <div class="ml-hero">
-                <img src="rodentiamajor.png" alt="Capital" class="bg-blur">
-                <h2>THE STATE OF MOUSELAND</h2>
-                <p>Unity. Cheese. Cardboard.</p>
-            </div>
+            <a href="https://roblox.com/users/YOUR_USER_ID/profile" target="_blank" class="card">
+                <div class="icon-box" style="color: #ffffff;">
+                    <i class="fas fa-square"></i> </div>
+                <div class="card-content">
+                    <span class="card-title">Roblox</span>
+                    <span class="card-desc">View Profile</span>
+                </div>
+            </a>
 
-            <div class="ml-section">
-                <h3>High Command</h3>
-                <div class="leaders">
-                    <div class="leader">
-                        <img src="anymousxe.png" alt="MIC">
-                        <h4>Anymousxe</h4>
-                        <span class="role mic">MIC (Mice In Charge)</span>
+            <a href="#" onclick="copyDiscord(event)" class="card">
+                <div class="icon-box" style="color: #5865F2;">
+                    <i class="fab fa-discord"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-title">Discord</span>
+                    <span class="card-desc">anymousxe._.</span>
+                </div>
+            </a>
+
+            <a href="https://twitter.com/YOUR_TWITTER" target="_blank" class="card twitter-card">
+                <div class="twitter-header">
+                    <div class="icon-box" style="color: #1DA1F2;">
+                        <i class="fab fa-twitter"></i>
                     </div>
-                    <div class="leader">
-                        <img src="color.png" alt="VMIC">
-                        <h4>Color</h4>
-                        <span class="role vmic">VMIC (Vice MIC)</span>
+                    <div class="card-content">
+                        <span class="card-title">Twitter / X</span>
+                        <span class="card-desc">Check out the latest</span>
                     </div>
                 </div>
-            </div>
+                <img src="boxborough.png" alt="Twitter Preview" class="twitter-embed-img">
+            </a>
 
-            <div class="ml-section">
-                <h3>Latest Intel</h3>
-                <div class="intel-card warning">
-                    <h4>⚠ INCIDENT REPORT: Feline Attack</h4>
-                    <p>Stray cats breached Rubbish Heights. <strong>Tom</strong> (Ally Cat) deployed reinforcement. Threat neutralized. 5 injured. <strong>RIP Moc Miang</strong> (KIA).</p>
+            <a href="mailto:your_email@example.com" class="card">
+                <div class="icon-box" style="color: #aa00ff;">
+                    <i class="fas fa-envelope"></i>
                 </div>
-                <div class="intel-card danger">
-                    <h4>🚨 CRIME: Laced Cheese</h4>
-                    <p>Suspect apprehended for distributing fake/laced cheddar. Victims recovering.</p>
+                <div class="card-content">
+                    <span class="card-title">Email</span>
+                    <span class="card-desc">Contact Me</span>
                 </div>
-                <div class="intel-card success">
-                    <h4>💰 ECONOMY: W</h4>
-                    <p>Rich taxed. Poverty fixed. We up.</p>
-                </div>
-            </div>
+            </a>
 
-            <div class="ml-section">
-                <h3>Territories</h3>
-                <div class="towns-list">
-                    <div class="town"><img src="mec.png"><span>Mec</span></div>
-                    <div class="town"><img src="boxborough.png"><span>Box Borough</span></div>
-                    <div class="town"><img src="corrugatecrossing.png"><span>Corrugate Crossing</span></div>
-                    <div class="town"><img src="rodentiamajor.png"><span>Rodentia Major</span></div>
-                    <div class="town"><img src="rubbishheights.png"><span>Rubbish Heights</span></div>
-                </div>
-            </div>
         </div>
-    </section>
 
-    <script src="main.js"></script>
+        <a href="mouseland.html" class="mouseland-btn">
+            ENTER MOUSELAND <i class="fas fa-exclamation-triangle"></i> RESTRICTED <i class="fas fa-exclamation-triangle"></i>
+        </a>
+        
+        <div style="margin-top: 10px; font-size: 0.7rem; color: #555;">
+            © 2025 Anymousxe. Built different.
+        </div>
+
+    </div>
+
+    <div id="toast" class="copy-toast">Copied Discord!</div>
+
+    <script>
+        function copyDiscord(e) {
+            e.preventDefault();
+            navigator.clipboard.writeText("anymousxe._.");
+            
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
