@@ -1,0 +1,227 @@
+:root {
+    --bg-dark: #1a1a1d;
+    --bg-card: #2d2d30;
+    --text-main: #e0e0e0;
+    --cheese-gold: #ffc107;
+    --danger-red: #ff4d4d;
+    --success-green: #4caf50;
+    --font-head: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-body: 'Courier New', Courier, monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Header */
+header {
+    background: #000;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--cheese-gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo h1 {
+    color: var(--cheese-gold);
+    font-family: var(--font-head);
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--cheese-gold);
+}
+
+/* Hero */
+.hero {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('rodentiamajor.png'); /* Fallback if image exists, else dark */
+    background-size: cover;
+    border-bottom: 1px solid #333;
+}
+
+.hero h2 {
+    font-family: var(--font-head);
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+#citizen-btn {
+    background: var(--cheese-gold);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    font-family: var(--font-head);
+}
+
+#citizen-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Common Section Styles */
+.container {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-family: var(--font-head);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--cheese-gold);
+    text-transform: uppercase;
+}
+
+/* Leadership */
+.leaders-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.leader-card {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+    border: 1px solid #444;
+}
+
+.leader-card .img-wrapper {
+    width: 150px;
+    height: 150px;
+    background: #000;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    overflow: hidden;
+    border: 3px solid var(--cheese-gold);
+}
+
+.leader-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin: 5px 0 15px;
+}
+
+.mic { background: var(--cheese-gold); color: #000; }
+.vmic { background: #fff; color: #000; }
+
+/* Towns Grid */
+.towns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.town-card {
+    background: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.town-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
+}
+
+.town-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    background: #222; /* Fallback color */
+}
+
+.town-card .info {
+    padding: 1.5rem;
+}
+
+.town-card h3 {
+    color: var(--cheese-gold);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-head);
+}
+
+/* News Feed */
+.news-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.news-item {
+    background: var(--bg-card);
+    padding: 20px;
+    border-left: 5px solid #555;
+    border-radius: 0 8px 8px 0;
+}
+
+.news-item.danger { border-left-color: var(--danger-red); }
+.news-item.warning { border-left-color: orange; }
+.news-item.success { border-left-color: var(--success-green); }
+
+.date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: #000;
+    color: #666;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
