@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOUSELAND | RESTRICTED</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 0px #330000;
+            animation: glitch 1s infinite alternate;
+        }
+
+        p { font-size: 1.2rem; opacity: 0.8; margin-bottom: 30px; }
+
+        .back-btn {
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid #fff;
+            padding: 10px 20px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { background: #fff; color: #000; }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+    <h1>⚠️ WELCOME TO MOUSELAND ⚠️</h1>
+    <p>This area is restricted. Proceed with caution.</p>
+    <!-- Add your restricted content here -->
+    
+    <br>
+    <a href="/" class="back-btn">Go Back Home</a>
+</body>
+</html>
