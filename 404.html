@@ -3,35 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Lost in the Void</title>
+    <title>404 | Mouse Trap</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background-color: #1a1625;
-            color: #fff;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        h1 { font-size: 6rem; line-height: 1; margin: 0; color: #8a2be2; }
-        h2 { margin-bottom: 20px; }
-        a {
-            color: #fff;
-            text-decoration: none;
-            border-bottom: 2px solid #8a2be2;
-            padding-bottom: 2px;
-        }
-        a:hover { color: #8a2be2; }
+        .error-num { font-size: 6rem; font-weight: bold; color: var(--danger); }
     </style>
 </head>
 <body>
-    <h1>404</h1>
-    <h2>You're lost, bro.</h2>
-    <p>This page doesn't exist.</p>
-    <br>
-    <a href="/">Return to Base</a>
+    <div class="error-page container">
+        <div class="error-num">404</div>
+        <h2>You fell for the trap!</h2>
+        <p>This page doesn't exist. You might be lost in the sewers.</p>
+        <br>
+        <a href="/" class="btn btn-primary">Return to Safety</a>
+    </div>
 </body>
 </html>
