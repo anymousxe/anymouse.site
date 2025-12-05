@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mouseland | Official Site</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- ✅ UPDATED: Site Icon (Favicon) -->
+    <link rel="icon" type="image/png" href="mouseicon.png">
+    
     <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
@@ -178,7 +182,7 @@
             </div>
         </section>
 
-        <!-- Official Decrees & Projects (Restored) -->
+        <!-- Official Decrees & Projects -->
         <section class="animate-fade delay-2" style="margin: 4rem 0;">
             <h2 style="border-left: 5px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Official Decrees & National Projects</h2>
             
@@ -209,7 +213,7 @@
         <section class="news-section animate-fade delay-3">
             <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Network</h2>
             
-            <!-- Dynamic Feed (Your small posts) -->
+            <!-- Dynamic Feed -->
             <div style="margin-bottom: 3rem;">
                 <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Live Wire</h4>
                 <div id="news-feed">
@@ -217,7 +221,7 @@
                 </div>
             </div>
 
-            <!-- Static Archived News (Restored) -->
+            <!-- Static Archived News -->
             <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Recent Headlines</h4>
 
             <article class="news-item">
@@ -320,7 +324,6 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // Storing lowercase versions for case-insensitive check
         const WHITELIST = [
             "anymousxe.info@gmail.com",
             "colorvicemouseincharge@proton.me"
@@ -342,7 +345,6 @@
 
         // --- AUTH LOGIC ---
 
-        // Toggle Modal
         document.body.addEventListener('click', (e) => {
             if (e.target.id === 'login-trigger-btn') {
                 modal.style.display = 'flex';
@@ -413,7 +415,7 @@
                 const userEmailLower = user.email.toLowerCase();
                 const isAdmin = WHITELIST.includes(userEmailLower);
                 
-                // Use generic name if displayName is null (common in email auth without updateProfile)
+                // Use generic name if displayName is null
                 const displayName = user.displayName || user.email.split('@')[0];
                 
                 authContainer.innerHTML = `
@@ -425,6 +427,10 @@
                     <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:0.5rem;">Logout</button>
                 `;
                 adminPanel.style.display = isAdmin ? "block" : "none";
+                
+                if (isAdmin) {
+                    console.log("Admin Logged In:", userEmailLower);
+                }
             } else {
                 authContainer.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>`;
                 adminPanel.style.display = "none";
@@ -441,7 +447,6 @@
                 return;
             }
 
-            // Normalize for check
             const userEmailLower = user.email.toLowerCase();
 
             if (!WHITELIST.includes(userEmailLower)) {
@@ -478,9 +483,11 @@
                     createdAt: serverTimestamp()
                 });
                 postForm.reset();
+                alert("Update published successfully!");
             } catch (err) {
-                console.error("Error adding:", err);
-                alert("Error publishing.");
+                console.error("Error adding document:", err);
+                // Detailed error alert for debugging
+                alert("Error publishing: " + err.message + "\n\n(Check your Firestore Security Rules if the message says 'Missing or insufficient permissions')");
             }
         });
 
@@ -499,7 +506,6 @@
                 const data = docSnap.data();
                 const user = auth.currentUser;
                 
-                // Check admin status carefully for delete button visibility
                 let isAdmin = false;
                 if (user) {
                     const userEmailLower = user.email.toLowerCase();
@@ -522,7 +528,6 @@
 
                 let deleteBtn = isAdmin ? `<span class="delete-btn" data-id="${docSnap.id}">[Delete]</span>` : "";
 
-                // Fallback pfp for posts
                 const postPfpSrc = data.pfp || 'anymousxe.png';
 
                 postEl.innerHTML = `
