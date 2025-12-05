@@ -3,69 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anymousxe | Game Dev</title>
+    <title>Mouseland | Official Site</title>
+    <link rel="stylesheet" href="style.css">
     
-    <!-- ✅ FAVICON: This is the code for the icon -->
+    <!-- ✅ FAVICON: This code is correct. It might not show on local files (file://) but will work when hosted. -->
     <link rel="icon" type="image/png" href="mouseicon.png">
     
-    <link rel="stylesheet" href="style.css">
-    <!-- Using FontAwesome for icons -->
+    <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- Twitter Card & Open Graph Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@anymousxe">
+    <meta name="twitter:title" content="Mouseland | Official Government Site">
+    <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
+    <meta name="twitter:image" content="https://anymousxe.site/boxborough.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mouseland | Official Government Site">
+    <meta property="og:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
+    <meta property="og:image" content="https://anymousxe.site/boxborough.png">
+    <meta property="og:url" content="https://anymousxe.site/mouseland">
+
+    <style>
+        /* Extra styles for the dynamic author tags */
+        .author-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .role-mic { background-color: var(--mouseland-accent); color: #000; }
+        .role-vmic { background-color: #a855f7; color: #fff; }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+        .post-pfp {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #555;
+        }
+
+        /* --- Login Modal Styles --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #1a1a1e;
+            padding: 2rem; 
+            border: 1px solid var(--mouseland-accent); 
+            width: 90%; 
+            max-width: 400px;
+            border-radius: 12px;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-modal:hover { color: #fff; }
+
+        .auth-divider { 
+            margin: 1.5rem 0; 
+            color: #666; 
+            font-size: 0.9rem; 
+            position: relative;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #333;
+        }
+        .auth-divider::before { left: 0; }
+        .auth-divider::after { right: 0; }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: white;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--mouseland-accent);
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        
-        <!-- Profile Header -->
-        <header class="profile-header animate-fade">
-            <div class="pfp-container">
-                <img src="anymousxe.png" alt="Anymousxe PFP">
-            </div>
-            <div class="bio">
-                <h1>Anymousxe</h1>
-                <p class="animate-fade delay-1">
-                    Yo, I'm Aiden. Game Dev 🛠️ | Roblox Creator 🎮 | Web Dev 🌐 <br>
-                    Currently cooking up a massive Roblox game. In my dev arc fr. No cap, we making moves.
-                </p>
-            </div>
-        </header>
-
-        <!-- Links Section -->
-        <section class="links-grid animate-fade delay-2">
+    <!-- Header -->
+    <header class="ml-header animate-fade">
+        <div class="container">
+            <nav class="nav-bar">
+                <!-- Back Link Fixed -->
+                <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
+                <div id="auth-container" class="user-controls">
+                    <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
+                </div>
+            </nav>
             
-            <a href="https://www.youtube.com/@anymousxe" target="_blank" class="link-card">
-                <h3><i class="fab fa-youtube" style="color: #ff0000;"></i> YouTube</h3>
-                <p>Watch the devlogs & gameplay</p>
-            </a>
+            <div style="text-align: center;">
+                <h1>🐀 Welcome to Mouseland</h1>
+                <p>Unity. Cheese. Strength.</p>
+            </div>
+        </div>
+    </header>
 
-            <a href="https://www.roblox.com/users/868921271/profile" target="_blank" class="link-card">
-                <h3><i class="fas fa-gamepad" style="color: #00b06f;"></i> Roblox</h3>
-                <p>Check out my profile</p>
-            </a>
+    <div class="container">
 
-            <a href="https://www.softworks-tycoon.xyz" target="_blank" class="link-card">
-                <h3><i class="fas fa-globe" style="color: #3b82f6;"></i> Website</h3>
-                <p>Softworks Tycoon HQ</p>
-            </a>
+        <!-- ADMIN PANEL (Hidden by default) -->
+        <section id="admin-panel" class="admin-panel">
+            <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
+            <form id="post-form" class="admin-form">
+                <input type="text" id="post-title" class="admin-input" placeholder="Update Title (e.g., Treaty Signed)" required>
+                <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business..." required></textarea>
+                <select id="post-type" class="admin-input">
+                    <option value="standard">Standard News</option>
+                    <option value="urgent">🚨 Urgent / Breaking</option>
+                    <option value="decree">📜 Official Decree</option>
+                </select>
+                <button type="submit" class="btn btn-mouseland">Publish Update</button>
+            </form>
+        </section>
 
-            <a href="mailto:anymousxe.info@gmail.com" class="link-card">
-                <h3><i class="fas fa-envelope" style="color: #eab308;"></i> Email</h3>
-                <p>Business inquiries only</p>
-            </a>
+        <!-- Government Section -->
+        <section class="animate-fade delay-1">
+            <h2 style="text-align:center; margin-bottom: 2rem;">Government Leadership</h2>
+            <div class="leadership-section">
+                <!-- MIC -->
+                <div class="leader-card">
+                    <img src="anymousxe.png" alt="Anymousxe" class="leader-img">
+                    <h3>Anymousxe</h3>
+                    <p style="color: var(--mouseland-accent); font-weight: bold;">MIC (Mice In Charge)</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Leading Mouseland into a new era of prosperity.</p>
+                </div>
+
+                <!-- VMIC -->
+                <div class="leader-card">
+                    <img src="color.png" alt="Color" class="leader-img">
+                    <h3>Color</h3>
+                    <p style="color: #a855f7; font-weight: bold;">VMIC (Vice Mice In Charge)</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Right-hand mouse. Ensuring order across the cities.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Official Decrees & Projects -->
+        <section class="animate-fade delay-2" style="margin: 4rem 0;">
+            <h2 style="border-left: 5px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Official Decrees & National Projects</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- MSP Card -->
+                <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
+                    <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> Project: SkyCheese (MSP)</h3>
+                    <p>
+                        <strong>Status: LAUNCHED</strong><br><br>
+                        The <strong>Mouse Space Program (MSP)</strong> has officially begun operations. Our scientists in Mec City have confirmed the moon might actually be made of a rare gouda. 
+                        We are sending the first rover, <em>Squeak-1</em>, to verify these claims. The sky is no longer the limit.
+                    </p>
+                </div>
+
+                <!-- Foreign Policy Card -->
+                <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
+                    <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Foreign Policy Update</h3>
+                    <p>
+                        <strong>Subject: Fryland & Nuggetland Conflict</strong><br><br>
+                        Due to the recent outbreak of war between <strong>Fryland</strong> and <strong>Nuggetland</strong>, Mouseland is officially closing its borders to military personnel from both nations. 
+                        We have trade relations with both, but we are distancing ourselves politically. We ain't picking sides in that beef. Neutrality is key.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section class="news-section animate-fade delay-3">
+            <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Network</h2>
+            
+            <!-- Dynamic Feed -->
+            <div style="margin-bottom: 3rem;">
+                <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Live Wire</h4>
+                <div id="news-feed">
+                    <div style="text-align: center; color: #666; font-size: 0.9rem;">Connecting to MIC secure frequency...</div>
+                </div>
+            </div>
+
+            <!-- Static Archived News -->
+            <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Recent Headlines</h4>
+
+            <article class="news-item">
+                <h3>🚨 BREAKING: Fake Cheese Scandal Exposes Black Market</h3>
+                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Hours Ago</p>
+                <p>
+                    A massive sting operation has revealed that a group of rogue mice was selling "Discount Cheddar" laced with sawdust and expired dairy. 
+                    Over <strong>10,000 mice</strong> have fallen ill across Rubbish Heights. The MIC has declared this "absolutely cooked behavior" and vowed justice.
+                </p>
+            </article>
+
+            <article class="news-item" style="border-color: #f59e0b;">
+                <h3>⚠️ Feline Attack Repelled by Ally Forces</h3>
+                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Days Ago</p>
+                <p>
+                    A coordinate attack by the Stray Cat Coalition was halted yesterday. Our ally, <strong>Tom the Cat</strong>, pulled up with his gang and fought them off in the streets of Rodentia Major. 
+                    Sadly, 5 brave mice were injured, and we lost a real one, <strong>Moc Miang</strong>. Rest in Power. 🕊️
+                </p>
+            </article>
 
         </section>
 
-        <!-- Mouseland Promo Button -->
-        <section class="mouseland-promo animate-fade delay-3">
-            <h2>🐀 Visit Mouseland</h2>
-            <p>Check out the lore, the cities, and the latest news from the MIC.</p>
-            <br>
-            <!-- Updated to point directly to the file to prevent 404s -->
-            <a href="mouseland.html" class="btn btn-mouseland">Enter Mouseland</a>
+        <!-- Cities Section -->
+        <section class="animate-fade delay-2" style="margin-top: 4rem;">
+            <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">The 5 Great Cities</h2>
+            <div class="cities-grid">
+                <div class="city-card">
+                    <img src="boxborough.png" alt="Boxborough">
+                    <div class="city-name">Boxborough</div>
+                </div>
+                <div class="city-card">
+                    <img src="corrugatecrossing.png" alt="Corrugate Crossing">
+                    <div class="city-name">Corrugate Crossing</div>
+                </div>
+                <div class="city-card">
+                    <img src="rodentiamajor.png" alt="Rodentia Major">
+                    <div class="city-name">Rodentia Major</div>
+                </div>
+                <div class="city-card">
+                    <img src="rubbishheights.png" alt="Rubbish Heights">
+                    <div class="city-name">Rubbish Heights</div>
+                </div>
+                <div class="city-card">
+                    <img src="mec.png" alt="Mec City">
+                    <div class="city-name">Mec</div>
+                </div>
+            </div>
         </section>
+        
+        <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">
+            &copy; 2025 Mouseland Gov. All Rights Reserved.
+        </footer>
 
     </div>
 
-    <script src="main.js"></script>
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 0.5rem;">Citizen Identify</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1.5rem;">Show your papers to enter.</p>
+            
+            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+            
+            <div class="auth-divider">OR</div>
+            
+            <form id="email-auth-form">
+                <input type="email" id="auth-email" class="auth-input" placeholder="Email Address" required>
+                <input type="password" id="auth-password" class="auth-input" placeholder="Password" required>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" id="email-login-btn" class="btn btn-mouseland" style="flex: 1;">Login</button>
+                    <button type="button" id="email-signup-btn" class="btn btn-ghost" style="flex: 1;">Sign Up</button>
+                </div>
+            </form>
+            <p id="auth-error" style="color:var(--danger); font-size:0.8rem; margin-top:1rem; display:none;"></p>
+        </div>
+    </div>
+
+    <!-- FIREBASE MODULE SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
+            authDomain: "mouseland-istuff.firebaseapp.com",
+            projectId: "mouseland-istuff",
+            storageBucket: "mouseland-istuff.firebasestorage.app",
+            messagingSenderId: "459629527486",
+            appId: "1:459629527486:web:0c038f1fad27ef288879ef",
+            measurementId: "G-HX18GW1CVG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Storing lowercase versions for case-insensitive check
+        const WHITELIST = [
+            "anymousxe.info@gmail.com",
+            "colorvicemouseincharge@proton.me"
+        ];
+
+        // UI Elements
+        const authContainer = document.getElementById('auth-container');
+        const adminPanel = document.getElementById('admin-panel');
+        const postForm = document.getElementById('post-form');
+        const newsFeed = document.getElementById('news-feed');
+        
+        // Modal Elements
+        const modal = document.getElementById('login-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const googleBtn = document.getElementById('google-auth-btn');
+        const emailForm = document.getElementById('email-auth-form');
+        const signupBtn = document.getElementById('email-signup-btn');
+        const authError = document.getElementById('auth-error');
+
+        // --- AUTH LOGIC ---
+
+        document.body.addEventListener('click', (e) => {
+            if (e.target.id === 'login-trigger-btn') {
+                modal.style.display = 'flex';
+            }
+            if (e.target.id === 'logout-btn') {
+                signOut(auth);
+            }
+        });
+
+        closeModal.onclick = () => { modal.style.display = "none"; authError.style.display = "none"; }
+        window.onclick = (e) => { if (e.target == modal) { modal.style.display = "none"; authError.style.display = "none"; }}
+
+        // Google Login
+        googleBtn.onclick = () => {
+            signInWithPopup(auth, provider)
+                .then(() => modal.style.display = "none")
+                .catch((error) => {
+                    console.error("Login failed:", error);
+                    authError.textContent = "Google Sign-In Failed: " + error.message;
+                    authError.style.display = "block";
+                });
+        };
+
+        // Email Login
+        emailForm.onsubmit = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    modal.style.display = "none";
+                    emailForm.reset();
+                })
+                .catch((error) => {
+                    authError.textContent = "Login Failed: " + error.message;
+                    authError.style.display = "block";
+                });
+        };
+
+        // Email Signup
+        signupBtn.onclick = () => {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            
+            if(!email || !pass) {
+                authError.textContent = "Please enter email and password to sign up.";
+                authError.style.display = "block";
+                return;
+            }
+
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    modal.style.display = "none";
+                    emailForm.reset();
+                    alert("Citizenship Granted! Welcome to Mouseland.");
+                })
+                .catch((error) => {
+                    authError.textContent = "Signup Failed: " + error.message;
+                    authError.style.display = "block";
+                });
+        };
+
+        // Monitor Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Normalize email to lowercase for checking whitelist
+                const userEmailLower = user.email.toLowerCase();
+                const isAdmin = WHITELIST.includes(userEmailLower);
+                
+                // Use generic name if displayName is null
+                const displayName = user.displayName || user.email.split('@')[0];
+                
+                authContainer.innerHTML = `
+                    <div style="text-align:right;">
+                        <div style="font-size:0.8rem; color:#888;">Logged in as</div>
+                        <div style="font-weight:bold;">${displayName}</div>
+                    </div>
+                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User" onerror="this.src='anymousxe.png'">
+                    <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:0.5rem;">Logout</button>
+                `;
+                adminPanel.style.display = isAdmin ? "block" : "none";
+                
+                if (isAdmin) {
+                    console.log("Admin Logged In:", userEmailLower);
+                }
+            } else {
+                authContainer.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>`;
+                adminPanel.style.display = "none";
+            }
+        });
+
+        // --- POSTING ---
+        postForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            
+            if (!user) {
+                alert("You need to login first.");
+                return;
+            }
+
+            const userEmailLower = user.email.toLowerCase();
+
+            if (!WHITELIST.includes(userEmailLower)) {
+                alert("You don't have clearance.");
+                return;
+            }
+
+            // Custom Identity Logic
+            let authorName = user.displayName || "Mouseland Official";
+            let authorPFP = user.photoURL;
+            let authorRole = "";
+
+            if (userEmailLower === "anymousxe.info@gmail.com") {
+                authorName = "Anymousxe";
+                authorPFP = "anymousxe.png";
+                authorRole = "MIC";
+            } else if (userEmailLower === "colorvicemouseincharge@proton.me") {
+                authorName = "Color";
+                authorPFP = "color.png";
+                authorRole = "VMIC";
+            }
+
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const type = document.getElementById('post-type').value;
+
+            try {
+                await addDoc(collection(db, "updates"), {
+                    title, content, type,
+                    author: authorName,
+                    pfp: authorPFP,
+                    role: authorRole,
+                    uid: user.uid,
+                    createdAt: serverTimestamp()
+                });
+                postForm.reset();
+                alert("Update published successfully!");
+            } catch (err) {
+                console.error("Error adding document:", err);
+                // Detailed error alert for debugging
+                alert("Error publishing: " + err.message + "\n\n(Check your Firestore Security Rules if the message says 'Missing or insufficient permissions')");
+            }
+        });
+
+        // --- READING ---
+        const q = query(collection(db, "updates"), orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            newsFeed.innerHTML = "";
+            
+            if (snapshot.empty) {
+                newsFeed.innerHTML = "<p style='text-align:center; color:#666; font-style:italic;'>Radio silence from the MIC.</p>";
+                return;
+            }
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const user = auth.currentUser;
+                
+                let isAdmin = false;
+                if (user) {
+                    const userEmailLower = user.email.toLowerCase();
+                    isAdmin = WHITELIST.includes(userEmailLower);
+                }
+                
+                let timeString = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now";
+                let dateString = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
+
+                const postEl = document.createElement('article');
+                postEl.className = `news-item ${data.type || 'standard'}`;
+                
+                let icon = "";
+                if (data.type === "urgent") icon = "🚨 ";
+                if (data.type === "decree") icon = "📜 ";
+
+                let roleBadge = "";
+                if (data.role === "MIC") roleBadge = `<span class="author-badge role-mic">MIC</span>`;
+                if (data.role === "VMIC") roleBadge = `<span class="author-badge role-vmic">VMIC</span>`;
+
+                let deleteBtn = isAdmin ? `<span class="delete-btn" data-id="${docSnap.id}">[Delete]</span>` : "";
+
+                const postPfpSrc = data.pfp || 'anymousxe.png';
+
+                postEl.innerHTML = `
+                    <div class="post-header">
+                        <img src="${postPfpSrc}" class="post-pfp" alt="pfp" onerror="this.src='anymousxe.png'">
+                        <div>
+                            <div style="font-weight:bold; font-size:0.95rem;">
+                                ${data.author} ${roleBadge}
+                            </div>
+                            <div style="font-size:0.75rem; color:#666;">${dateString} at ${timeString}</div>
+                        </div>
+                    </div>
+                    <h3>${icon}${data.title}</h3>
+                    <p>${data.content}</p>
+                    <div class="news-actions">${deleteBtn}</div>
+                `;
+                newsFeed.appendChild(postEl);
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if(confirm("Delete this transmission?")) {
+                        await deleteDoc(doc(db, "updates", e.target.getAttribute('data-id')));
+                    }
+                });
+            });
+        });
+
+    </script>
 </body>
 </html>
