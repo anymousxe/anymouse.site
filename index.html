@@ -6,18 +6,19 @@
     <title>ANYMOUSXE</title>
     
     <!-- --- TWITTER / DISCORD EMBED FIX --- -->
-    <!-- You MUST change 'yourdomain.com' to your actual website URL for the image to work on Discord/Twitter! -->
+    <!-- Replaced generic domain with softworks-tycoon.xyz assuming that's your main domain, 
+         or change it to wherever this site is actually hosted -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ANYMOUSXE">
     <meta name="twitter:description" content="Dev // Creator // Chaos Manager">
-    <meta name="twitter:image" content="https://yourdomain.com/boxborough.png">
+    <meta name="twitter:image" content="https://softworks-tycoon.xyz/boxborough.png">
     
     <!-- Open Graph (for Discord/Facebook etc) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="ANYMOUSXE">
     <meta property="og:description" content="Dev // Creator // Chaos Manager">
-    <meta property="og:image" content="https://yourdomain.com/boxborough.png">
-    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:image" content="https://softworks-tycoon.xyz/boxborough.png">
+    <meta property="og:url" content="https://softworks-tycoon.xyz">
     <meta name="theme-color" content="#8a2be2"> 
     <!-- ----------------------------------- -->
 
@@ -49,7 +50,7 @@
 
         .container {
             width: 100%;
-            max-width: 500px; /* Slightly tighter width for cleaner look */
+            max-width: 500px;
             text-align: center;
             padding-bottom: 50px;
         }
@@ -228,8 +229,8 @@
 
         <div class="links">
             
-            <!-- Link 1 -->
-            <a href="https://roblox.com/games/YOUR_ID" target="_blank" class="link-card">
+            <!-- Link 1: Softworks -->
+            <a href="https://softworks-tycoon.xyz" target="_blank" class="link-card">
                 <div class="icon-box" style="color: #a855f7;"><i class="fas fa-gamepad"></i></div>
                 <div class="card-content">
                     <span class="card-title">Softworks Tycoon</span>
@@ -237,8 +238,8 @@
                 </div>
             </a>
 
-            <!-- Link 2 -->
-            <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="link-card">
+            <!-- Link 2: YouTube -->
+            <a href="https://www.youtube.com/@anymousxe" target="_blank" class="link-card">
                 <div class="icon-box" style="color: #ff4444;"><i class="fab fa-youtube"></i></div>
                 <div class="card-content">
                     <span class="card-title">YouTube</span>
@@ -246,8 +247,8 @@
                 </div>
             </a>
 
-            <!-- Link 3 -->
-            <a href="https://roblox.com/users/YOUR_ID" target="_blank" class="link-card">
+            <!-- Link 3: Roblox -->
+            <a href="https://www.roblox.com/users/868921271/profile" target="_blank" class="link-card">
                 <div class="icon-box" style="color: #fff;"><i class="fas fa-square"></i></div>
                 <div class="card-content">
                     <span class="card-title">Roblox</span>
@@ -265,7 +266,7 @@
             </a>
 
             <!-- Email -->
-            <a href="mailto:your@email.com" class="link-card">
+            <a href="mailto:anymousxe.info@gmail.com" class="link-card">
                 <div class="icon-box" style="color: #e0e0e0;"><i class="fas fa-envelope"></i></div>
                 <div class="card-content">
                     <span class="card-title">Email</span>
@@ -276,7 +277,7 @@
         </div>
 
         <div class="mouseland-footer">
-            <!-- This points to the folder 'mouseland'. Make sure you have mouseland/index.html -->
+            <!-- Points to mouseland/index.html -->
             <a href="/mouseland/" class="mouseland-btn">
                 <i class="fas fa-radiation"></i> ENTER MOUSELAND <i class="fas fa-radiation"></i>
             </a>
@@ -290,7 +291,6 @@
 
     <script>
         function copyText(text) {
-            // Fallback for better mobile support
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text);
             } else {
