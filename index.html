@@ -3,169 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>anymousxe | Portfolio</title>
-    <style>
-        /* --- RESET & BASICS --- */
+    <title>anymousxe</title>
+    
+    <meta property="og:title" content="anymousxe">
+    <meta property="og:description" content="Game dev, web dev, im making roblox stuff, i sometimes might make yt videos">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-website-link.com">
+    <meta property="og:image" content="https://your-image-link.com/avatar.png"> <meta name="theme-color" content="#ffffff"> <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            user-select: none; /* Stops people from highlighting text */
         }
 
         body {
             background-color: #050505;
-            color: #ffffff;
-            font-family: 'Courier New', Courier, monospace; /* Coding vibes */
-            height: 100vh;
-            overflow: hidden; /* No scrolling */
+            color: #e0e0e0;
+            font-family: 'Courier Prime', monospace;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-        }
-
-        /* --- CLICK TO ENTER OVERLAY --- */
-        #enter-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000; /* Pure black overlay */
-            display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: 999;
-            cursor: pointer;
-            transition: opacity 1s ease;
-        }
-
-        #enter-text {
-            font-size: 1.5rem;
-            animation: pulse 2s infinite;
-        }
-
-        /* --- MAIN CONTENT (Initially Hidden) --- */
-        #main-content {
+            min-height: 100vh;
             text-align: center;
-            opacity: 0; /* Hidden until clicked */
-            transition: opacity 2s ease;
-            z-index: 10;
-            width: 80%;
-            max-width: 800px;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
         }
 
         h1 {
             font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
         }
 
-        .bio {
-            font-size: 1.1rem;
-            color: #aaa;
-            margin-bottom: 30px;
-            line-height: 1.6;
+        .subtitle {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 2rem;
             border-bottom: 1px solid #333;
-            padding-bottom: 20px;
-            display: inline-block;
+            padding-bottom: 2rem;
         }
 
-        /* --- EMBED SECTION --- */
-        .embed-container {
+        /* THE LINKS SECTION */
+        .links-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .link-btn {
+            background: #0f0f0f;
             border: 1px solid #333;
-            background: #111;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
-            min-height: 200px;
+            color: #fff;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #555;
+            border-radius: 4px;
         }
 
-        /* Make iframes responsive if you paste one in */
-        .embed-container iframe {
-            width: 100%;
-            height: 300px; 
-            border: none;
+        .link-btn:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            transform: scale(1.01);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
-        /* --- ANIMATIONS --- */
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; text-shadow: 0 0 15px white; }
-            100% { opacity: 0.5; }
+        .footer {
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            color: #444;
         }
-
     </style>
 </head>
 <body>
 
-    <audio id="bg-music" src="lofi.mp3" loop></audio> 
-    <audio id="click-sfx" src="click.mp3"></audio>
-
-    <div id="enter-screen">
-        <div id="enter-text">[ click to enter ]</div>
-    </div>
-
-    <div id="main-content">
+    <div class="container">
         <h1>anymousxe</h1>
-        
-        <p class="bio">
-            Game dev, web dev, im making roblox stuff, i sometimes might make yt videos
-        </p>
+        <p class="subtitle">Game dev, web dev, im making roblox stuff, i sometimes might make yt videos</p>
 
-        <div class="embed-container">
-            <p>[ Embed Placeholder: Paste your code in the HTML ]</p>
+        <div class="links-grid">
+            <a href="https://roblox.com/users/YOUR_ID/profile" class="link-btn" target="_blank">
+                Roblox Profile
+            </a>
+            
+            <a href="https://youtube.com/@YOUR_CHANNEL" class="link-btn" target="_blank">
+                YouTube Channel
+            </a>
+
+            <a href="#" class="link-btn" target="_blank">
+                Softworks / Web Projects
+            </a>
+
+            <a href="#" class="link-btn" target="_blank">
+                Music (SoundCloud/Spotify)
+            </a>
+        </div>
+
+        <div class="footer">
+            © 2025 anymousxe
         </div>
     </div>
 
-    <script>
-        // --- VARIABLES ---
-        const enterScreen = document.getElementById('enter-screen');
-        const mainContent = document.getElementById('main-content');
-        const bgMusic = document.getElementById('bg-music');
-        const clickSfx = document.getElementById('click-sfx');
-
-        // Set music volume (0.0 to 1.0) so it doesn't blast ears
-        bgMusic.volume = 0.3; 
-        clickSfx.volume = 0.5;
-
-        // --- ENTER FUNCTION ---
-        enterScreen.addEventListener('click', () => {
-            // 1. Play the click sound immediately
-            playClick();
-
-            // 2. Start the Lo-Fi music
-            bgMusic.play().then(() => {
-                console.log("Music started.");
-            }).catch(e => {
-                console.log("Audio prevent error:", e);
-            });
-
-            // 3. Fade out overlay
-            enterScreen.style.opacity = '0';
-            
-            // 4. Remove overlay from interactions after fade
-            setTimeout(() => {
-                enterScreen.style.display = 'none';
-                // 5. Fade in main content
-                mainContent.style.opacity = '1';
-            }, 1000); // Wait 1 second for fade out
-        });
-
-        // --- GLOBAL CLICK SOUND ---
-        // This makes the click sound play whenever you click anywhere on the page
-        document.addEventListener('click', () => {
-            playClick();
-        });
-
-        function playClick() {
-            clickSfx.currentTime = 0; // Reset sound to start
-            clickSfx.play();
-        }
-    </script>
 </body>
 </html>
