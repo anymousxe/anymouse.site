@@ -3,169 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>anymousxe | Portfolio</title>
-    <style>
-        /* --- RESET & BASICS --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none; /* Stops people from highlighting text */
-        }
+    <title>ANYMOUSXE | SYSTEMS ONLINE</title>
+    
+    <meta name="theme-color" content="#8b5cf6">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://anymouse.site/">
+    <meta property="og:title" content="ANYMOUSXE | GAME DEV">
+    <meta property="og:description" content="Roblox Developer & Web Architect. Enter the system.">
+    <meta property="og:image" content="https://anymouse.site/anymousxe.png">
 
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Courier New', Courier, monospace; /* Coding vibes */
-            height: 100vh;
-            overflow: hidden; /* No scrolling */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://anymouse.site/">
+    <meta property="twitter:title" content="ANYMOUSXE | GAME DEV">
+    <meta property="twitter:description" content="Roblox Developer & Web Architect. Enter the system.">
+    <meta property="twitter:image" content="https://anymouse.site/anymousxe.png">
 
-        /* --- CLICK TO ENTER OVERLAY --- */
-        #enter-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000; /* Pure black overlay */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            cursor: pointer;
-            transition: opacity 1s ease;
-        }
-
-        #enter-text {
-            font-size: 1.5rem;
-            animation: pulse 2s infinite;
-        }
-
-        /* --- MAIN CONTENT (Initially Hidden) --- */
-        #main-content {
-            text-align: center;
-            opacity: 0; /* Hidden until clicked */
-            transition: opacity 2s ease;
-            z-index: 10;
-            width: 80%;
-            max-width: 800px;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .bio {
-            font-size: 1.1rem;
-            color: #aaa;
-            margin-bottom: 30px;
-            line-height: 1.6;
-            border-bottom: 1px solid #333;
-            padding-bottom: 20px;
-            display: inline-block;
-        }
-
-        /* --- EMBED SECTION --- */
-        .embed-container {
-            border: 1px solid #333;
-            background: #111;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
-            min-height: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #555;
-        }
-
-        /* Make iframes responsive if you paste one in */
-        .embed-container iframe {
-            width: 100%;
-            height: 300px; 
-            border: none;
-        }
-
-        /* --- ANIMATIONS --- */
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; text-shadow: 0 0 15px white; }
-            100% { opacity: 0.5; }
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <audio id="bg-music" src="lofi.mp3" loop></audio> 
-    <audio id="click-sfx" src="click.mp3"></audio>
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sfx-hover">
+        <source src="hover.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sfx-click">
+        <source src="click.mp3" type="audio/mpeg">
+    </audio>
 
-    <div id="enter-screen">
-        <div id="enter-text">[ click to enter ]</div>
-    </div>
+    <div class="scanlines"></div>
 
-    <div id="main-content">
-        <h1>anymousxe</h1>
-        
-        <p class="bio">
-            Game dev, web dev, im making roblox stuff, i sometimes might make yt videos
-        </p>
-
-        <div class="embed-container">
-            <p>[ Embed Placeholder: Paste your code in the HTML ]</p>
+    <div id="intro-overlay">
+        <div class="intro-content">
+            <div class="loader-bar"></div>
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="ANYMOUSE.SITE">ANYMOUSE.SITE</h1>
+            </div>
+            <p class="subtitle">SYSTEMS INITIALIZING...</p>
+            <div class="pfp-preview">
+                <img src="anymousxe.png" alt="Profile">
+            </div>
+            <p class="credits">MADE BY ANYMOUSE</p>
+            <button id="enter-btn">ENTER REALITY</button>
         </div>
     </div>
 
-    <script>
-        // --- VARIABLES ---
-        const enterScreen = document.getElementById('enter-screen');
-        const mainContent = document.getElementById('main-content');
-        const bgMusic = document.getElementById('bg-music');
-        const clickSfx = document.getElementById('click-sfx');
+    <canvas id="bg-canvas"></canvas>
 
-        // Set music volume (0.0 to 1.0) so it doesn't blast ears
-        bgMusic.volume = 0.3; 
-        clickSfx.volume = 0.5;
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
-        // --- ENTER FUNCTION ---
-        enterScreen.addEventListener('click', () => {
-            // 1. Play the click sound immediately
-            playClick();
+    <main id="main-content" class="hidden">
+        
+        <div class="floating-mouse">
+            <img src="mouse.png" alt="The Special Mouse" title="The Architect">
+        </div>
 
-            // 2. Start the Lo-Fi music
-            bgMusic.play().then(() => {
-                console.log("Music started.");
-            }).catch(e => {
-                console.log("Audio prevent error:", e);
-            });
+        <div class="container">
+            <header class="profile-header">
+                <div class="pfp-container tilt-card">
+                    <img src="anymousxe.png" alt="Anymousxe PFP">
+                    <div class="status-indicator"></div>
+                </div>
+                <div class="bio">
+                    <h1 class="hero-name" data-value="ANYMOUSXE">ANYMOUSXE</h1>
+                    <div class="role-badge">
+                        <span>DEV</span><span>//</span><span>CREATOR</span>
+                    </div>
+                    <p class="bio-text">
+                        Yo, I'm Aiden. Game Dev 🛠️ | Roblox Creator 🎮 | Web Dev 🌐 <br>
+                        Currently cooking up a massive Roblox game. In my dev arc fr. <br>
+                        <span class="highlight">No cap, we making moves.</span>
+                    </p>
+                </div>
+            </header>
 
-            // 3. Fade out overlay
-            enterScreen.style.opacity = '0';
-            
-            // 4. Remove overlay from interactions after fade
-            setTimeout(() => {
-                enterScreen.style.display = 'none';
-                // 5. Fade in main content
-                mainContent.style.opacity = '1';
-            }, 1000); // Wait 1 second for fade out
-        });
+            <section class="links-grid">
+                
+                <a href="https://www.youtube.com/@anymousxe" target="_blank" class="link-card tilt-card" data-sfx>
+                    <div class="card-bg"></div>
+                    <div class="card-content">
+                        <i class="fab fa-youtube icon"></i>
+                        <h3 data-value="YOUTUBE">YOUTUBE</h3>
+                        <p>Devlogs & Gameplay</p>
+                    </div>
+                </a>
 
-        // --- GLOBAL CLICK SOUND ---
-        // This makes the click sound play whenever you click anywhere on the page
-        document.addEventListener('click', () => {
-            playClick();
-        });
+                <a href="https://www.roblox.com/users/868921271/profile" target="_blank" class="link-card tilt-card" data-sfx>
+                    <div class="card-bg"></div>
+                    <div class="card-content">
+                        <i class="fas fa-gamepad icon"></i>
+                        <h3 data-value="ROBLOX">ROBLOX</h3>
+                        <p>View Profile</p>
+                    </div>
+                </a>
 
-        function playClick() {
-            clickSfx.currentTime = 0; // Reset sound to start
-            clickSfx.play();
-        }
-    </script>
+                <a href="https://www.softworks-tycoon.xyz" target="_blank" class="link-card tilt-card" data-sfx>
+                    <div class="card-bg"></div>
+                    <div class="card-content">
+                        <i class="fas fa-code icon"></i>
+                        <h3 data-value="SOFTWORKS">SOFTWORKS</h3>
+                        <p>Tycoon HQ</p>
+                    </div>
+                </a>
+
+                <a href="mailto:anymousxe.info@gmail.com" class="link-card tilt-card" data-sfx>
+                    <div class="card-bg"></div>
+                    <div class="card-content">
+                        <i class="fas fa-envelope icon"></i>
+                        <h3 data-value="EMAIL">EMAIL</h3>
+                        <p>Business Only</p>
+                    </div>
+                </a>
+
+            </section>
+
+            <section class="mouseland-promo tilt-card" data-sfx>
+                <div class="promo-content">
+                    <h2 data-value="ENTER MOUSELAND">🐀 ENTER MOUSELAND</h2>
+                    <p>Lore. Cities. The MIC Decree.</p>
+                    <a href="/mouseland" class="btn btn-glitch">VISIT NOW</a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="main.js"></script>
 </body>
 </html>
