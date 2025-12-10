@@ -121,7 +121,24 @@
         .leader-card:hover { transform: translateY(-5px); border-color: var(--mouseland-accent); }
         .leader-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); margin-bottom: 1rem; }
 
-        /* News */
+        /* News & Scrolling */
+        .news-archive-container {
+            max-height: 600px; /* Limits height to create scroll */
+            overflow-y: auto;  /* Adds vertical scrollbar */
+            padding-right: 10px; /* Space for scrollbar */
+            margin-bottom: 2rem;
+            border: 1px solid #222;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        /* Custom Scrollbar Logic */
+        .news-archive-container::-webkit-scrollbar { width: 8px; }
+        .news-archive-container::-webkit-scrollbar-track { background: #111; border-radius: 4px; }
+        .news-archive-container::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .news-archive-container::-webkit-scrollbar-thumb:hover { background: var(--mouseland-accent); }
+
         .news-item { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid #555; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; position: relative; }
         .news-item.urgent { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent); }
         .news-item.decree { border-left-color: var(--warning); }
@@ -255,30 +272,45 @@
 
                 <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Archive</h4>
 
-                <article class="news-item decree">
-                    <img src="https://cdn.discordapp.com/attachments/1411012956422148106/1448327860497420412/MausmasLand.png?ex=693adbee&is=69398a6e&hm=99ad2cc79ad0b7da2d19c5a75a9c9f8874678f02c8eafc6293109fa4df22822d&" 
-                         alt="Mausmas Land" 
-                         class="news-image" 
-                         style="width: 100%; border-radius: 8px;">
-                    <h3>🎄 GRAND OPENING: Mausmas Land</h3>
-                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Opens: Dec 20, 2025</p>
-                    <p>
-                        Get ready for the ultimate holiday experience! The MIC has authorized the construction of <strong>Mausmas Land</strong>.
-                        <br><br>
-                        Featuring: <strong>Snowball Fights</strong>, <strong>Extreme Sledding</strong>, and Christmas-themed rides. Get your tickets now.
-                    </p>
-                </article>
+                <div class="news-archive-container">
 
-                <article class="news-item urgent">
-                    <h3>⚔️ BREAKING: Fryland Falls</h3>
-                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 10, 2025 - 09:45 AM</p>
-                    <p>
-                        The war is over. After <strong>Cheeseland</strong> got involved, we decided to step in "just a little bit" to tip the scales. 
-                        <strong>Nuggetland</strong> has declared victory. We are now on the "enemy list" of Fryland, but we good with everyone else.
-                    </p>
-                </article>
+                    <article class="news-item urgent">
+                        <h3>🚀 MSP UPDATE: Launch Success & Mafia Siege</h3>
+                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 10, 2025 - 11:50 AM</p>
+                        <p>
+                            <strong>The Launch:</strong> First rocket blew up (L), but the 2nd one? We did it live in front of thousands. Stalled a bit but we up. 3 mice are currently in space doing great.
+                            <br><br>
+                            <strong>The Conflict:</strong> Over <strong>400 Mafia mice</strong> are trying to steal the launch docs. We hid the papers in a bunker with 600 snipers posted up, but there's too many of them.
+                            <br><br>
+                            <strong>Reinforcements:</strong> We called <strong>TOM</strong> (our ally cat). He is en route to attack the mob. No updates on his ETA yet. Defend the bunker at all costs.
+                        </p>
+                    </article>
 
-            </section>
+                    <article class="news-item decree">
+                        <img src="https://cdn.discordapp.com/attachments/1411012956422148106/1448327860497420412/MausmasLand.png?ex=693adbee&is=69398a6e&hm=99ad2cc79ad0b7da2d19c5a75a9c9f8874678f02c8eafc6293109fa4df22822d&" 
+                             alt="Mausmas Land" 
+                             class="news-image" 
+                             style="width: 100%; border-radius: 8px;">
+                        <h3>🎄 GRAND OPENING: Mausmas Land</h3>
+                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Opens: Dec 20, 2025</p>
+                        <p>
+                            Get ready for the ultimate holiday experience! The MIC has authorized the construction of <strong>Mausmas Land</strong>.
+                            <br><br>
+                            Featuring: <strong>Snowball Fights</strong>, <strong>Extreme Sledding</strong>, and Christmas-themed rides. Get your tickets now.
+                        </p>
+                    </article>
+
+                    <article class="news-item">
+                        <h3>⚔️ BREAKING: Fryland Falls</h3>
+                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 10, 2025 - 09:45 AM</p>
+                        <p>
+                            The war is over. After <strong>Cheeseland</strong> got involved, we decided to step in "just a little bit" to tip the scales. 
+                            <strong>Nuggetland</strong> has declared victory. We are now on the "enemy list" of Fryland, but we good with everyone else.
+                        </p>
+                    </article>
+
+                </div> 
+                </section>
 
             <section style="margin-top: 4rem;">
                 <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem;">The 5 Great Cities</h2>
