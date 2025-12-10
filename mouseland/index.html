@@ -4,28 +4,321 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mouseland | Official Site</title>
-    <link rel="stylesheet" href="style.css">
     
-    <!-- ✅ FAVICON: This code is correct. It might not show on local files (file://) but will work when hosted. -->
     <link rel="icon" type="image/png" href="mouseicon.png">
     
-    <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-    <!-- Twitter Card & Open Graph Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
     <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
-    <meta name="twitter:image" content="https://anymousxe.site/boxborough.png">
+    <meta name="twitter:image" content="https://anymouse.site/boxborough.png">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Mouseland | Official Government Site">
     <meta property="og:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
-    <meta property="og:image" content="https://anymousxe.site/boxborough.png">
+    <meta property="og:image" content="https://anymouse.site/boxborough.png">
     <meta property="og:url" content="https://anymousxe.site/mouseland">
 
     <style>
+        /* --- CONFIG & VARIABLES --- */
+        :root {
+            --bg-color: #09090b; /* Deep Void Black */
+            --card-bg: #18181b;  /* Zinc-900 */
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            
+            /* The Official Mouseland Colors */
+            --mouseland-accent: #10b981; /* Emerald Green (Official) */
+            --danger: #ef4444;           /* Alert Red */
+            --warning: #f59e0b;          /* Cheese Gold */
+            --border: #27272a;           /* Subtle Border */
+            
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* --- RESET & BASICS --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            color: #fff;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.2s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* --- HEADER --- */
+        .ml-header {
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            background: radial-gradient(circle at top, #1a2e25 0%, transparent 70%);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+        }
+        .btn-primary:hover {
+            background: #e4e4e7;
+            transform: translateY(-2px);
+        }
+
+        .btn-mouseland {
+            background: var(--mouseland-accent);
+            color: #000;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        .btn-mouseland:hover {
+            background: #34d399;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* --- ADMIN PANEL --- */
+        .admin-panel {
+            background: #111;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--mouseland-accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            display: none; /* Toggled by JS */
+        }
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .admin-input, .admin-textarea {
+            background: #000;
+            border: 1px solid #333;
+            padding: 0.8rem;
+            color: #fff;
+            border-radius: 4px;
+            font-family: inherit;
+            width: 100%;
+        }
+        .admin-input:focus, .admin-textarea:focus {
+            outline: none;
+            border-color: var(--mouseland-accent);
+        }
+
+        /* --- LEADERSHIP SECTION --- */
+        .leadership-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .leader-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            width: 280px;
+            transition: transform 0.3s ease;
+        }
+        .leader-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--mouseland-accent);
+        }
+
+        .leader-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        /* --- NEWS FEED --- */
+        .news-section {
+            margin-bottom: 4rem;
+        }
+
+        .news-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid #555; /* Default gray */
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 1.5rem;
+            position: relative;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        /* News Variations */
+        .news-item.urgent {
+            border-left-color: var(--danger);
+            background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent);
+        }
+        .news-item.decree {
+            border-left-color: var(--warning);
+        }
+
+        .news-actions {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--danger);
+        }
+        .news-actions:hover {
+            text-decoration: underline;
+        }
+
+        /* --- CITIES GRID --- */
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .city-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            cursor: default;
+        }
+
+        .city-card:hover {
+            border-color: var(--text-muted);
+            transform: scale(1.02);
+        }
+
+        .city-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            filter: grayscale(40%);
+            transition: 0.3s;
+        }
+        .city-card:hover img {
+            filter: grayscale(0%);
+        }
+
+        .city-name {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* --- ANIMATIONS --- */
+        .animate-fade {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .leadership-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .leader-card {
+                width: 100%;
+            }
+            .nav-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
         /* Extra styles for the dynamic author tags */
         .author-badge {
             font-size: 0.7rem;
@@ -126,11 +419,9 @@
 </head>
 <body>
 
-    <!-- Header -->
     <header class="ml-header animate-fade">
         <div class="container">
             <nav class="nav-bar">
-                <!-- Back Link Fixed -->
                 <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
                 <div id="auth-container" class="user-controls">
                     <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
@@ -146,7 +437,6 @@
 
     <div class="container">
 
-        <!-- ADMIN PANEL (Hidden by default) -->
         <section id="admin-panel" class="admin-panel">
             <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
             <form id="post-form" class="admin-form">
@@ -161,11 +451,9 @@
             </form>
         </section>
 
-        <!-- Government Section -->
         <section class="animate-fade delay-1">
             <h2 style="text-align:center; margin-bottom: 2rem;">Government Leadership</h2>
             <div class="leadership-section">
-                <!-- MIC -->
                 <div class="leader-card">
                     <img src="anymousxe.png" alt="Anymousxe" class="leader-img">
                     <h3>Anymousxe</h3>
@@ -173,7 +461,6 @@
                     <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Leading Mouseland into a new era of prosperity.</p>
                 </div>
 
-                <!-- VMIC -->
                 <div class="leader-card">
                     <img src="color.png" alt="Color" class="leader-img">
                     <h3>Color</h3>
@@ -183,12 +470,10 @@
             </div>
         </section>
 
-        <!-- Official Decrees & Projects -->
         <section class="animate-fade delay-2" style="margin: 4rem 0;">
-            <h2 style="border-left: 5px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Official Decrees & National Projects</h2>
+            <h2 style="border-left: 5px solid var(--mouseland-accent); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Official Decrees & National Projects</h2>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                <!-- MSP Card -->
                 <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
                     <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> Project: SkyCheese (MSP)</h3>
                     <p>
@@ -198,7 +483,6 @@
                     </p>
                 </div>
 
-                <!-- Foreign Policy Card -->
                 <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
                     <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Foreign Policy Update</h3>
                     <p>
@@ -210,11 +494,9 @@
             </div>
         </section>
 
-        <!-- News Section -->
         <section class="news-section animate-fade delay-3">
             <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Network</h2>
             
-            <!-- Dynamic Feed -->
             <div style="margin-bottom: 3rem;">
                 <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Live Wire</h4>
                 <div id="news-feed">
@@ -222,7 +504,6 @@
                 </div>
             </div>
 
-            <!-- Static Archived News -->
             <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Recent Headlines</h4>
 
             <article class="news-item">
@@ -245,7 +526,6 @@
 
         </section>
 
-        <!-- Cities Section -->
         <section class="animate-fade delay-2" style="margin-top: 4rem;">
             <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">The 5 Great Cities</h2>
             <div class="cities-grid">
@@ -278,7 +558,6 @@
 
     </div>
 
-    <!-- LOGIN MODAL -->
     <div id="login-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -304,7 +583,6 @@
         </div>
     </div>
 
-    <!-- FIREBASE MODULE SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -425,7 +703,7 @@
                         <div style="font-size:0.8rem; color:#888;">Logged in as</div>
                         <div style="font-weight:bold;">${displayName}</div>
                     </div>
-                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User" onerror="this.src='anymousxe.png'">
+                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User" style="width:35px; height:35px; border-radius:50%; margin-left:10px; border:1px solid #555;" onerror="this.src='anymousxe.png'">
                     <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:0.5rem;">Logout</button>
                 `;
                 adminPanel.style.display = isAdmin ? "block" : "none";
