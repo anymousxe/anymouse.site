@@ -45,7 +45,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Behind everything */
+            z-index: -1; 
             opacity: 0.4;
         }
 
@@ -127,6 +127,8 @@
         .news-item.decree { border-left-color: var(--warning); }
         .news-actions { position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; cursor: pointer; color: var(--danger); }
         
+        .news-image { width: 100%; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
+
         /* Cities */
         .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
         .city-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
@@ -217,27 +219,25 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
                     <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
                         <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> MSP: Operation Moon Cheese</h3>
-                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 06, 2025</p>
+                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 10, 2025</p>
                         <p>
                             The <strong>Mouse Space Program (MSP)</strong> is Go for Launch. 
                             <br><br>
                             <strong>Rocket:</strong> The "Big Squeak 9"<br>
-                            <strong>Payload:</strong> Rover "Gouda-1"<br>
                             <strong>Mission:</strong> Drill into the lunar surface to confirm the "Great Dairy Theory".
                             <br><br>
-                            Training simulations in the deserts near Rodentia Major are 100% complete. We launch at dawn.
+                            Training simulations are 100% complete. We launch at dawn.
                         </p>
                     </div>
 
                     <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                        <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Decree 402: Neutrality</h3>
-                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 04, 2025</p>
+                        <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Decree 404: Victory</h3>
+                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 10, 2025</p>
                         <p>
-                            Regarding the conflict between <strong>Fryland</strong> and <strong>Nuggetland</strong>:
+                            <strong>Fryland has been defeated.</strong><br><br>
+                            Mouseland forces intervened strategically alongside <strong>Cheeseland</strong> to help <strong>Nuggetland</strong> secure the W.
                             <br><br>
-                            Mouseland maintains strict neutrality. We are closing the borders to foreign military. 
-                            Any nuggets or fries found within our borders without a visa will be eaten.
-                            We ain't stepping in. We focused on the cheese.
+                            We are now official allies with Nuggetland & Cheeseland. Fryland is designated as hostile territory.
                         </p>
                     </div>
                 </div>
@@ -255,23 +255,26 @@
 
                 <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Archive</h4>
 
-                <article class="news-item">
-                    <h3>🚨 BREAKING: Fake Cheese Ring Busted</h3>
-                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 06, 2025 - 14:30 PM</p>
+                <article class="news-item decree">
+                    <img src="MausmasLand.png" alt="Mausmas Land" class="news-image">
+                    <h3>🎄 GRAND OPENING: Mausmas Land</h3>
+                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Opens: Dec 20, 2025</p>
                     <p>
-                        A massive sting operation has revealed a group selling "Discount Cheddar" laced with sawdust. 
-                        Over 10,000 mice fell ill. The MIC declared this "absolutely cooked behavior".
+                        Get ready for the ultimate holiday experience! The MIC has authorized the construction of <strong>Mausmas Land</strong>.
+                        <br><br>
+                        Featuring: <strong>Snowball Fights</strong>, <strong>Extreme Sledding</strong>, and Christmas-themed rides. Get your tickets now.
                     </p>
                 </article>
 
                 <article class="news-item urgent">
-                    <h3>⚠️ Feline Attack Repelled</h3>
-                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 04, 2025 - 03:00 AM</p>
+                    <h3>⚔️ BREAKING: Fryland Falls</h3>
+                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 10, 2025 - 09:45 AM</p>
                     <p>
-                        A coordinated attack by the Stray Cat Coalition was halted. Ally <strong>Tom the Cat</strong> assisted defense. 
-                        We lost a real one, <strong>Moc Miang</strong>. Rest in Power. 🕊️
+                        The war is over. After <strong>Cheeseland</strong> got involved, we decided to step in "just a little bit" to tip the scales. 
+                        <strong>Nuggetland</strong> has declared victory. We are now on the "enemy list" of Fryland, but we good with everyone else.
                     </p>
                 </article>
+
             </section>
 
             <section style="margin-top: 4rem;">
