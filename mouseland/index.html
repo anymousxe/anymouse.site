@@ -6,7 +6,6 @@
     <title>Mouseland | Official Site</title>
     
     <link rel="icon" type="image/png" href="mouseicon.png">
-    
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <meta name="twitter:card" content="summary_large_image">
@@ -15,36 +14,22 @@
     <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
     <meta name="twitter:image" content="https://anymouse.site/boxborough.png">
 
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Mouseland | Official Government Site">
-    <meta property="og:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
-    <meta property="og:image" content="https://anymouse.site/boxborough.png">
-    <meta property="og:url" content="https://anymousxe.site/mouseland">
-
     <style>
         /* --- CONFIG & VARIABLES --- */
         :root {
-            --bg-color: #09090b; /* Deep Void Black */
-            --card-bg: #18181b;  /* Zinc-900 */
+            --bg-color: #09090b; 
+            --card-bg: #18181b;  
             --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
-            
-            /* The Official Mouseland Colors */
-            --mouseland-accent: #10b981; /* Emerald Green (Official) */
-            --danger: #ef4444;           /* Alert Red */
-            --warning: #f59e0b;          /* Cheese Gold */
-            --border: #27272a;           /* Subtle Border */
-            
+            --mouseland-accent: #10b981; 
+            --danger: #ef4444;           
+            --warning: #f59e0b;          
+            --border: #27272a;           
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        /* --- RESET & BASICS --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* --- RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -52,99 +37,71 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-
-        h1, h2, h3, h4 {
-            color: #fff;
-            font-weight: 700;
-            line-height: 1.2;
+        
+        /* --- VISUAL FX LAYERS --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind everything */
+            opacity: 0.4;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: 0.2s;
+        /* Intro Overlay */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s ease-in-out;
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+        .intro-content { text-align: center; }
+        .intro-title { font-size: 3rem; font-weight: 800; color: var(--mouseland-accent); margin-bottom: 1rem; }
+        #enter-btn {
+            background: transparent;
+            border: 1px solid var(--mouseland-accent);
+            color: var(--mouseland-accent);
+            padding: 1rem 2rem;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
         }
+        #enter-btn:hover { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 20px var(--mouseland-accent); }
 
-        /* --- HEADER --- */
+        /* --- LAYOUT --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+        
+        /* Header */
         .ml-header {
             padding: 2rem 0;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border);
-            background: radial-gradient(circle at top, #1a2e25 0%, transparent 70%);
+            background: radial-gradient(circle at top, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
         }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 
-        .nav-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s ease; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { color: #fff; border-color: #fff; }
+        .btn-primary { background: #fff; color: #000; }
+        .btn-primary:hover { background: #e4e4e7; transform: translateY(-2px); }
+        .btn-mouseland { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+        .btn-mouseland:hover { background: #34d399; box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
 
-        /* --- BUTTONS --- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-sm {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
-        .btn-ghost:hover {
-            color: #fff;
-            border-color: #fff;
-        }
-
-        .btn-primary {
-            background: #fff;
-            color: #000;
-        }
-        .btn-primary:hover {
-            background: #e4e4e7;
-            transform: translateY(-2px);
-        }
-
-        .btn-mouseland {
-            background: var(--mouseland-accent);
-            color: #000;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-        }
-        .btn-mouseland:hover {
-            background: #34d399;
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
-        }
-
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-        .btn-danger:hover {
-            background: var(--danger);
-            color: #fff;
-        }
-
-        /* --- ADMIN PANEL --- */
+        /* Admin */
         .admin-panel {
             background: #111;
             border: 1px solid var(--border);
@@ -152,450 +109,284 @@
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 3rem;
-            display: none; /* Toggled by JS */
+            display: none; 
         }
-
-        .admin-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
         .admin-input, .admin-textarea {
-            background: #000;
-            border: 1px solid #333;
-            padding: 0.8rem;
-            color: #fff;
-            border-radius: 4px;
-            font-family: inherit;
-            width: 100%;
-        }
-        .admin-input:focus, .admin-textarea:focus {
-            outline: none;
-            border-color: var(--mouseland-accent);
+            background: #000; border: 1px solid #333; padding: 0.8rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 10px;
         }
 
-        /* --- LEADERSHIP SECTION --- */
-        .leadership-section {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
+        /* Cards & Sections */
+        .leadership-section { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; }
+        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; text-align: center; width: 280px; transition: transform 0.3s ease; }
+        .leader-card:hover { transform: translateY(-5px); border-color: var(--mouseland-accent); }
+        .leader-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); margin-bottom: 1rem; }
 
-        .leader-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            width: 280px;
-            transition: transform 0.3s ease;
-        }
-        .leader-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--mouseland-accent);
-        }
+        /* News */
+        .news-item { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid #555; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; position: relative; }
+        .news-item.urgent { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent); }
+        .news-item.decree { border-left-color: var(--warning); }
+        .news-actions { position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; cursor: pointer; color: var(--danger); }
+        
+        /* Cities */
+        .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .city-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
+        .city-card img { width: 100%; height: 120px; object-fit: cover; filter: grayscale(40%); transition: 0.3s; }
+        .city-card:hover img { filter: grayscale(0%); }
+        .city-name { padding: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; }
 
-        .leader-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--border);
-            margin-bottom: 1rem;
-        }
-
-        /* --- NEWS FEED --- */
-        .news-section {
-            margin-bottom: 4rem;
-        }
-
-        .news-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-left: 4px solid #555; /* Default gray */
-            padding: 1.5rem;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 1.5rem;
-            position: relative;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        /* News Variations */
-        .news-item.urgent {
-            border-left-color: var(--danger);
-            background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent);
-        }
-        .news-item.decree {
-            border-left-color: var(--warning);
-        }
-
-        .news-actions {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            color: var(--danger);
-        }
-        .news-actions:hover {
-            text-decoration: underline;
-        }
-
-        /* --- CITIES GRID --- */
-        .cities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .city-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: 0.3s;
-            cursor: default;
-        }
-
-        .city-card:hover {
-            border-color: var(--text-muted);
-            transform: scale(1.02);
-        }
-
-        .city-card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            filter: grayscale(40%);
-            transition: 0.3s;
-        }
-        .city-card:hover img {
-            filter: grayscale(0%);
-        }
-
-        .city-name {
-            padding: 1rem;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* --- ANIMATIONS --- */
-        .animate-fade {
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 600px) {
-            .leadership-section {
-                flex-direction: column;
-                align-items: center;
-            }
-            .leader-card {
-                width: 100%;
-            }
-            .nav-bar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-
-        /* Extra styles for the dynamic author tags */
-        .author-badge {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 8px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #1a1a1e; padding: 2rem; border: 1px solid var(--mouseland-accent); width: 90%; max-width: 400px; border-radius: 12px; position: relative; text-align: center; }
+        .auth-input { width: 100%; padding: 0.8rem; margin-bottom: 0.8rem; background: #111; border: 1px solid #333; border-radius: 6px; color: white; }
+        
+        /* Misc */
+        .author-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: bold; text-transform: uppercase; }
         .role-mic { background-color: var(--mouseland-accent); color: #000; }
         .role-vmic { background-color: #a855f7; color: #fff; }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+        .post-pfp { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
         
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 0.5rem;
-        }
-        .post-pfp {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid #555;
-        }
-
-        /* --- Login Modal Styles --- */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: #1a1a1e;
-            padding: 2rem; 
-            border: 1px solid var(--mouseland-accent); 
-            width: 90%; 
-            max-width: 400px;
-            border-radius: 12px;
-            position: relative;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .close-modal:hover { color: #fff; }
-
-        .auth-divider { 
-            margin: 1.5rem 0; 
-            color: #666; 
-            font-size: 0.9rem; 
-            position: relative;
-        }
-        .auth-divider::before, .auth-divider::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: #333;
-        }
-        .auth-divider::before { left: 0; }
-        .auth-divider::after { right: 0; }
-
-        .auth-input {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 6px;
-            color: white;
-        }
-        .auth-input:focus {
-            outline: none;
-            border-color: var(--mouseland-accent);
-        }
+        @media (max-width: 600px) { .leadership-section { flex-direction: column; } .nav-bar { flex-direction: column; gap: 1rem; } }
     </style>
 </head>
 <body>
 
-    <header class="ml-header animate-fade">
-        <div class="container">
-            <nav class="nav-bar">
-                <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
-                <div id="auth-container" class="user-controls">
-                    <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
-                </div>
-            </nav>
-            
-            <div style="text-align: center;">
-                <h1>🐀 Welcome to Mouseland</h1>
-                <p>Unity. Cheese. Strength.</p>
-            </div>
+    <audio id="bg-music" loop><source src="lofi.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-hover"><source src="hover.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-click"><source src="click.mp3" type="audio/mpeg"></audio>
+
+    <canvas id="bg-canvas"></canvas>
+    
+    <div id="intro-overlay">
+        <div class="intro-content">
+            <div class="intro-title">MOUSELAND</div>
+            <p style="color: #888; margin-bottom: 2rem;">GOVERNMENT TERMINAL // SECURE CONNECTION</p>
+            <button id="enter-btn">ENTER SYSTEM</button>
         </div>
-    </header>
+    </div>
 
-    <div class="container">
+    <div id="main-content">
+        
+        <header class="ml-header">
+            <div class="container">
+                <nav class="nav-bar">
+                    <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
+                    <div id="auth-container" class="user-controls">
+                        <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
+                    </div>
+                </nav>
+                <div style="text-align: center;">
+                    <h1 class="tilt-card">🐀 Welcome to Mouseland</h1>
+                    <p>Unity. Cheese. Strength.</p>
+                </div>
+            </div>
+        </header>
 
-        <section id="admin-panel" class="admin-panel">
-            <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
-            <form id="post-form" class="admin-form">
-                <input type="text" id="post-title" class="admin-input" placeholder="Update Title (e.g., Treaty Signed)" required>
-                <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business..." required></textarea>
-                <select id="post-type" class="admin-input">
-                    <option value="standard">Standard News</option>
-                    <option value="urgent">🚨 Urgent / Breaking</option>
-                    <option value="decree">📜 Official Decree</option>
-                </select>
-                <button type="submit" class="btn btn-mouseland">Publish Update</button>
-            </form>
-        </section>
+        <div class="container">
 
-        <section class="animate-fade delay-1">
-            <h2 style="text-align:center; margin-bottom: 2rem;">Government Leadership</h2>
-            <div class="leadership-section">
-                <div class="leader-card">
+            <section id="admin-panel" class="admin-panel">
+                <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
+                <form id="post-form">
+                    <input type="text" id="post-title" class="admin-input" placeholder="Update Title" required>
+                    <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business..." required></textarea>
+                    <select id="post-type" class="admin-input">
+                        <option value="standard">Standard News</option>
+                        <option value="urgent">🚨 Urgent / Breaking</option>
+                        <option value="decree">📜 Official Decree</option>
+                    </select>
+                    <button type="submit" class="btn btn-mouseland">Publish Update</button>
+                </form>
+            </section>
+
+            <section class="leadership-section">
+                <div class="leader-card tilt-card">
                     <img src="anymousxe.png" alt="Anymousxe" class="leader-img">
                     <h3>Anymousxe</h3>
                     <p style="color: var(--mouseland-accent); font-weight: bold;">MIC (Mice In Charge)</p>
-                    <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Leading Mouseland into a new era of prosperity.</p>
                 </div>
-
-                <div class="leader-card">
+                <div class="leader-card tilt-card">
                     <img src="color.png" alt="Color" class="leader-img">
                     <h3>Color</h3>
                     <p style="color: #a855f7; font-weight: bold;">VMIC (Vice Mice In Charge)</p>
-                    <p style="font-size: 0.9rem; margin-top: 1rem; color: #aaa;">Right-hand mouse. Ensuring order across the cities.</p>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="animate-fade delay-2" style="margin: 4rem 0;">
-            <h2 style="border-left: 5px solid var(--mouseland-accent); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Official Decrees & National Projects</h2>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                    <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> Project: SkyCheese (MSP)</h3>
+            <section style="margin: 4rem 0;">
+                <h2 style="border-left: 5px solid var(--mouseland-accent); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Decrees & Projects</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
+                        <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> MSP: Operation Moon Cheese</h3>
+                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 06, 2025</p>
+                        <p>
+                            The <strong>Mouse Space Program (MSP)</strong> is Go for Launch. 
+                            <br><br>
+                            <strong>Rocket:</strong> The "Big Squeak 9"<br>
+                            <strong>Payload:</strong> Rover "Gouda-1"<br>
+                            <strong>Mission:</strong> Drill into the lunar surface to confirm the "Great Dairy Theory".
+                            <br><br>
+                            Training simulations in the deserts near Rodentia Major are 100% complete. We launch at dawn.
+                        </p>
+                    </div>
+
+                    <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
+                        <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Decree 402: Neutrality</h3>
+                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 04, 2025</p>
+                        <p>
+                            Regarding the conflict between <strong>Fryland</strong> and <strong>Nuggetland</strong>:
+                            <br><br>
+                            Mouseland maintains strict neutrality. We are closing the borders to foreign military. 
+                            Any nuggets or fries found within our borders without a visa will be eaten.
+                            We ain't stepping in. We focused on the cheese.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="news-section">
+                <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News</h2>
+                
+                <div style="margin-bottom: 3rem;">
+                    <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Live Wire</h4>
+                    <div id="news-feed">
+                        <div style="text-align: center; color: #666;">Connecting to MIC secure frequency...</div>
+                    </div>
+                </div>
+
+                <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Archive</h4>
+
+                <article class="news-item">
+                    <h3>🚨 BREAKING: Fake Cheese Ring Busted</h3>
+                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 06, 2025 - 14:30 PM</p>
                     <p>
-                        <strong>Status: LAUNCHED</strong><br><br>
-                        The <strong>Mouse Space Program (MSP)</strong> has officially begun operations. Our scientists in Mec City have confirmed the moon might actually be made of a rare gouda. 
-                        We are sending the first rover, <em>Squeak-1</em>, to verify these claims. The sky is no longer the limit.
+                        A massive sting operation has revealed a group selling "Discount Cheddar" laced with sawdust. 
+                        Over 10,000 mice fell ill. The MIC declared this "absolutely cooked behavior".
                     </p>
-                </div>
+                </article>
 
-                <div style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                    <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-globe-americas"></i> Foreign Policy Update</h3>
+                <article class="news-item urgent">
+                    <h3>⚠️ Feline Attack Repelled</h3>
+                    <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 04, 2025 - 03:00 AM</p>
                     <p>
-                        <strong>Subject: Fryland & Nuggetland Conflict</strong><br><br>
-                        Due to the recent outbreak of war between <strong>Fryland</strong> and <strong>Nuggetland</strong>, Mouseland is officially closing its borders to military personnel from both nations. 
-                        We have trade relations with both, but we are distancing ourselves politically. We ain't picking sides in that beef. Neutrality is key.
+                        A coordinated attack by the Stray Cat Coalition was halted. Ally <strong>Tom the Cat</strong> assisted defense. 
+                        We lost a real one, <strong>Moc Miang</strong>. Rest in Power. 🕊️
                     </p>
-                </div>
-            </div>
-        </section>
+                </article>
+            </section>
 
-        <section class="news-section animate-fade delay-3">
-            <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Network</h2>
-            
-            <div style="margin-bottom: 3rem;">
-                <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Live Wire</h4>
-                <div id="news-feed">
-                    <div style="text-align: center; color: #666; font-size: 0.9rem;">Connecting to MIC secure frequency...</div>
+            <section style="margin-top: 4rem;">
+                <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem;">The 5 Great Cities</h2>
+                <div class="cities-grid">
+                    <div class="city-card"><img src="boxborough.png" alt="Box"><div class="city-name">Boxborough</div></div>
+                    <div class="city-card"><img src="corrugatecrossing.png" alt="Corrugate"><div class="city-name">Corrugate Crossing</div></div>
+                    <div class="city-card"><img src="rodentiamajor.png" alt="Major"><div class="city-name">Rodentia Major</div></div>
+                    <div class="city-card"><img src="rubbishheights.png" alt="Rubbish"><div class="city-name">Rubbish Heights</div></div>
+                    <div class="city-card"><img src="mec.png" alt="Mec"><div class="city-name">Mec</div></div>
                 </div>
-            </div>
+            </section>
 
-            <h4 style="color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Recent Headlines</h4>
-
-            <article class="news-item">
-                <h3>🚨 BREAKING: Fake Cheese Scandal Exposes Black Market</h3>
-                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Hours Ago</p>
-                <p>
-                    A massive sting operation has revealed that a group of rogue mice was selling "Discount Cheddar" laced with sawdust and expired dairy. 
-                    Over <strong>10,000 mice</strong> have fallen ill across Rubbish Heights. The MIC has declared this "absolutely cooked behavior" and vowed justice.
-                </p>
-            </article>
-
-            <article class="news-item" style="border-color: #f59e0b;">
-                <h3>⚠️ Feline Attack Repelled by Ally Forces</h3>
-                <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">2 Days Ago</p>
-                <p>
-                    A coordinate attack by the Stray Cat Coalition was halted yesterday. Our ally, <strong>Tom the Cat</strong>, pulled up with his gang and fought them off in the streets of Rodentia Major. 
-                    Sadly, 5 brave mice were injured, and we lost a real one, <strong>Moc Miang</strong>. Rest in Power. 🕊️
-                </p>
-            </article>
-
-        </section>
-
-        <section class="animate-fade delay-2" style="margin-top: 4rem;">
-            <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">The 5 Great Cities</h2>
-            <div class="cities-grid">
-                <div class="city-card">
-                    <img src="boxborough.png" alt="Boxborough">
-                    <div class="city-name">Boxborough</div>
-                </div>
-                <div class="city-card">
-                    <img src="corrugatecrossing.png" alt="Corrugate Crossing">
-                    <div class="city-name">Corrugate Crossing</div>
-                </div>
-                <div class="city-card">
-                    <img src="rodentiamajor.png" alt="Rodentia Major">
-                    <div class="city-name">Rodentia Major</div>
-                </div>
-                <div class="city-card">
-                    <img src="rubbishheights.png" alt="Rubbish Heights">
-                    <div class="city-name">Rubbish Heights</div>
-                </div>
-                <div class="city-card">
-                    <img src="mec.png" alt="Mec City">
-                    <div class="city-name">Mec</div>
-                </div>
-            </div>
-        </section>
-        
-        <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">
-            &copy; 2025 Mouseland Gov. All Rights Reserved.
-        </footer>
-
+            <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">&copy; 2025 Mouseland Gov.</footer>
+        </div>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 style="margin-bottom: 0.5rem;">Citizen Identify</h2>
-            <p style="color: #888; font-size: 0.9rem; margin-bottom: 1.5rem;">Show your papers to enter.</p>
-            
-            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <i class="fab fa-google"></i> Continue with Google
-            </button>
-            
-            <div class="auth-divider">OR</div>
-            
+            <span class="close-modal" style="position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer;">&times;</span>
+            <h2>Identify Yourself</h2>
+            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; margin: 1rem 0;">Continue with Google</button>
+            <div style="margin: 1rem 0; color: #666;">OR</div>
             <form id="email-auth-form">
-                <input type="email" id="auth-email" class="auth-input" placeholder="Email Address" required>
+                <input type="email" id="auth-email" class="auth-input" placeholder="Email" required>
                 <input type="password" id="auth-password" class="auth-input" placeholder="Password" required>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" id="email-login-btn" class="btn btn-mouseland" style="flex: 1;">Login</button>
-                    <button type="button" id="email-signup-btn" class="btn btn-ghost" style="flex: 1;">Sign Up</button>
-                </div>
+                <button type="submit" class="btn btn-mouseland" style="width:100%;">Login</button>
             </form>
-            <p id="auth-error" style="color:var(--danger); font-size:0.8rem; margin-top:1rem; display:none;"></p>
+            <p id="auth-error" style="color:var(--danger); display:none; margin-top:10px;"></p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+        // --- VISUAL FX (From main.js) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const enterBtn = document.getElementById('enter-btn');
+            const overlay = document.getElementById('intro-overlay');
+            const bgMusic = document.getElementById('bg-music');
+            const clickSfx = document.getElementById('sfx-click');
+            const hoverSfx = document.getElementById('sfx-hover');
+            
+            if(bgMusic) bgMusic.volume = 0.3;
+            
+            if(enterBtn) {
+                enterBtn.addEventListener('click', () => {
+                    if(clickSfx) clickSfx.play();
+                    if(bgMusic) bgMusic.play().catch(e => console.log("Audio prevented"));
+                    overlay.style.transform = 'translateY(-100%)';
+                });
+            }
+
+            // Particles
+            const canvas = document.getElementById('bg-canvas');
+            if(canvas) {
+                const ctx = canvas.getContext('2d');
+                let particles = [];
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.size = Math.random() * 2;
+                        this.speedX = (Math.random() * 1) - 0.5;
+                        this.speedY = (Math.random() * 1) - 0.5;
+                    }
+                    update() {
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                        if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+                    }
+                    draw() {
+                        ctx.fillStyle = 'rgba(16, 185, 129, 0.4)'; // Green particles
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+                function init() { for(let i=0; i<80; i++) particles.push(new Particle()); }
+                function animate() {
+                    ctx.clearRect(0,0,canvas.width, canvas.height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    requestAnimationFrame(animate);
+                }
+                init();
+                animate();
+            }
+
+            // Tilt Cards
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width/2;
+                    const y = e.clientY - rect.top - rect.height/2;
+                    card.style.transform = `perspective(1000px) rotateX(${-y/10}deg) rotateY(${x/10}deg) scale(1.02)`;
+                });
+                card.addEventListener('mouseleave', () => card.style.transform = 'none');
+                card.addEventListener('mouseenter', () => { if(hoverSfx) { hoverSfx.currentTime=0; hoverSfx.play().catch(()=>{}); } });
+            });
+        });
+
+        // --- FIREBASE LOGIC ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
             authDomain: "mouseland-istuff.firebaseapp.com",
             projectId: "mouseland-istuff",
             storageBucket: "mouseland-istuff.firebasestorage.app",
             messagingSenderId: "459629527486",
-            appId: "1:459629527486:web:0c038f1fad27ef288879ef",
-            measurementId: "G-HX18GW1CVG"
+            appId: "1:459629527486:web:0c038f1fad27ef288879ef"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -603,239 +394,118 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // Storing lowercase versions for case-insensitive check
+        // 🔒 ADMIN WHITELIST
         const WHITELIST = [
             "anymousxe.info@gmail.com",
             "colorvicemouseincharge@proton.me"
         ];
 
-        // UI Elements
         const authContainer = document.getElementById('auth-container');
         const adminPanel = document.getElementById('admin-panel');
         const postForm = document.getElementById('post-form');
         const newsFeed = document.getElementById('news-feed');
-        
-        // Modal Elements
         const modal = document.getElementById('login-modal');
-        const closeModal = document.querySelector('.close-modal');
-        const googleBtn = document.getElementById('google-auth-btn');
-        const emailForm = document.getElementById('email-auth-form');
-        const signupBtn = document.getElementById('email-signup-btn');
         const authError = document.getElementById('auth-error');
 
-        // --- AUTH LOGIC ---
-
-        document.body.addEventListener('click', (e) => {
-            if (e.target.id === 'login-trigger-btn') {
-                modal.style.display = 'flex';
-            }
-            if (e.target.id === 'logout-btn') {
-                signOut(auth);
-            }
+        // Auth Listeners
+        document.body.addEventListener('click', e => {
+            if(e.target.id === 'login-trigger-btn') modal.style.display = 'flex';
+            if(e.target.id === 'logout-btn') signOut(auth);
+            if(e.target.classList.contains('close-modal') || e.target === modal) modal.style.display = 'none';
         });
 
-        closeModal.onclick = () => { modal.style.display = "none"; authError.style.display = "none"; }
-        window.onclick = (e) => { if (e.target == modal) { modal.style.display = "none"; authError.style.display = "none"; }}
-
-        // Google Login
-        googleBtn.onclick = () => {
-            signInWithPopup(auth, provider)
-                .then(() => modal.style.display = "none")
-                .catch((error) => {
-                    console.error("Login failed:", error);
-                    authError.textContent = "Google Sign-In Failed: " + error.message;
-                    authError.style.display = "block";
-                });
-        };
-
-        // Email Login
-        emailForm.onsubmit = (e) => {
+        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(()=>modal.style.display='none').catch(e=>alert(e.message));
+        
+        document.getElementById('email-auth-form').onsubmit = (e) => {
             e.preventDefault();
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-password').value;
-            
-            signInWithEmailAndPassword(auth, email, pass)
-                .then(() => {
-                    modal.style.display = "none";
-                    emailForm.reset();
-                })
-                .catch((error) => {
-                    authError.textContent = "Login Failed: " + error.message;
-                    authError.style.display = "block";
-                });
+            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
+            .then(() => modal.style.display='none')
+            .catch(err => { authError.style.display='block'; authError.textContent=err.message; });
         };
 
-        // Email Signup
-        signupBtn.onclick = () => {
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-password').value;
-            
-            if(!email || !pass) {
-                authError.textContent = "Please enter email and password to sign up.";
-                authError.style.display = "block";
-                return;
-            }
-
-            createUserWithEmailAndPassword(auth, email, pass)
-                .then(() => {
-                    modal.style.display = "none";
-                    emailForm.reset();
-                    alert("Citizenship Granted! Welcome to Mouseland.");
-                })
-                .catch((error) => {
-                    authError.textContent = "Signup Failed: " + error.message;
-                    authError.style.display = "block";
-                });
-        };
-
-        // Monitor Auth State
+        // User State & Admin Check
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Normalize email to lowercase for checking whitelist
-                const userEmailLower = user.email.toLowerCase();
-                const isAdmin = WHITELIST.includes(userEmailLower);
-                
-                // Use generic name if displayName is null
-                const displayName = user.displayName || user.email.split('@')[0];
+                const email = user.email.toLowerCase();
+                const isAdmin = WHITELIST.includes(email);
                 
                 authContainer.innerHTML = `
-                    <div style="text-align:right;">
-                        <div style="font-size:0.8rem; color:#888;">Logged in as</div>
-                        <div style="font-weight:bold;">${displayName}</div>
+                    <div style="text-align:right; font-size:0.8rem;">
+                        <span style="color:#888;">Logged in:</span> <b>${user.displayName || 'Citizen'}</b>
                     </div>
-                    <img src="${user.photoURL || 'anymousxe.png'}" class="user-avatar" alt="User" style="width:35px; height:35px; border-radius:50%; margin-left:10px; border:1px solid #555;" onerror="this.src='anymousxe.png'">
-                    <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:0.5rem;">Logout</button>
+                    <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:10px;">Log Out</button>
                 `;
-                adminPanel.style.display = isAdmin ? "block" : "none";
                 
-                if (isAdmin) {
-                    console.log("Admin Logged In:", userEmailLower);
-                }
+                // Show Admin Panel ONLY if Whitelisted
+                adminPanel.style.display = isAdmin ? "block" : "none";
             } else {
                 authContainer.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>`;
                 adminPanel.style.display = "none";
             }
         });
 
-        // --- POSTING ---
+        // Publish Post
         postForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
-            
-            if (!user) {
-                alert("You need to login first.");
-                return;
-            }
+            if(!user || !WHITELIST.includes(user.email.toLowerCase())) return alert("ACCESS DENIED.");
 
-            const userEmailLower = user.email.toLowerCase();
-
-            if (!WHITELIST.includes(userEmailLower)) {
-                alert("You don't have clearance.");
-                return;
-            }
-
-            // Custom Identity Logic
-            let authorName = user.displayName || "Mouseland Official";
-            let authorPFP = user.photoURL;
-            let authorRole = "";
-
-            if (userEmailLower === "anymousxe.info@gmail.com") {
-                authorName = "Anymousxe";
-                authorPFP = "anymousxe.png";
-                authorRole = "MIC";
-            } else if (userEmailLower === "colorvicemouseincharge@proton.me") {
-                authorName = "Color";
-                authorPFP = "color.png";
-                authorRole = "VMIC";
-            }
-
-            const title = document.getElementById('post-title').value;
-            const content = document.getElementById('post-content').value;
-            const type = document.getElementById('post-type').value;
+            let name = user.email.includes("anymousxe") ? "Anymousxe" : "Color";
+            let role = user.email.includes("anymousxe") ? "MIC" : "VMIC";
+            let pfp = user.email.includes("anymousxe") ? "anymousxe.png" : "color.png";
 
             try {
                 await addDoc(collection(db, "updates"), {
-                    title, content, type,
-                    author: authorName,
-                    pfp: authorPFP,
-                    role: authorRole,
-                    uid: user.uid,
+                    title: document.getElementById('post-title').value,
+                    content: document.getElementById('post-content').value,
+                    type: document.getElementById('post-type').value,
+                    author: name, role: role, pfp: pfp,
                     createdAt: serverTimestamp()
                 });
                 postForm.reset();
-                alert("Update published successfully!");
-            } catch (err) {
-                console.error("Error adding document:", err);
-                // Detailed error alert for debugging
-                alert("Error publishing: " + err.message + "\n\n(Check your Firestore Security Rules if the message says 'Missing or insufficient permissions')");
-            }
+            } catch(err) { alert(err.message); }
         });
 
-        // --- READING ---
-        const q = query(collection(db, "updates"), orderBy("createdAt", "desc"));
-        
-        onSnapshot(q, (snapshot) => {
+        // Load Posts
+        onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
-            
-            if (snapshot.empty) {
-                newsFeed.innerHTML = "<p style='text-align:center; color:#666; font-style:italic;'>Radio silence from the MIC.</p>";
-                return;
-            }
+            if(snapshot.empty) newsFeed.innerHTML = "<div style='text-align:center; color:#666;'>No active transmissions.</div>";
+
+            const user = auth.currentUser;
+            const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
 
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const user = auth.currentUser;
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
+                const time = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
                 
-                let isAdmin = false;
-                if (user) {
-                    const userEmailLower = user.email.toLowerCase();
-                    isAdmin = WHITELIST.includes(userEmailLower);
-                }
-                
-                let timeString = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Just now";
-                let dateString = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
+                // Logic: IF isAdmin is true, show delete button on EVERYTHING
+                const deleteBtn = isAdmin ? `<span class="news-actions delete-btn" data-id="${docSnap.id}">[DELETE]</span>` : "";
 
-                const postEl = document.createElement('article');
-                postEl.className = `news-item ${data.type || 'standard'}`;
-                
-                let icon = "";
-                if (data.type === "urgent") icon = "🚨 ";
-                if (data.type === "decree") icon = "📜 ";
-
-                let roleBadge = "";
-                if (data.role === "MIC") roleBadge = `<span class="author-badge role-mic">MIC</span>`;
-                if (data.role === "VMIC") roleBadge = `<span class="author-badge role-vmic">VMIC</span>`;
-
-                let deleteBtn = isAdmin ? `<span class="delete-btn" data-id="${docSnap.id}">[Delete]</span>` : "";
-
-                const postPfpSrc = data.pfp || 'anymousxe.png';
-
-                postEl.innerHTML = `
+                const div = document.createElement('article');
+                div.className = `news-item ${data.type}`;
+                div.innerHTML = `
+                    ${deleteBtn}
                     <div class="post-header">
-                        <img src="${postPfpSrc}" class="post-pfp" alt="pfp" onerror="this.src='anymousxe.png'">
+                        <img src="${data.pfp || 'anymousxe.png'}" class="post-pfp">
                         <div>
-                            <div style="font-weight:bold; font-size:0.95rem;">
-                                ${data.author} ${roleBadge}
-                            </div>
-                            <div style="font-size:0.75rem; color:#666;">${dateString} at ${timeString}</div>
+                            <div style="font-weight:bold; font-size:0.9rem;">${data.author} <span class="author-badge ${data.role === 'MIC' ? 'role-mic' : 'role-vmic'}">${data.role}</span></div>
+                            <div style="font-size:0.7rem; color:#666;">${date} - ${time}</div>
                         </div>
                     </div>
-                    <h3>${icon}${data.title}</h3>
+                    <h3>${data.type === 'urgent' ? '🚨 ' : ''}${data.title}</h3>
                     <p>${data.content}</p>
-                    <div class="news-actions">${deleteBtn}</div>
                 `;
-                newsFeed.appendChild(postEl);
+                newsFeed.appendChild(div);
             });
 
+            // Delete Handler
             document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if(confirm("Delete this transmission?")) {
-                        await deleteDoc(doc(db, "updates", e.target.getAttribute('data-id')));
-                    }
-                });
+                btn.onclick = async () => {
+                    if(confirm("Confirm deletion of this record?")) await deleteDoc(doc(db, "updates", btn.dataset.id));
+                }
             });
         });
-
     </script>
 </body>
 </html>
