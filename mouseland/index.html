@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mouseland | Official Site</title>
     
-    <link rel="stylesheet" href="style.css"> 
-    
     <link rel="icon" type="image/png" href="mouseicon.png">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
@@ -15,6 +13,143 @@
     <meta name="twitter:title" content="Mouseland | Official Government Site">
     <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
     <meta name="twitter:image" content="https://anymouse.site/boxborough.png">
+
+    <style>
+        /* --- CONFIG & VARIABLES --- */
+        :root {
+            --bg-color: #09090b; 
+            --card-bg: #18181b;  
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --mouseland-accent: #10b981; 
+            --danger: #ef4444;           
+            --warning: #f59e0b;          
+            --border: #27272a;           
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* --- RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* --- VISUAL FX LAYERS --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            opacity: 0.4;
+        }
+
+        /* Intro Overlay */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s ease-in-out;
+        }
+        .intro-content { text-align: center; }
+        .intro-title { font-size: 3rem; font-weight: 800; color: var(--mouseland-accent); margin-bottom: 1rem; }
+        #enter-btn {
+            background: transparent;
+            border: 1px solid var(--mouseland-accent);
+            color: var(--mouseland-accent);
+            padding: 1rem 2rem;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        #enter-btn:hover { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 20px var(--mouseland-accent); }
+
+        /* --- LAYOUT --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+        
+        /* Header */
+        .ml-header {
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            background: radial-gradient(circle at top, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s ease; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { color: #fff; border-color: #fff; }
+        .btn-primary { background: #fff; color: #000; }
+        .btn-primary:hover { background: #e4e4e7; transform: translateY(-2px); }
+        .btn-mouseland { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+        .btn-mouseland:hover { background: #34d399; box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        /* Admin */
+        .admin-panel {
+            background: #111;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--mouseland-accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            display: none; 
+        }
+        .admin-input, .admin-textarea {
+            background: #000; border: 1px solid #333; padding: 0.8rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 10px;
+        }
+
+        /* Cards & Sections */
+        .leadership-section { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; }
+        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; text-align: center; width: 280px; transition: transform 0.3s ease; }
+        .leader-card:hover { transform: translateY(-5px); border-color: var(--mouseland-accent); }
+        .leader-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); margin-bottom: 1rem; }
+
+        /* News */
+        .news-item { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid #555; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; position: relative; }
+        .news-item.urgent { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent); }
+        .news-item.decree { border-left-color: var(--warning); }
+        .news-actions { position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; cursor: pointer; color: var(--danger); }
+        
+        .news-image { width: 100%; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
+
+        /* Cities */
+        .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .city-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
+        .city-card img { width: 100%; height: 120px; object-fit: cover; filter: grayscale(40%); transition: 0.3s; }
+        .city-card:hover img { filter: grayscale(0%); }
+        .city-name { padding: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #1a1a1e; padding: 2rem; border: 1px solid var(--mouseland-accent); width: 90%; max-width: 400px; border-radius: 12px; position: relative; text-align: center; }
+        .auth-input { width: 100%; padding: 0.8rem; margin-bottom: 0.8rem; background: #111; border: 1px solid #333; border-radius: 6px; color: white; }
+        
+        /* Misc */
+        .author-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: bold; text-transform: uppercase; }
+        .role-mic { background-color: var(--mouseland-accent); color: #000; }
+        .role-vmic { background-color: #a855f7; color: #fff; }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+        .post-pfp { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
+        
+        @media (max-width: 600px) { .leadership-section { flex-direction: column; } .nav-bar { flex-direction: column; gap: 1rem; } }
+    </style>
 </head>
 <body>
 
