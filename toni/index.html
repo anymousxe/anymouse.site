@@ -8,9 +8,11 @@
     <style>
         :root {
             --bg-color: #000000;
+            --card-bg: #1c1c1e;
             --accent-color: #fa586a;
             --text-main: #ffffff;
             --text-secondary: #b3b3b3;
+            --suno-color: #ffffff; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,29 +28,16 @@
         /* --- BACK BUTTON --- */
         .nav-header {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 1.5rem;
-            z-index: 100;
+            top: 0; left: 0; width: 100%; padding: 1.5rem; z-index: 100;
             background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
             pointer-events: none;
         }
 
         .back-btn {
-            pointer-events: auto;
-            text-decoration: none;
-            color: white;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
+            pointer-events: auto; text-decoration: none; color: white;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -56,41 +45,23 @@
 
         /* --- HERO SECTION --- */
         .hero {
-            position: relative;
-            height: 50vh;
-            width: 100%;
-            display: flex;
-            align-items: flex-end;
-            padding: 2rem;
-            overflow: hidden;
-            background: #111;
+            position: relative; height: 50vh; width: 100%; display: flex;
+            align-items: flex-end; padding: 2rem; overflow: hidden; background: #111;
         }
 
         .hero-bg-blur {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('https://cdn.discordapp.com/attachments/1446702513532305558/1448517208954376274/image.png?ex=693b8c46&is=693a3ac6&hm=a2971c35b88c02a1394c7fb02ad610f28c04a90934ade38d275e0e320767882b&');
-            background-size: cover;
-            background-position: center;
-            filter: blur(60px) brightness(0.4);
-            z-index: 0;
+            background-size: cover; background-position: center; filter: blur(60px) brightness(0.4); z-index: 0;
         }
 
         .artist-info {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
+            position: relative; z-index: 2; display: flex; align-items: center; gap: 2rem;
+            max-width: 1000px; margin: 0 auto; width: 100%;
         }
 
         .artist-pfp {
-            width: 180px; height: 180px;
-            border-radius: 50%;
-            object-fit: cover;
+            width: 180px; height: 180px; border-radius: 50%; object-fit: cover;
             box-shadow: 0 8px 40px rgba(0,0,0,0.6);
         }
 
@@ -106,14 +77,11 @@
         .content-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
         .section-title { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0; }
 
-        /* --- LATEST RELEASE --- */
+        /* --- LATEST RELEASE CARD --- */
         .latest-release {
-            background: #1c1c1e;
-            padding: 1.5rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
+            background: var(--card-bg); padding: 1.5rem; border-radius: 12px;
+            display: flex; align-items: center; gap: 1.5rem;
+            border: 1px solid #333;
         }
         
         .release-art { width: 80px; height: 80px; border-radius: 6px; object-fit: cover; }
@@ -121,12 +89,20 @@
         .release-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
         .explicit { border: 1px solid #666; color: #888; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; margin-left: 8px; vertical-align: middle; }
 
+        /* Play Button Style */
+        .play-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: white; color: black; text-decoration: none;
+            padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;
+            margin-top: 10px; transition: transform 0.2s;
+        }
+        .play-btn:hover { transform: scale(1.05); background: #eee; }
+
         /* --- ALBUM & TRACKS --- */
         .album-header { display: flex; gap: 2rem; margin-top: 2rem; }
 
         .album-cover-locked {
-            width: 300px; height: 300px;
-            background: #222; border-radius: 8px;
+            width: 300px; height: 300px; background: #222; border-radius: 8px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: #444; border: 1px solid #333;
             position: sticky; top: 100px;
@@ -136,18 +112,24 @@
         .tracklist { flex-grow: 1; display: flex; flex-direction: column; gap: 0.2rem; }
 
         .track-row {
-            display: flex; align-items: center; padding: 0.8rem;
-            border-radius: 6px; color: var(--text-secondary);
-            cursor: not-allowed; border-bottom: 1px solid #1a1a1a;
+            display: flex; align-items: center; padding: 0.8rem; border-radius: 6px;
+            color: var(--text-secondary); border-bottom: 1px solid #1a1a1a; transition: 0.2s;
+            text-decoration: none;
         }
-        .track-row:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
-        .track-num { width: 30px; font-size: 0.9rem; color: #666; }
-        .track-name { flex-grow: 1; font-weight: 500; }
-        .track-status { font-size: 0.7rem; text-transform: uppercase; border: 1px solid #444; padding: 2px 6px; border-radius: 4px; opacity: 0.6; }
-
-        /* --- AUDIO PLAYER --- */
-        audio { width: 100%; margin-top: 1rem; height: 30px; }
         
+        /* Interactive Tracks */
+        .track-row.playable { cursor: pointer; color: white; }
+        .track-row.playable:hover { background: rgba(255,255,255,0.1); }
+        .track-row.locked { cursor: not-allowed; opacity: 0.7; }
+
+        .track-num { width: 30px; font-size: 0.9rem; color: #666; }
+        .track-name { flex-grow: 1; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+        .track-status { font-size: 0.7rem; text-transform: uppercase; border: 1px solid #444; padding: 2px 6px; border-radius: 4px; opacity: 0.8; }
+        
+        /* Status Colors */
+        .status-released { border-color: #10b981; color: #10b981; }
+        .status-pending { border-color: #666; color: #666; }
+
         @media (max-width: 800px) {
             .album-header { flex-direction: column; align-items: center; }
             .album-cover-locked { position: static; width: 200px; height: 200px; }
@@ -186,12 +168,9 @@
                 <div class="release-title">Cheesed Up <span class="explicit">E</span></div>
                 <div class="release-subtitle">Single • 2025</div>
                 
-                <audio id="mainAudio" controls>
-                    <source src="cheesedup.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-                
-                <div id="debug-msg" style="margin-top: 10px; color: #ff4444; font-size: 0.8rem; display: none;"></div>
+                <a href="https://suno.com/s/XSQOlygWhfUDpzkE" target="_blank" class="play-btn">
+                    <i class="fas fa-play"></i> Listen on Suno
+                </a>
             </div>
         </div>
 
@@ -206,22 +185,101 @@
             <div class="tracklist">
                 <div style="margin-bottom: 10px; font-weight: bold; color: white;">Album: State of Mind</div>
                 
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">1</div><div class="track-name">State of Mind (Intro)</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">2</div><div class="track-name">Cheesed Up <span class="explicit">E</span></div><div class="track-status">Released</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">3</div><div class="track-name">Trap House</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">4</div><div class="track-name">Gouda Mornin'</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">5</div><div class="track-name">Whiskers</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">6</div><div class="track-name">Big Steppa (Tiny Feet) <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">7</div><div class="track-name">The Sewers (Interlude)</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">8</div><div class="track-name">9 Lives (Diss Track) <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">9</div><div class="track-name">Crumb Chasers (feat. Lil Squeak)</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">10</div><div class="track-name">Rodentia Drifts</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">11</div><div class="track-name">No Cats Allowed <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">12</div><div class="track-name">Night Vision</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">13</div><div class="track-name">Swiss Holes</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">14</div><div class="track-name">The Pantry Heist</div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">15</div><div class="track-name">Sharp Teeth <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
-                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">16</div><div class="track-name">Outro: The Hole</div><div class="track-status">Pending</div></div>
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">1</div>
+                    <div class="track-name">State of Mind (Intro)</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <a href="https://suno.com/s/XSQOlygWhfUDpzkE" target="_blank" class="track-row playable">
+                    <div class="track-num">2</div>
+                    <div class="track-name">Cheesed Up <span class="explicit">E</span></div>
+                    <div class="track-status status-released">Released</div>
+                </a>
+
+                <a href="https://suno.com/s/DOmIBFRByN3W5y3a" target="_blank" class="track-row playable">
+                    <div class="track-num">3</div>
+                    <div class="track-name">Pills <span class="explicit">E</span></div>
+                    <div class="track-status status-released">Released</div>
+                </a>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">4</div>
+                    <div class="track-name">Gouda Mornin'</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">5</div>
+                    <div class="track-name">Whiskers</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">6</div>
+                    <div class="track-name">Big Steppa (Tiny Feet) <span class="explicit">E</span></div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">7</div>
+                    <div class="track-name">The Sewers (Interlude)</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">8</div>
+                    <div class="track-name">9 Lives (Diss Track) <span class="explicit">E</span></div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">9</div>
+                    <div class="track-name">Crumb Chasers (feat. Lil Squeak)</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">10</div>
+                    <div class="track-name">Rodentia Drifts</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">11</div>
+                    <div class="track-name">No Cats Allowed <span class="explicit">E</span></div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">12</div>
+                    <div class="track-name">Night Vision</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">13</div>
+                    <div class="track-name">Swiss Holes</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">14</div>
+                    <div class="track-name">The Pantry Heist</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">15</div>
+                    <div class="track-name">Sharp Teeth <span class="explicit">E</span></div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
+
+                <div class="track-row locked" onclick="preReleaseAlert()">
+                    <div class="track-num">16</div>
+                    <div class="track-name">Outro: The Hole</div>
+                    <div class="track-status status-pending">Pending</div>
+                </div>
             </div>
         </div>
 
@@ -232,20 +290,8 @@
 
     <script>
         function preReleaseAlert() {
-            alert("🔒 PRE-RELEASE CONTENT:\n\nThis track/album has not been released to the public yet.\nExpected Drop: Late 2025.");
+            alert("🔒 PRE-RELEASE CONTENT:\n\nThis track/album has not been released to the public yet.\nExpected Drop: Early 2026.");
         }
-
-        // CORRECT ERROR HANDLING SCRIPT
-        const audio = document.getElementById('mainAudio');
-        const debugMsg = document.getElementById('debug-msg');
-
-        // This listener will catch if the file fails to load
-        audio.addEventListener('error', function(e) {
-            console.error("Audio Load Error:", e);
-            // Show the error message on screen
-            debugMsg.style.display = 'block';
-            debugMsg.innerHTML = '⚠️ <b>System Error:</b> Audio file "cheesedup.mp3" not found on server.<br>Ensure the file is uploaded to the "toni" folder.';
-        }, true);
     </script>
 </body>
 </html>
