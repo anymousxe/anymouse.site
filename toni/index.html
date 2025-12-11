@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toni | State of Mind</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #000000;
-            --sidebar-color: #121212;
             --accent-color: #fa586a;
             --text-main: #ffffff;
             --text-secondary: #b3b3b3;
-            --glass-bg: rgba(30, 30, 30, 0.6);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,29 +52,23 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.02);
-        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.3); }
 
         /* --- HERO SECTION --- */
         .hero {
             position: relative;
             height: 50vh;
             width: 100%;
-            overflow: hidden;
             display: flex;
             align-items: flex-end;
             padding: 2rem;
-            background: radial-gradient(circle at 70% 30%, #2a2a2a, #000);
+            overflow: hidden;
+            background: #111;
         }
 
         .hero-bg-blur {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('https://cdn.discordapp.com/attachments/1446702513532305558/1448517208954376274/image.png?ex=693b8c46&is=693a3ac6&hm=a2971c35b88c02a1394c7fb02ad610f28c04a90934ade38d275e0e320767882b&');
             background-size: cover;
             background-position: center;
@@ -96,49 +88,25 @@
         }
 
         .artist-pfp {
-            width: 180px;
-            height: 180px;
+            width: 180px; height: 180px;
             border-radius: 50%;
             object-fit: cover;
             box-shadow: 0 8px 40px rgba(0,0,0,0.6);
         }
 
         .artist-text h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            font-size: 4rem; font-weight: 800; margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 15px;
         }
 
-        .verified {
-            font-size: 1.5rem;
-            color: #3b82f6;
-        }
+        .verified { font-size: 1.5rem; color: #3b82f6; }
+        .artist-meta { color: var(--text-secondary); font-size: 1.1rem; font-weight: 500; }
 
-        .artist-meta {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
+        /* --- CONTENT --- */
+        .content-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0; }
 
-        /* --- CONTENT CONTAINER --- */
-        .content-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        /* --- LATEST RELEASE (PLAYABLE) --- */
+        /* --- LATEST RELEASE --- */
         .latest-release {
             background: #1c1c1e;
             padding: 1.5rem;
@@ -146,81 +114,33 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            transition: 0.3s;
-            cursor: pointer;
         }
         
-        .latest-release:hover { background: #2c2c2e; }
-
-        .release-art {
-            width: 80px;
-            height: 80px;
-            border-radius: 6px;
-            object-fit: cover;
-        }
-
+        .release-art { width: 80px; height: 80px; border-radius: 6px; object-fit: cover; }
         .release-details { flex-grow: 1; }
         .release-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
-        .release-subtitle { color: var(--text-secondary); font-size: 0.9rem; }
-        
-        .explicit {
-            border: 1px solid #666;
-            color: #888;
-            font-size: 0.6rem;
-            padding: 1px 4px;
-            border-radius: 3px;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
+        .explicit { border: 1px solid #666; color: #888; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; margin-left: 8px; vertical-align: middle; }
 
-        /* --- ALBUM GRID (THE FAKE ONE) --- */
-        .album-header {
-            display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+        /* --- ALBUM & TRACKS --- */
+        .album-header { display: flex; gap: 2rem; margin-top: 2rem; }
 
         .album-cover-locked {
-            width: 300px;
-            height: 300px;
-            background: #222;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #444;
-            border: 1px solid #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 100px;
+            width: 300px; height: 300px;
+            background: #222; border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #444; border: 1px solid #333;
+            position: sticky; top: 100px;
         }
-
         .lock-icon { font-size: 4rem; margin-bottom: 10px; }
 
-        .tracklist {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-        }
+        .tracklist { flex-grow: 1; display: flex; flex-direction: column; gap: 0.2rem; }
 
         .track-row {
-            display: flex;
-            align-items: center;
-            padding: 0.8rem;
-            border-radius: 6px;
-            color: var(--text-secondary);
-            cursor: not-allowed;
-            transition: 0.2s;
-            border-bottom: 1px solid #1a1a1a;
+            display: flex; align-items: center; padding: 0.8rem;
+            border-radius: 6px; color: var(--text-secondary);
+            cursor: not-allowed; border-bottom: 1px solid #1a1a1a;
         }
-
-        .track-row:hover {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-main);
-        }
-
+        .track-row:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
         .track-num { width: 30px; font-size: 0.9rem; color: #666; }
         .track-name { flex-grow: 1; font-weight: 500; }
         .track-status { font-size: 0.7rem; text-transform: uppercase; border: 1px solid #444; padding: 2px 6px; border-radius: 4px; opacity: 0.6; }
@@ -231,6 +151,9 @@
         @media (max-width: 800px) {
             .album-header { flex-direction: column; align-items: center; }
             .album-cover-locked { position: static; width: 200px; height: 200px; }
+            .hero { height: auto; flex-direction: column; align-items: center; text-align: center; padding-top: 6rem; }
+            .artist-info { flex-direction: column; }
+            .artist-text h1 { justify-content: center; font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -263,14 +186,12 @@
                 <div class="release-title">Cheesed Up <span class="explicit">E</span></div>
                 <div class="release-subtitle">Single • 2025</div>
                 
-                <audio id="mainAudio" controls preload="auto">
-                    <source src="./cheesedup.mp3" onerror="handleError(event)">
-                    <source src="cheesedup.mp3" onerror="handleError(event)">
+                <audio id="mainAudio" controls>
+                    <source src="cheesedup.mp3" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
-                <div id="error-msg" style="color: red; font-size: 0.8rem; display: none; margin-top: 5px;">
-                    ⚠️ Error: Audio file not found. Check filename.
-                </div>
+                
+                <div id="debug-msg" style="margin-top: 10px; color: #ff4444; font-size: 0.8rem; display: none;"></div>
             </div>
         </div>
 
@@ -285,86 +206,22 @@
             <div class="tracklist">
                 <div style="margin-bottom: 10px; font-weight: bold; color: white;">Album: State of Mind</div>
                 
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">1</div>
-                    <div class="track-name">State of Mind (Intro)</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">2</div>
-                    <div class="track-name">Cheesed Up <span class="explicit">E</span></div>
-                    <div class="track-status">Released</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">3</div>
-                    <div class="track-name">Trap House</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">4</div>
-                    <div class="track-name">Gouda Mornin'</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">5</div>
-                    <div class="track-name">Whiskers</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">6</div>
-                    <div class="track-name">Big Steppa (Tiny Feet) <span class="explicit">E</span></div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">7</div>
-                    <div class="track-name">The Sewers (Interlude)</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">8</div>
-                    <div class="track-name">9 Lives (Diss Track) <span class="explicit">E</span></div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">9</div>
-                    <div class="track-name">Crumb Chasers (feat. Lil Squeak)</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">10</div>
-                    <div class="track-name">Rodentia Drifts</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">11</div>
-                    <div class="track-name">No Cats Allowed <span class="explicit">E</span></div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">12</div>
-                    <div class="track-name">Night Vision</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">13</div>
-                    <div class="track-name">Swiss Holes</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">14</div>
-                    <div class="track-name">The Pantry Heist</div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">15</div>
-                    <div class="track-name">Sharp Teeth <span class="explicit">E</span></div>
-                    <div class="track-status">Pending</div>
-                </div>
-                <div class="track-row" onclick="preReleaseAlert()">
-                    <div class="track-num">16</div>
-                    <div class="track-name">Outro: The Hole</div>
-                    <div class="track-status">Pending</div>
-                </div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">1</div><div class="track-name">State of Mind (Intro)</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">2</div><div class="track-name">Cheesed Up <span class="explicit">E</span></div><div class="track-status">Released</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">3</div><div class="track-name">Trap House</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">4</div><div class="track-name">Gouda Mornin'</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">5</div><div class="track-name">Whiskers</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">6</div><div class="track-name">Big Steppa (Tiny Feet) <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">7</div><div class="track-name">The Sewers (Interlude)</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">8</div><div class="track-name">9 Lives (Diss Track) <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">9</div><div class="track-name">Crumb Chasers (feat. Lil Squeak)</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">10</div><div class="track-name">Rodentia Drifts</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">11</div><div class="track-name">No Cats Allowed <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">12</div><div class="track-name">Night Vision</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">13</div><div class="track-name">Swiss Holes</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">14</div><div class="track-name">The Pantry Heist</div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">15</div><div class="track-name">Sharp Teeth <span class="explicit">E</span></div><div class="track-status">Pending</div></div>
+                <div class="track-row" onclick="preReleaseAlert()"><div class="track-num">16</div><div class="track-name">Outro: The Hole</div><div class="track-status">Pending</div></div>
             </div>
         </div>
 
@@ -378,12 +235,16 @@
             alert("🔒 PRE-RELEASE CONTENT:\n\nThis track/album has not been released to the public yet.\nExpected Drop: Late 2025.");
         }
 
-        // Debug Script for Audio
+        // CORRECT ERROR HANDLING SCRIPT
         const audio = document.getElementById('mainAudio');
-        audio.addEventListener('error', (e) => {
-            console.log("Audio Error:", e);
-            document.getElementById('error-msg').style.display = 'block';
-            document.getElementById('error-msg').innerText = "⚠️ Error: Cannot load ./cheesedup.mp3 (Check console for details)";
+        const debugMsg = document.getElementById('debug-msg');
+
+        // This listener will catch if the file fails to load
+        audio.addEventListener('error', function(e) {
+            console.error("Audio Load Error:", e);
+            // Show the error message on screen
+            debugMsg.style.display = 'block';
+            debugMsg.innerHTML = '⚠️ <b>System Error:</b> Audio file "cheesedup.mp3" not found on server.<br>Ensure the file is uploaded to the "toni" folder.';
         }, true);
     </script>
 </body>
