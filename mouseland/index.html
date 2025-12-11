@@ -22,9 +22,9 @@
             --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
             --mouseland-accent: #10b981; 
-            --danger: #ef4444;           
-            --warning: #f59e0b;          
-            --border: #27272a;           
+            --danger: #ef4444;            
+            --warning: #f59e0b;           
+            --border: #27272a;            
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
@@ -142,6 +142,8 @@
         .news-item { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid #555; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; position: relative; }
         .news-item.urgent { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent); }
         .news-item.decree { border-left-color: var(--warning); }
+        .news-item.industry { border-left-color: #3b82f6; } /* New Color for Toni */
+        
         .news-actions { position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; cursor: pointer; color: var(--danger); }
         
         .news-image { width: 100%; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
@@ -273,6 +275,22 @@
                 <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Archive</h4>
 
                 <div class="news-archive-container">
+
+                    <article class="news-item industry">
+                        <img src="https://cdn.discordapp.com/attachments/1446702513532305558/1448517208954376274/image.png?ex=693b8c46&is=693a3ac6&hm=a2971c35b88c02a1394c7fb02ad610f28c04a90934ade38d275e0e320767882b&" 
+                             class="news-image" 
+                             style="width: 100px; border-radius: 50%; border: 2px solid #3b82f6; display: block; margin-bottom: 1rem;">
+                        <h3>🎵 INDUSTRY NEWS: Toni Signed</h3>
+                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 10, 2025 - 10:45 PM</p>
+                        <p>
+                            <strong>Mouseland Records</strong> is proud to announce our first major signing. 
+                            The underground lyrical genius <strong>Toni</strong> has officially joined the roster.
+                            <br><br>
+                            His debut single "Cheesed Up" is available to stream right now on the government network.
+                            <br><br>
+                            <a href="https://anymouse.site/toni" class="btn btn-sm btn-primary" style="text-decoration: none;">Listen to Toni</a>
+                        </p>
+                    </article>
 
                     <article class="news-item urgent">
                         <h3>🚀 MSP UPDATE: Launch Success & Mafia Siege</h3>
