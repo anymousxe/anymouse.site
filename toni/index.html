@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toni | Mouseland Records</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #161616;
+            --accent-gold: #FFC800; /* Cheese Gold */
+            --text-main: #ffffff;
+            --text-dim: #a1a1a1;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #0a0a0a 70%);
+        }
+
+        /* --- CONTAINER --- */
+        .artist-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* --- HEADER / PFP --- */
+        .artist-header {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pfp-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 0 0 20px rgba(255, 200, 0, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .pfp-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .artist-name {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .verified-badge {
+            width: 20px;
+            height: 20px;
+            background: #1DB954; /* Spotify Green or keep Blue */
+            color: black; /* Or white check */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            box-shadow: 0 0 10px rgba(29, 185, 84, 0.4);
+        }
+
+        .artist-bio {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* --- LATEST RELEASE CARD --- */
+        .release-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            transition: transform 0.3s ease;
+        }
+
+        .release-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+
+        .label-text {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+            display: block;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .album-art {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .track-info {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .track-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- EXPLICIT TAG --- */
+        .explicit-tag {
+            border: 1px solid #666;
+            color: #ccc;
+            font-size: 0.6rem;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: normal;
+            vertical-align: middle;
+            display: inline-block;
+            line-height: 1.2;
+        }
+
+        .track-artist {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        /* --- AUDIO PLAYER STYLING --- */
+        audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+        }
+        
+        /* Customizing audio player colors is tricky across browsers, 
+           so we use a CSS filter to make it fit the dark theme */
+        audio::-webkit-media-controls-panel {
+            background-color: #222;
+        }
+        audio::-webkit-media-controls-play-button {
+            background-color: var(--accent-gold);
+            border-radius: 50%;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #fff;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="artist-container">
+        <header class="artist-header">
+            <div class="pfp-container">
+                <img src="https://cdn.discordapp.com/attachments/1446702513532305558/1448517208954376274/image.png?ex=693b8c46&is=693a3ac6&hm=a2971c35b88c02a1394c7fb02ad610f28c04a90934ade38d275e0e320767882b&" alt="Toni PFP">
+            </div>
+            <h1 class="artist-name">
+                Toni 
+                <span class="verified-badge">✓</span>
+            </h1>
+            <p class="artist-bio">Mouseland Records • Hip-Hop / Rap</p>
+        </header>
+
+        <div class="release-card">
+            <span class="label-text">Latest Release</span>
+            
+            <div class="album-art">
+                <img src="https://cdn.discordapp.com/attachments/1446702513532305558/1448517051839807569/image.png?ex=693b8c21&is=693a3aa1&hm=a0656803e2133ab9f3209ac3ce3a768fe1368c8a05109bf91756ade15eed8c70&" alt="Cheesed Up Cover">
+            </div>
+
+            <div class="track-info">
+                <div class="track-title">
+                    Cheesed Up
+                    <span class="explicit-tag" title="Explicit Content">E</span>
+                </div>
+                <div class="track-artist">Toni</div>
+            </div>
+
+            <audio controls>
+                <source src="cheesedup.mp3" type="audio/mpeg">
+                <source src="cheesedup.wav" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="footer">
+            &copy; 2025 Mouseland Entertainment
+        </div>
+    </div>
+
+</body>
+</html>
