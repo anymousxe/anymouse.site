@@ -3,149 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Video Gen Sim</title>
+    <title>Video Generation Platform</title>
     <style>
         :root {
-            --bg: #0f0f11;
+            --bg: #09090b;
             --card: #18181b;
-            --accent: #6366f1;
-            --text: #e2e8f0;
-            --error: #ef4444;
-            --success: #22c55e;
+            --border: #27272a;
+            --primary: #6366f1; /* Indigo */
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --danger: #ef4444;
+            --status-wait: #eab308;
+            --status-complete: #22c55e;
         }
 
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
         }
 
-        /* Offline Overlay */
-        #offline-overlay {
+        /* OFFLINE SCREEN */
+        #offline-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: black;
-            color: red;
-            display: none; /* Hidden by default */
+            background: #000;
+            z-index: 9999;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            font-size: 3rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 5px;
+            text-align: center;
         }
 
-        .container {
+        #offline-screen h1 {
+            font-size: 4rem;
+            margin: 0;
+            letter-spacing: -2px;
+            color: #333;
+        }
+        
+        #offline-screen p {
+            color: var(--danger);
+            font-family: monospace;
+            margin-top: 10px;
+        }
+
+        /* MAIN APP */
+        .app-wrapper {
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
+            padding: 40px 20px;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
         }
 
-        .credits-box {
-            font-size: 0.9rem;
-            background: #27272a;
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: 1px solid #333;
+        h2 { margin: 0; letter-spacing: -1px; }
+
+        .credits-pill {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
-        /* Input Area */
-        .input-group {
+        /* Input Form */
+        .input-form {
             background: var(--card);
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid #333;
+            border: 1px solid var(--border);
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         input[type="text"] {
             flex: 1;
             background: #000;
-            border: 1px solid #333;
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: inherit;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
         }
 
-        button {
+        .btn-primary {
             cursor: pointer;
-            font-family: inherit;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
-            border-radius: 4px;
-            padding: 10px 20px;
-            transition: 0.2s;
-        }
-
-        .btn-gen {
-            background: var(--accent);
+            border-radius: 6px;
+            padding: 12px 25px;
+            transition: background 0.2s;
+            background: var(--primary);
             color: white;
         }
-        .btn-gen:hover { opacity: 0.9; }
 
-        /* Feed */
-        .feed {
+        .btn-primary:disabled {
+            background: #4f46e5;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Request Feed */
+        .request-feed {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
         .request-card {
             background: var(--card);
-            padding: 15px;
+            padding: 18px;
             border-radius: 8px;
-            border: 1px solid #333;
+            border: 1px solid var(--border);
             position: relative;
         }
-
-        .status-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .status-pending { background: #eab308; color: black; }
-        .status-generating { background: var(--accent); color: white; animation: pulse 1.5s infinite; }
-        .status-done { background: var(--success); color: black; }
-        .status-error { background: var(--error); color: white; }
 
         .prompt-text {
             font-size: 1.1rem;
             margin-bottom: 10px;
-            font-weight: bold;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: var(--status-wait); color: #000; }
+        .status-generating { background: var(--primary); color: white; animation: pulse 1.5s infinite; }
+        .status-complete { background: var(--status-complete); color: #000; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
         }
 
         .result-content {
-            margin-top: 10px;
-            background: black;
-            border-radius: 4px;
+            margin-top: 15px;
+            background: #000;
+            border-radius: 6px;
             overflow: hidden;
-            border: 1px solid #333;
+            border: 1px solid var(--border);
         }
 
         .result-content img, .result-content video {
@@ -156,28 +181,32 @@
         .delete-btn {
             position: absolute;
             top: 10px;
-            right: 10px;
-            background: transparent;
-            color: #666;
-            font-size: 1.2rem;
-            padding: 0;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.2s;
         }
-        .delete-btn:hover { color: var(--error); }
+        .delete-btn:hover { color: var(--danger); }
 
-        /* Admin Dashboard (Hidden by default) */
+        /* Admin Dashboard */
         #admin-panel {
             margin-top: 50px;
-            border-top: 2px dashed #333;
-            padding-top: 20px;
+            border-top: 2px dashed var(--border);
+            padding-top: 30px;
             width: 100%;
-            display: none; /* Toggle with '`' key */
+            display: none;
         }
         
         .admin-row {
-            background: #222;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #444;
+            background: #111;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -189,67 +218,81 @@
             align-items: center;
         }
 
-        .admin-file-input {
-            font-size: 0.8rem;
-        }
-
         .kill-switch {
-            background: var(--error);
+            background: var(--danger);
             color: white;
             width: 100%;
             padding: 15px;
             margin-bottom: 20px;
             font-size: 1.2rem;
-            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 6px;
+            transition: opacity 0.2s;
+        }
+        .kill-switch:hover { opacity: 0.9; }
+
+        .admin-file-input {
+            flex-grow: 1;
+            padding: 8px;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: var(--text-main);
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .admin-fulfill-btn {
+            padding: 8px 15px;
+            background: var(--status-complete);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .admin-status {
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
 
-    <div id="offline-overlay">
-        SYSTEM OFFLINE
-        <div style="font-size: 1rem; margin-top: 20px; color: #666;">Maintenance in progress...</div>
+    <div id="offline-screen">
+        <h1>OFFLINE</h1>
+        <p>PAGE TEMPORARILY DISABLED. PLEASE CHECK BACK LATER.</p>
     </div>
 
-    <div class="container" id="app-container">
+    <div class="app-wrapper" id="app-wrapper">
         <header>
-            <h2>Softworks AI</h2>
-            <div class="credits-box">Credits: <span id="credit-count">50</span></div>
+            <h2>AI Generation Service</h2>
+            <div class="credits-pill">Credits: <span id="credit-count">50</span></div>
         </header>
 
-        <div class="input-group">
-            <input type="text" id="user-prompt" placeholder="Describe your video...">
-            <button class="btn-gen" onclick="submitRequest()">Generate</button>
+        <div class="input-form">
+            <input type="text" id="user-prompt" placeholder="Describe the video you want to generate...">
+            <button class="btn-primary" onclick="submitRequest()" id="generate-button">Generate Video</button>
         </div>
 
-        <div class="feed" id="request-feed">
+        <div class="request-feed" id="request-feed">
             </div>
 
         <div id="admin-panel">
-            <h3 style="color: var(--accent);">ADMIN DASHBOARD</h3>
-            <button class="kill-switch" onclick="toggleOffline()">⚠️ TOGGLE MAINTENANCE MODE ⚠️</button>
+            <h3 style="color: var(--primary);">ADMIN DASHBOARD</h3>
+            <button class="kill-switch" onclick="toggleOffline()">MAINTENANCE MODE: TOGGLE PAGE OFFLINE</button>
             <div id="admin-feed"></div>
         </div>
     </div>
 
     <script>
-        // Store state in local storage so it persists if you refresh
-        let state = JSON.parse(localStorage.getItem('softworks_state')) || {
+        // State management using localStorage
+        let state = JSON.parse(localStorage.getItem('generation_platform_state')) || {
             credits: 50,
             requests: [],
             isOffline: false
         };
 
-        // Render immediately
+        // Initial render on page load
         render();
 
-        // Listen for the ` key to toggle admin
+        // Listen for the ` key to toggle admin panel
         document.addEventListener('keydown', (e) => {
             if (e.key === '`') {
                 const panel = document.getElementById('admin-panel');
@@ -258,7 +301,7 @@
         });
 
         function saveState() {
-            localStorage.setItem('softworks_state', JSON.stringify(state));
+            localStorage.setItem('generation_platform_state', JSON.stringify(state));
             render();
         }
 
@@ -271,7 +314,7 @@
             if (!prompt) return;
 
             if (state.credits <= 0) {
-                alert("Broke boy alert: Out of credits.");
+                alert("Low credits. You need more juice to generate.");
                 return;
             }
 
@@ -280,7 +323,7 @@
             const newReq = {
                 id: Date.now(),
                 prompt: prompt,
-                status: 'pending', // pending -> generating -> done
+                status: 'pending', // pending -> generating -> complete
                 resultType: null, // 'image' or 'video'
                 resultSrc: null
             };
@@ -288,10 +331,10 @@
             state.requests.unshift(newReq);
             input.value = '';
             
-            // Auto transition to "Generating" after 2 seconds to simulate queue
+            // Simulation: Automatically transition to "Generating" after 2 seconds
             setTimeout(() => {
                 const req = state.requests.find(r => r.id === newReq.id);
-                if(req) {
+                if(req && req.status === 'pending') {
                     req.status = 'generating';
                     saveState();
                 }
@@ -301,8 +344,8 @@
         }
 
         function attemptDelete(id) {
-            // Fake error when trying to delete
-            alert("ERROR: CANNOT DELETE ACTIVE REQUEST FROM SERVER.");
+            // STRICTLY IMPLEMENTING: Cannot delete requests
+            alert("ERROR: Request is currently being processed by the server.");
         }
 
         function toggleOffline() {
@@ -315,16 +358,16 @@
         function adminComplete(id, fileInput) {
             const file = fileInput.files[0];
             if (!file) {
-                alert("Yo, pick a file first.");
+                alert("Upload a file first, fam.");
                 return;
             }
 
             const req = state.requests.find(r => r.id === id);
             if (req) {
-                // Create a local URL for the file (works in browser session)
+                // Create a local URL for the file (allows browser to display local file)
                 const objectUrl = URL.createObjectURL(file);
                 
-                req.status = 'done';
+                req.status = 'complete';
                 req.resultSrc = objectUrl;
                 req.resultType = file.type.startsWith('video') ? 'video' : 'image';
                 
@@ -332,21 +375,26 @@
             }
         }
 
+        function triggerAdminComplete(id) {
+            const input = document.getElementById(`file-${id}`);
+            adminComplete(id, input);
+        }
+
         // --- RENDER LOGIC ---
 
         function render() {
             // Handle Offline Mode
-            const overlay = document.getElementById('offline-overlay');
-            const app = document.getElementById('app-container');
+            const overlay = document.getElementById('offline-screen');
+            const wrapper = document.getElementById('app-wrapper');
 
             if (state.isOffline) {
                 overlay.style.display = 'flex';
-                app.style.filter = 'blur(5px) grayscale(100%)';
-                app.style.pointerEvents = 'none'; // Disable clicking
+                wrapper.style.filter = 'blur(5px) grayscale(100%)';
+                wrapper.style.pointerEvents = 'none';
             } else {
                 overlay.style.display = 'none';
-                app.style.filter = 'none';
-                app.style.pointerEvents = 'all';
+                wrapper.style.filter = 'none';
+                wrapper.style.pointerEvents = 'all';
             }
 
             // Update Credits
@@ -359,20 +407,25 @@
             state.requests.forEach(req => {
                 let statusHtml = '';
                 let contentHtml = '';
+                let statusText = '';
+                let cardClass = '';
 
                 if (req.status === 'pending') {
-                    statusHtml = '<span class="status-badge status-pending">Request Sent In</span>';
-                    contentHtml = '<div style="color: #666; font-size: 0.9rem;">Waiting for GPU...</div>';
+                    statusText = 'Request Sent In';
+                    cardClass = 'status-pending';
+                    contentHtml = `<div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Awaiting processing queue...</div>`;
                 } else if (req.status === 'generating') {
-                    statusHtml = '<span class="status-badge status-generating">Generating...</span>';
+                    statusText = 'Generating...';
+                    cardClass = 'status-generating';
                     contentHtml = `
-                        <div style="background: #111; height: 150px; display: flex; align-items: center; justify-content: center; color: var(--accent);">
-                            [ RENDERING FRAMES ]
+                        <div style="height: 150px; display: flex; align-items: center; justify-content: center; background: #000; color: var(--primary); font-size: 0.9rem; border-radius: 6px; margin-top: 15px; border: 1px solid var(--border);">
+                            [ Processing AI Model ]
                         </div>`;
-                } else if (req.status === 'done') {
-                    statusHtml = '<span class="status-badge status-done">Completed</span>';
+                } else if (req.status === 'complete') {
+                    statusText = 'Completed';
+                    cardClass = 'status-complete';
                     if (req.resultType === 'video') {
-                        contentHtml = `<div class="result-content"><video src="${req.resultSrc}" controls autoplay loop></video></div>`;
+                        contentHtml = `<div class="result-content"><video src="${req.resultSrc}" controls loop></video></div>`;
                     } else {
                         contentHtml = `<div class="result-content"><img src="${req.resultSrc}"></div>`;
                     }
@@ -381,37 +434,32 @@
                 feed.innerHTML += `
                     <div class="request-card">
                         <button class="delete-btn" onclick="attemptDelete(${req.id})">&times;</button>
-                        ${statusHtml}
+                        <span class="status-badge ${cardClass}">${statusText}</span>
                         <div class="prompt-text">"${req.prompt}"</div>
                         ${contentHtml}
                     </div>
                 `;
             });
 
-            // Render Admin Feed
+            // Render Admin Feed (Only show pending/generating requests)
             const adminFeed = document.getElementById('admin-feed');
             adminFeed.innerHTML = '';
             
-            // Only show requests that aren't done yet in admin
-            state.requests.filter(r => r.status !== 'done').forEach(req => {
+            state.requests.filter(r => r.status !== 'complete').forEach(req => {
                 const div = document.createElement('div');
                 div.className = 'admin-row';
                 div.innerHTML = `
-                    <div><strong>ID:</strong> ${req.id}</div>
+                    <div class="admin-status">
+                        <strong>ID:</strong> ${req.id} | <strong>Status:</strong> ${req.status.toUpperCase()}
+                    </div>
                     <div><strong>Prompt:</strong> ${req.prompt}</div>
                     <div class="admin-controls">
                         <input type="file" class="admin-file-input" id="file-${req.id}" accept="image/*,video/*">
-                        <button class="btn-gen" onclick="triggerAdminComplete(${req.id})">Send File</button>
+                        <button class="btn-primary admin-fulfill-btn" onclick="triggerAdminComplete(${req.id})">Fulfill</button>
                     </div>
                 `;
                 adminFeed.appendChild(div);
             });
-        }
-
-        // Helper to bridge onclick string to function with element reference
-        function triggerAdminComplete(id) {
-            const input = document.getElementById(`file-${id}`);
-            adminComplete(id, input);
         }
     </script>
 </body>
