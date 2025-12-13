@@ -25,7 +25,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* Animation */
+        /* Background */
         .background-fx {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: radial-gradient(circle at 15% 50%, rgba(86, 0, 245, 0.15), transparent 25%),
@@ -34,6 +34,20 @@
         }
         @keyframes bgPulse { 0% { opacity: 0.8; } 100% { opacity: 1; } }
 
+        /* LOGIN SCREEN */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 2000; backdrop-filter: blur(20px); background: rgba(0,0,0,0.6);
+        }
+        
+        .login-card {
+            background: #0f0f13; border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); max-width: 400px; width: 90%;
+        }
+        
+        .big-logo { font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 20px; font-weight: bold; }
+
         /* Nav */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
         .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; }
@@ -41,10 +55,11 @@
         .user-controls { display: flex; align-items: center; gap: 15px; }
 
         button { cursor: pointer; border: none; transition: all 0.3s ease; }
-        .glow-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 600; }
+        .glow-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 600; display: flex; align-items: center; gap: 10px; justify-content: center;}
         .glow-btn:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
 
         /* Main */
+        #main-ui { display: none; } /* Hidden until logged in */
         #app-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
 
         /* Models */
@@ -100,7 +115,7 @@
         
         /* Utils */
         .hidden { display: none !important; }
-        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 25px; border-radius: 50px; z-index: 1000; font-weight: bold; display: none; }
+        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 25px; border-radius: 50px; z-index: 3000; font-weight: bold; display: none; }
         
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -110,14 +125,24 @@
 
     <div class="background-fx"></div>
 
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="big-logo">The Ai <span class="highlight">STudio</span></div>
+            <p style="color:#aaa; margin-bottom:30px;">Access requires authentication.</p>
+            <button id="hero-login-btn" class="glow-btn" style="width:100%; padding:15px; font-size:1.1rem;">
+                <i class="fa-brands fa-google"></i> Sign in with Google
+            </button>
+            <p id="auth-error" style="color:#ff4444; margin-top:15px; font-size:0.9rem; display:none;"></p>
+        </div>
+    </div>
+
     <div id="main-ui">
         <nav>
             <div class="logo">The Ai <span class="highlight">STudio</span></div>
             <div class="user-controls">
                 <span id="credit-display">Loading...</span>
                 <button id="admin-link-btn" class="glow-btn hidden" onclick="toggleAdmin(true)" style="border-color: #ff4444; color: #ff4444;">Admin Panel</button>
-                <button id="login-btn" class="glow-btn">Log In <i class="fa-brands fa-google"></i></button>
-                <div id="user-profile" class="hidden">
+                <div id="user-profile">
                     <img id="user-pfp" src="" style="width:35px; height:35px; border-radius:50%;" alt="Profile">
                     <button id="logout-btn" style="background:transparent; color:#aaa; margin-left:10px;">Log Out</button>
                 </div>
@@ -214,29 +239,39 @@
         let soraDuration = 10;
         let refImageBase64 = null;
         
-        // LIMITS
-        const GUEST_LIMIT = 2; // Per model lifetime (stored in localstorage)
         const USER_LIMIT_COUNT = 10;
         const USER_LIMIT_WINDOW_MS = 20 * 60 * 1000; // 20 mins
 
         // DOM
         const root = document.documentElement;
+        const loginScreen = document.getElementById('login-screen');
         const mainUi = document.getElementById('main-ui');
         const adminScreen = document.getElementById('admin-screen');
         const creditDisplay = document.getElementById('credit-display');
         const refPreview = document.getElementById('ref-img-preview');
+        const authError = document.getElementById('auth-error');
 
         // --- AUTH ---
         const provider = new GoogleAuthProvider();
         
-        document.getElementById('login-btn').addEventListener('click', () => signInWithPopup(auth, provider));
+        // Hero Login Button
+        document.getElementById('hero-login-btn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch((error) => {
+                console.error(error);
+                authError.innerText = error.message;
+                authError.style.display = 'block';
+            });
+        });
+
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             if (user) {
-                document.getElementById('login-btn').classList.add('hidden');
-                document.getElementById('user-profile').classList.remove('hidden');
+                // HIDE Login, SHOW Main
+                loginScreen.style.display = 'none';
+                mainUi.style.display = 'block';
+                
                 document.getElementById('user-pfp').src = user.photoURL;
                 creditDisplay.innerText = "Logged In (10/20min)";
                 
@@ -246,14 +281,12 @@
                 // Admin Check
                 if (user.email === "anymousxe.info@gmail.com") {
                     document.getElementById('admin-link-btn').classList.remove('hidden');
-                    loadAdminData(); // Start listening for admin stuff
+                    loadAdminData(); 
                 }
             } else {
-                document.getElementById('login-btn').classList.remove('hidden');
-                document.getElementById('user-profile').classList.add('hidden');
-                document.getElementById('admin-link-btn').classList.add('hidden');
-                updateGuestDisplay();
-                document.getElementById('gallery-grid').innerHTML = '<div style="color:#555; text-align:center;">Log in to see your history.</div>';
+                // SHOW Login, HIDE Main
+                loginScreen.style.display = 'flex';
+                mainUi.style.display = 'none';
             }
         });
 
@@ -288,8 +321,6 @@
             } else {
                 root.style.setProperty('--primary', '#ff5e00'); // Flux color
             }
-            
-            if(!currentUser) updateGuestDisplay();
         };
 
         window.setDuration = (sec) => {
@@ -307,7 +338,7 @@
             reader.onload = function(event) {
                 const img = new Image();
                 img.onload = function() {
-                    // Resize to max 300px width to save DB space
+                    // Resize to max 300px width
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     const scaleFactor = 300 / img.width;
@@ -324,35 +355,15 @@
             reader.readAsDataURL(file);
         });
 
-        // --- RATE LIMITS & GENERATION ---
-        function getGuestCredits() {
-            const saved = localStorage.getItem('aiStudio_guest');
-            return saved ? JSON.parse(saved) : { banana: 2, sora: 2, flux: 2 };
-        }
-
-        function updateGuestDisplay() {
-            const creds = getGuestCredits();
-            const val = creds[selectedModel] !== undefined ? creds[selectedModel] : 2;
-            creditDisplay.innerText = `Guest: ${val} left`;
-        }
-
+        // --- GENERATION LOGIC ---
         document.getElementById('generate-btn').addEventListener('click', async () => {
             const prompt = document.getElementById('prompt-input').value.trim();
             if (!prompt) return showToast("Type a prompt!");
 
-            // 1. GUEST CHECK
-            if (!currentUser) {
-                const creds = getGuestCredits();
-                if (creds[selectedModel] <= 0) return showToast("No credits left! Log in.");
-                
-                creds[selectedModel]--;
-                localStorage.setItem('aiStudio_guest', JSON.stringify(creds));
-                updateGuestDisplay();
-            }
+            if (!currentUser) return alert("You must be logged in.");
 
-            // 2. LOGGED IN USER CHECK (Rate Limit)
-            if (currentUser) {
-                // Query recent docs to check limit
+            // RATE LIMIT CHECK
+            try {
                 const limitQ = query(
                     collection(db, "ai_studio_requests"),
                     where("userId", "==", currentUser.uid),
@@ -360,19 +371,17 @@
                 );
                 const snap = await getDocs(limitQ);
                 if (snap.size >= USER_LIMIT_COUNT) {
-                    return showToast(`Limit hit! Wait a bit. (${snap.size}/10 used)`);
+                    return showToast(`Limit hit! Wait a bit. (${snap.size}/10)`);
                 }
-            }
 
-            // SEND
-            try {
+                // SEND
                 await addDoc(collection(db, "ai_studio_requests"), {
-                    userId: currentUser ? currentUser.uid : "guest",
-                    userName: currentUser ? currentUser.displayName : "Guest",
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName,
                     model: selectedModel === 'banana' ? "Nano Banana Pro" : (selectedModel === 'sora' ? "Sora 2" : "Flux"),
                     prompt: prompt,
                     duration: selectedModel === 'sora' ? soraDuration : null,
-                    refImage: refImageBase64, // The compressed base64 string
+                    refImage: refImageBase64,
                     status: "pending",
                     resultUrl: "",
                     timestamp: serverTimestamp()
@@ -384,18 +393,23 @@
                 refPreview.style.display = 'none';
             } catch (err) {
                 console.error(err);
-                showToast("Error sending request. Check console.");
+                // IF THIS STILL ERRORS, THE DB IS LOCKED
+                alert("Database Error: " + err.message + "\n\n(If it says permission denied, your database rules are set to 'false' for everyone.)");
             }
         });
 
         // --- USER GALLERY ---
         function loadUserQueue(uid) {
-            const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), orderBy("timestamp", "desc"), limit(20));
-            onSnapshot(q, (snap) => {
-                const grid = document.getElementById('gallery-grid');
-                grid.innerHTML = "";
-                snap.forEach(doc => renderCard(doc.data(), doc.id, grid));
-            });
+            try {
+                const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), orderBy("timestamp", "desc"), limit(20));
+                onSnapshot(q, (snap) => {
+                    const grid = document.getElementById('gallery-grid');
+                    grid.innerHTML = "";
+                    snap.forEach(doc => renderCard(doc.data(), doc.id, grid));
+                }, (error) => {
+                    console.log("Read Error:", error);
+                });
+            } catch(e) { console.log(e); }
         }
 
         function renderCard(data, id, container) {
@@ -418,42 +432,42 @@
 
         // --- ADMIN PANEL LOGIC ---
         function loadAdminData() {
-            // Get all pending, then completed
-            const q = query(collection(db, "ai_studio_requests"), orderBy("timestamp", "desc"), limit(50));
-            onSnapshot(q, (snap) => {
-                const queue = document.getElementById('admin-queue');
-                queue.innerHTML = "";
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const id = docSnap.id;
-                    
-                    // Format Details
-                    const refDisplay = d.refImage ? `<img src="${d.refImage}" class="admin-ref-img" title="Reference Image">` : '';
-                    const durDisplay = d.duration ? `<span style="color:cyan; font-weight:bold;">${d.duration}s</span>` : '';
-                    
-                    const card = document.createElement('div');
-                    card.className = "admin-card";
-                    card.innerHTML = `
-                        <h4>
-                            <span>${d.userName}</span>
-                            <span style="color:${d.model.includes('Sora')?'cyan':(d.model.includes('Flux')?'orange':'yellow')}">${d.model} ${durDisplay}</span>
-                        </h4>
-                        ${refDisplay}
-                        <div class="admin-prompt" onclick="navigator.clipboard.writeText('${d.prompt}')">
-                            ${d.prompt} <i class="fa-solid fa-copy"></i>
-                        </div>
-                        <div>Status: <span style="color:${d.status==='pending'?'orange':'lime'}">${d.status}</span></div>
+            try {
+                const q = query(collection(db, "ai_studio_requests"), orderBy("timestamp", "desc"), limit(50));
+                onSnapshot(q, (snap) => {
+                    const queue = document.getElementById('admin-queue');
+                    queue.innerHTML = "";
+                    snap.forEach(docSnap => {
+                        const d = docSnap.data();
+                        const id = docSnap.id;
                         
-                        ${d.status === 'pending' ? `
-                            <div class="admin-input-group">
-                                <input type="text" class="admin-input" id="res-${id}" placeholder="Paste Image/Video URL...">
-                                <button class="glow-btn" style="background:#00ff88; color:black;" onclick="window.completeReq('${id}')">SEND</button>
+                        const refDisplay = d.refImage ? `<img src="${d.refImage}" class="admin-ref-img" title="Reference Image">` : '';
+                        const durDisplay = d.duration ? `<span style="color:cyan; font-weight:bold;">${d.duration}s</span>` : '';
+                        
+                        const card = document.createElement('div');
+                        card.className = "admin-card";
+                        card.innerHTML = `
+                            <h4>
+                                <span>${d.userName}</span>
+                                <span style="color:${d.model.includes('Sora')?'cyan':(d.model.includes('Flux')?'orange':'yellow')}">${d.model} ${durDisplay}</span>
+                            </h4>
+                            ${refDisplay}
+                            <div class="admin-prompt" onclick="navigator.clipboard.writeText('${d.prompt}')">
+                                ${d.prompt} <i class="fa-solid fa-copy"></i>
                             </div>
-                        ` : ''}
-                    `;
-                    queue.appendChild(card);
+                            <div>Status: <span style="color:${d.status==='pending'?'orange':'lime'}">${d.status}</span></div>
+                            
+                            ${d.status === 'pending' ? `
+                                <div class="admin-input-group">
+                                    <input type="text" class="admin-input" id="res-${id}" placeholder="Paste Image/Video URL...">
+                                    <button class="glow-btn" style="background:#00ff88; color:black;" onclick="window.completeReq('${id}')">SEND</button>
+                                </div>
+                            ` : ''}
+                        `;
+                        queue.appendChild(card);
+                    });
                 });
-            });
+            } catch(e){ console.log(e); }
         }
 
         window.completeReq = async (id) => {
