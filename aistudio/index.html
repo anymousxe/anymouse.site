@@ -174,7 +174,7 @@
         <nav>
             <div class="logo">The Ai <span class="highlight">STudio</span></div>
             <div style="display:flex; align-items:center; gap:20px;">
-                <span id="credits-txt" style="font-size:0.9rem; color:#aaa; font-weight:600;">Unlimited Access</span>
+                <span id="credits-txt" style="font-size:0.9rem; color:#aaa; font-weight:600;">10 Credits / 10 Mins</span>
                 <button id="btn-open-admin" class="hidden" onclick="toggleAdmin(true)" style="background:rgba(255, 42, 42, 0.1); border:1px solid var(--danger); color:var(--danger); padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:bold; transition:0.3s;">ADMIN</button>
                 <img id="user-pfp" style="width:40px; height:40px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;" src="">
                 <i class="fa-solid fa-right-from-bracket" onclick="doLogout()" style="cursor:pointer; color:#aaa; font-size:1.2rem; transition:0.3s;"></i>
@@ -214,7 +214,7 @@
                 </div>
 
                 <textarea id="inp-prompt" placeholder="Describe your imagination..."></textarea>
-                <button class="action-btn" onclick="submitRequest()">Generate Content</button>
+                <button id="btn-submit" class="action-btn" onclick="submitRequest()">Generate Content</button>
             </div>
 
             <h2 style="font-weight:300; opacity:0.7; margin-bottom:25px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">Your Creations</h2>
@@ -265,6 +265,33 @@
             soraDur: 10
         };
 
+        // --- IMAGE COMPRESSION UTIL ---
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const elem = document.createElement('canvas');
+                        // Max dimension 800px to keep size small for Firestore text
+                        const scaleFactor = 800 / Math.max(img.width, img.height);
+                        const w = img.width > 800 ? img.width * scaleFactor : img.width;
+                        const h = img.height > 800 ? img.height * scaleFactor : img.height;
+                        
+                        elem.width = w;
+                        elem.height = h;
+                        const ctx = elem.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        // Compress to JPEG 0.6 quality
+                        resolve(elem.toDataURL('image/jpeg', 0.6));
+                    };
+                    img.onerror = (e) => reject(e);
+                };
+            });
+        }
+
         // --- CORE UI ---
         function renderApp() {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
@@ -274,7 +301,6 @@
                 return;
             }
 
-            // SIMPLIFIED LOGIC: No more offline checks
             if (state.user) {
                 document.getElementById('screen-app').classList.add('active');
             } else {
@@ -298,8 +324,6 @@
         });
 
         // --- FUNCTIONS ---
-        // Removed openLoginModal (no longer needed since offline screen is gone)
-
         document.getElementById('btn-login-google').addEventListener('click', async () => {
             try {
                 await signInWithPopup(auth, provider);
@@ -338,25 +362,57 @@
             }
         };
 
-        document.getElementById('inp-ref-img').addEventListener('change', (e) => {
+        // NEW: Handles Image compression on upload
+        document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    state.refImg = e.target.result;
-                    document.getElementById('ref-status').innerText = "IMAGE LOADED";
-                };
-                reader.readAsDataURL(file);
+                document.getElementById('ref-status').innerText = "COMPRESSING...";
+                try {
+                    const compressed = await compressImage(file);
+                    state.refImg = compressed;
+                    document.getElementById('ref-status').innerText = "IMAGE READY";
+                } catch(err) {
+                    console.error(err);
+                    document.getElementById('ref-status').innerText = "ERROR LOADING IMG";
+                    showToast("Image too weird/large");
+                }
             }
         });
 
         window.submitRequest = async () => {
+            const btn = document.getElementById('btn-submit');
             const prompt = document.getElementById('inp-prompt').value;
             if(!prompt) return showToast("Enter a prompt!");
 
-            // --- REMOVED RATE LIMIT QUERY TO FIX TIMESTAMP INDEX ERROR ---
-            
+            btn.disabled = true;
+            btn.innerText = "Checking Limits...";
+
             try {
+                // --- MANUAL RATE LIMITER (NO INDEX ERROR) ---
+                // 1. Fetch last 20 requests for this user
+                // 2. Filter them in JS to see how many were in last 10 minutes
+                const tenMinsAgo = Date.now() - (10 * 60 * 1000); // 10 minutes in ms
+                
+                const q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), orderBy("timestamp", "desc"), limit(20));
+                const snap = await getDocs(q);
+                
+                let recentCount = 0;
+                snap.forEach(d => {
+                    const data = d.data();
+                    if(data.timestamp && data.timestamp.toMillis() > tenMinsAgo) {
+                        recentCount++;
+                    }
+                });
+
+                if(recentCount >= 10) {
+                    btn.disabled = false;
+                    btn.innerText = "Generate Content";
+                    return showToast("Rate Limit: 10 per 10 mins");
+                }
+                
+                // --- SENDING ---
+                btn.innerText = "Sending...";
+
                 await addDoc(collection(db, "ai_studio_requests"), {
                     userId: state.user.uid,
                     userName: state.user.displayName,
@@ -364,7 +420,7 @@
                     model: state.model === 'banana' ? "Nano Banana Pro" : (state.model === 'sora' ? "Sora 2" : "Flux"),
                     status: 'pending',
                     timestamp: serverTimestamp(),
-                    refImage: state.refImg,
+                    refImage: state.refImg, // Now using the compressed version
                     duration: state.model === 'sora' ? state.soraDur : null
                 });
 
@@ -372,18 +428,19 @@
                 state.refImg = null;
                 document.getElementById('ref-status').innerText = "";
                 document.getElementById('inp-ref-img').value = ""; 
-                showToast("Sent to Admin Queue");
+                showToast("Added to Queue"); // New message
 
             } catch(e) {
                 console.error(e);
-                alert("Database Error: " + e.message);
+                alert("Error: " + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Generate Content";
             }
         };
 
         // --- USER GALLERY ---
         function loadUserQueue(uid) {
-            // Note: This needs an index for userId + timestamp DESC. 
-            // If this errors, check console link.
             const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), orderBy("timestamp", "desc"), limit(20));
             onSnapshot(q, (snap) => {
                 const grid = document.getElementById('gallery');
@@ -412,10 +469,7 @@
         };
 
         function loadAdminQueue() {
-            // REMOVED 'orderBy' to prevent Index Error here too.
-            // Sorting is done in JS now for safety.
             const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"));
-            
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('admin-list');
                 list.innerHTML = "";
@@ -424,11 +478,8 @@
                     return;
                 }
 
-                // Convert to array and sort manually
                 const docs = [];
                 snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
-                
-                // Sort by timestamp if it exists, new ones on top
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 docs.forEach(d => {
