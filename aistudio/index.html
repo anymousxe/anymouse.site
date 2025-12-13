@@ -240,23 +240,24 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateCurrentUser } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        // FIREBASE CONFIG
+        // FIREBASE CONFIG (YOUR NEW PROJECT KEYS)
         const firebaseConfig = {
-            apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
-            authDomain: "mouseland-istuff.firebaseapp.com",
-            projectId: "mouseland-istuff",
-            storageBucket: "mouseland-istuff.firebasestorage.app",
-            messagingSenderId: "459629527486",
-            appId: "1:459629527486:web:0c038f1fad27ef288879ef",
-            measurementId: "G-HX18GW1CVG"
+            apiKey: "AIzaSyDQacpiI3oIqOUx8ciMfdlQgBtHZEVdcMo",
+            authDomain: "anymousxe-aistudio.firebaseapp.com",
+            projectId: "anymousxe-aistudio",
+            storageBucket: "anymousxe-aistudio.firebasestorage.app",
+            messagingSenderId: "518478280058",
+            appId: "1:518478280058:web:422404fc54c21e5ea312c3",
+            measurementId: "G-F9YHW3MWCW"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const ADMIN_EMAIL = "anymousxe.info@gmail.com"; // Set this to the email you login with
 
         // STATE
         let currentUser = null;
@@ -304,7 +305,7 @@
                 loadUserQueue(user.uid);
 
                 // Admin Check
-                if (user.email === "anymousxe.info@gmail.com") {
+                if (user.email === ADMIN_EMAIL) {
                     document.getElementById('admin-link-btn').classList.remove('hidden');
                     loadAdminData(); 
                 }
@@ -389,6 +390,7 @@
 
             // RATE LIMIT CHECK
             try {
+                // Note: You will need to create the index for this query in Firebase Console!
                 const limitQ = query(
                     collection(db, "ai_studio_requests"),
                     where("userId", "==", currentUser.uid),
@@ -418,7 +420,11 @@
                 refPreview.style.display = 'none';
             } catch (err) {
                 console.error(err);
-                alert("Database Error: " + err.message + "\n\n(Did you update the rules in Firebase Console?)");
+                if(err.code === 'failed-precondition') {
+                    alert("Click the link in the console to create the index!");
+                } else {
+                    alert("Database Error: " + err.message);
+                }
             }
         });
 
@@ -457,6 +463,7 @@
         // --- ADMIN PANEL LOGIC ---
         function loadAdminData() {
             try {
+                // Admin reads all requests
                 const q = query(collection(db, "ai_studio_requests"), orderBy("timestamp", "desc"), limit(50));
                 onSnapshot(q, (snap) => {
                     const queue = document.getElementById('admin-queue');
@@ -497,10 +504,16 @@
         window.completeReq = async (id) => {
             const url = document.getElementById(`res-${id}`).value;
             if(!url) return alert("Enter URL");
-            await updateDoc(doc(db, "ai_studio_requests", id), {
-                status: "completed",
-                resultUrl: url
-            });
+            
+            // Explicitly ensure the current user is used for the update request
+            if (currentUser && currentUser.email === ADMIN_EMAIL) {
+                await updateDoc(doc(db, "ai_studio_requests", id), {
+                    status: "completed",
+                    resultUrl: url
+                });
+            } else {
+                showToast("Permission Denied: Only the specific admin can fulfill requests.");
+            }
         };
 
         function showToast(msg) {
