@@ -1,0 +1,340 @@
+:root {
+    --bg-dark: #050508;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --banana-yellow: #ffe135;
+    --sora-cyan: #00f2ff;
+    --text-main: #ffffff;
+    --text-dim: #8b8b9e;
+    --primary: var(--banana-yellow);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Insane Background Animation */
+.background-fx {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: 
+        radial-gradient(circle at 15% 50%, rgba(86, 0, 245, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.1), transparent 25%);
+    z-index: -1;
+    animation: bgPulse 10s infinite alternate;
+}
+
+@keyframes bgPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.1); opacity: 1; }
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.highlight {
+    color: var(--primary);
+}
+
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Buttons & Inputs */
+button {
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.glow-btn {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+.glow-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Main App */
+#app-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Model Selection */
+.model-selector {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.model-card {
+    flex: 1;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 30px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.model-card:hover {
+    transform: translateY(-5px);
+}
+
+.model-card.active {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.model-card .icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--text-dim);
+}
+
+.model-card.active .icon {
+    color: var(--primary);
+}
+
+/* Input Area */
+.input-area {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+
+textarea {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    padding: 15px;
+    resize: none;
+    outline: none;
+    min-height: 100px;
+}
+
+.action-btn {
+    background: var(--primary);
+    color: #000;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    align-self: flex-end;
+}
+
+.action-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px var(--primary);
+}
+
+/* Sora Options */
+#sora-options {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toggle-group {
+    background: var(--glass);
+    padding: 5px;
+    border-radius: 50px;
+    display: flex;
+}
+
+.dur-btn {
+    background: transparent;
+    color: var(--text-dim);
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.dur-btn.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Hidden Utilities */
+.hidden { display: none !important; }
+
+/* Gallery */
+.gallery-section h2 {
+    margin: 40px 0 20px 0;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.creation-card {
+    background: var(--glass);
+    border-radius: 15px;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease;
+}
+
+.creation-card img, .creation-card video {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #000;
+}
+
+.creation-meta {
+    padding: 15px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.status-pending { background: #333; color: #fff; animation: pulse 1.5s infinite; }
+.status-completed { background: #00ff88; color: #000; }
+
+@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ADMIN PANEL STYLES */
+#admin-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: #0f0f13;
+    border-left: 1px solid #333;
+    z-index: 999;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: #ff4444;
+}
+
+.admin-card {
+    background: #1a1a20;
+    border: 1px solid #333;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+.admin-card p {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.prompt-text {
+    background: #000;
+    padding: 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--primary);
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.admin-input {
+    width: 100%;
+    background: #222;
+    border: 1px solid #444;
+    color: white;
+    padding: 8px;
+    margin-bottom: 5px;
+}
+
+.complete-btn {
+    width: 100%;
+    background: #00ff88;
+    color: black;
+    padding: 8px;
+    font-weight: bold;
+}
+
+#user-pfp {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+}
+
+/* Toast */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    z-index: 1000;
+    display: none;
+}
