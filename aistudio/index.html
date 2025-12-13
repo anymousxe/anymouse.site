@@ -59,9 +59,6 @@
         #screen-loading { z-index: 5000; background: #000; }
         .loader { width: 50px; height: 50px; border: 5px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite; }
 
-        /* --- FILE PROTOCOL WARNING --- */
-        #screen-protocol-error { z-index: 6000; background: #000; text-align: center; padding: 20px;}
-
         /* --- LOGIN --- */
         #screen-login { z-index: 3000; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); }
         .login-card { 
@@ -188,15 +185,6 @@
         <p style="margin-top: 20px; color: #666; font-family:'Space Grotesk'; letter-spacing:2px;">INITIALIZING SYSTEM</p>
     </div>
 
-    <div id="screen-protocol-error" class="screen centered">
-        <i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:20px;"></i>
-        <h2 style="font-family:'Space Grotesk'; color:white; margin-bottom:10px;">CANNOT RUN LOCALLY</h2>
-        <p style="color:#aaa; max-width:500px;">
-            Google Security blocks logging in from a downloaded file (file://).<br><br>
-            To share this app with friends, you must <b>Host It</b> on a real website like <b>anymouse.site</b>, GitHub Pages, or Vercel.
-        </p>
-    </div>
-
     <div id="screen-login" class="screen centered">
         <div class="login-card">
             <h2 class="logo" style="font-size: 2.5rem; margin-bottom: 10px;">The Ai <span class="highlight">STudio</span></h2>
@@ -315,10 +303,9 @@
             soraDur: 10
         };
 
-        // GLOBAL UNSUBSCRIBE to Fix Listener Leak
         let unsubscribeUserQueue = null;
 
-        // --- IMAGE COMPRESSION UTIL (Smart Resize) ---
+        // --- COMPRESSION FOR EVERYONE (ADMIN & USER) ---
         function compressImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -328,41 +315,27 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const elem = document.createElement('canvas');
-                        // INCREASED SIZE to 1280px (HD)
-                        const scaleFactor = 1280 / Math.max(img.width, img.height);
-                        const w = img.width > 1280 ? img.width * scaleFactor : img.width;
-                        const h = img.height > 1280 ? img.height * scaleFactor : img.height;
+                        // AGGRESSIVE COMPRESSION: Max 800px width/height
+                        const scaleFactor = 800 / Math.max(img.width, img.height);
+                        const w = img.width > 800 ? img.width * scaleFactor : img.width;
+                        const h = img.height > 800 ? img.height * scaleFactor : img.height;
                         
                         elem.width = w;
                         elem.height = h;
                         const ctx = elem.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
                         
-                        // Output as JPEG at 0.7 quality (Good balance)
-                        let result = elem.toDataURL('image/jpeg', 0.7);
-                        
-                        // FAILSAFE: If still > 950KB (approx 1MB limit), compress harder
-                        if(result.length > 950000) {
-                             result = elem.toDataURL('image/jpeg', 0.5);
-                        }
-                        
-                        resolve(result);
+                        // Quality 0.5 (50%) to ensure it fits in Firestore 1MB limit
+                        resolve(elem.toDataURL('image/jpeg', 0.5));
                     };
                     img.onerror = (e) => reject(e);
                 };
             });
         }
 
-        // --- CORE UI ---
         function renderApp() {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
             
-            // CHECK FOR FILE PROTOCOL
-            if (window.location.protocol === 'file:') {
-                 document.getElementById('screen-protocol-error').classList.add('active');
-                 return;
-            }
-
             if (state.loading) {
                 document.getElementById('screen-loading').classList.add('active');
                 return;
@@ -375,7 +348,6 @@
             }
         }
 
-        // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
             state.user = user;
             state.isAdmin = user && user.email === ADMIN_EMAIL;
@@ -386,14 +358,12 @@
                 loadUserQueue(user.uid);
                 if(state.isAdmin) loadAdminQueue();
             } else {
-                // Cleanup on logout
                 if(unsubscribeUserQueue) unsubscribeUserQueue();
             }
             state.loading = false; 
             renderApp();
         });
 
-        // --- FUNCTIONS ---
         document.getElementById('btn-login-google').addEventListener('click', async () => {
             try {
                 await signInWithPopup(auth, provider);
@@ -403,7 +373,7 @@
         });
 
         window.doLogout = () => {
-            if(unsubscribeUserQueue) unsubscribeUserQueue(); // Cleanup
+            if(unsubscribeUserQueue) unsubscribeUserQueue();
             signOut(auth);
             window.location.reload();
         };
@@ -433,30 +403,40 @@
             }
         };
 
-        // NEW: Handles Image compression on upload
+        // --- USER UPLOAD ---
         document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
                 document.getElementById('ref-status').innerText = "COMPRESSING...";
                 try {
                     const compressed = await compressImage(file);
-                    
-                    // DOUBLE CHECK SIZE
-                    if(compressed.length > 1000000) {
-                         alert("File still too large. Try a different image.");
-                         document.getElementById('ref-status').innerText = "TOO LARGE";
-                         return;
-                    }
-                    
                     state.refImg = compressed;
                     document.getElementById('ref-status').innerText = "IMAGE READY";
                 } catch(err) {
                     console.error(err);
                     document.getElementById('ref-status').innerText = "ERROR";
-                    showToast("Error processing image");
                 }
             }
         });
+
+        // --- ADMIN UPLOAD HANDLER ---
+        window.adminFile = async (input, id) => {
+            const file = input.files[0];
+            if(file) {
+                const label = input.parentElement;
+                label.style.opacity = "0.5"; // Visual feedback
+                try {
+                    // COMPRESS ADMIN UPLOAD TOO
+                    const compressed = await compressImage(file);
+                    document.getElementById(`res-${id}`).value = compressed; 
+                    label.style.background = "#00ff88"; // Success color
+                    label.style.opacity = "1";
+                } catch(err) {
+                    alert("Admin Upload Error: " + err);
+                    label.style.background = "var(--danger)";
+                }
+            }
+        };
 
         window.submitRequest = async () => {
             const btn = document.getElementById('btn-submit');
@@ -467,7 +447,6 @@
             btn.innerText = "Sending...";
 
             try {
-                // NO RATE LIMITER. JUST SEND IT.
                 await addDoc(collection(db, "ai_studio_requests"), {
                     userId: state.user.uid,
                     userName: state.user.displayName,
@@ -494,12 +473,8 @@
             }
         };
 
-        // --- USER GALLERY ---
         function loadUserQueue(uid) {
-            // FIX: If a listener already exists, kill it first.
-            if(unsubscribeUserQueue) {
-                unsubscribeUserQueue();
-            }
+            if(unsubscribeUserQueue) unsubscribeUserQueue();
 
             const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), limit(50));
             
@@ -507,7 +482,6 @@
                 const grid = document.getElementById('gallery');
                 grid.innerHTML = "";
                 
-                // Convert to array and Sort manually in JS
                 const docs = [];
                 snap.forEach(d => docs.push({id: d.id, ...d.data()}));
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
@@ -541,13 +515,11 @@
         }
 
         window.deleteCreation = async (id) => {
-            if (confirm("Are you sure you want to delete this creation? This cannot be undone.")) {
+            if (confirm("Delete this creation?")) {
                 try {
                     await deleteDoc(doc(db, "ai_studio_requests", id));
-                    showToast("Creation deleted.");
                 } catch (error) {
                     console.error("Error deleting document: ", error);
-                    showToast("Error deleting creation.");
                 }
             }
         };
@@ -623,17 +595,6 @@
                 });
             });
         }
-
-        window.adminFile = (input, id) => {
-            const file = input.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById(`res-${id}`).value = e.target.result; 
-                };
-                reader.readAsDataURL(file);
-            }
-        };
 
         window.finishReq = async (id, status) => {
             const url = document.getElementById(`res-${id}`)?.value;
