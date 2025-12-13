@@ -34,10 +34,10 @@
         }
         @keyframes bgPulse { 0% { opacity: 0.8; } 100% { opacity: 1; } }
 
-        /* --- UI LAYERS (The Fix) --- */
+        /* --- UI LAYERS --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; /* Hidden by default, JS turns them on */
+            display: none; /* Hidden by default */
             flex-direction: column; 
             overflow-y: auto;
         }
@@ -192,7 +192,7 @@
                 <button onclick="toggleAdmin(false)" style="padding:10px; cursor:pointer;">EXIT</button>
             </div>
         </div>
-        <div id="admin-list">Loading...</div>
+        <div id="admin-list">Waiting for requests...</div>
     </div>
 
     <div id="toast"></div>
@@ -224,16 +224,15 @@
         // State
         let state = {
             user: null,
-            serverOnline: true, // Default true until DB says otherwise
+            serverOnline: true, 
             isAdmin: false,
             model: 'banana',
             refImg: null,
             loading: true
         };
 
-        // --- CORE UI MANAGER (The Fix) ---
+        // --- CORE UI MANAGER ---
         function renderApp() {
-            // Hide all screens first
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
 
             if (state.loading) {
@@ -241,32 +240,23 @@
                 return;
             }
 
-            // Logic Tree
             if (!state.serverOnline) {
-                // Server is DOWN
                 if (state.isAdmin) {
-                    // Admin Logged In -> Show App (Bypass)
                     document.getElementById('screen-app').classList.add('active');
                     showToast("SERVER OFFLINE (ADMIN MODE)");
                 } else {
-                    // Normal User or Not Logged In -> Show Offline Screen
                     document.getElementById('screen-offline').classList.add('active');
                 }
             } else {
-                // Server is UP
                 if (state.user) {
-                    // Logged In -> Show App
                     document.getElementById('screen-app').classList.add('active');
                 } else {
-                    // Not Logged In -> Show Login
                     document.getElementById('screen-login').classList.add('active');
                 }
             }
         }
 
         // --- LISTENERS ---
-        
-        // 1. Auth Listener
         onAuthStateChanged(auth, (user) => {
             state.user = user;
             state.isAdmin = user && user.email === ADMIN_EMAIL;
@@ -278,18 +268,14 @@
                 loadUserQueue(user.uid);
                 if(state.isAdmin) loadAdminQueue();
             }
-            
-            // If we have data, stop loading
             state.loading = false; 
             renderApp();
         });
 
-        // 2. Server Status Listener
         onSnapshot(doc(db, "server_config", "global"), (snap) => {
             if (snap.exists()) {
                 state.serverOnline = snap.data().isOnline;
             } else {
-                // Initialize if missing
                 setDoc(doc(db, "server_config", "global"), { isOnline: true });
                 state.serverOnline = true;
             }
@@ -300,7 +286,6 @@
         // --- FUNCTIONS ---
 
         window.openLoginModal = () => {
-            // Force open login screen over offline screen
             document.getElementById('screen-offline').classList.remove('active');
             document.getElementById('screen-login').classList.add('active');
         };
@@ -319,8 +304,6 @@
         };
 
         // --- CREATION LOGIC ---
-        
-        // Model Switcher
         window.setModel = (m) => {
             state.model = m;
             document.querySelectorAll('.model-card').forEach(el => el.classList.remove('active'));
@@ -340,7 +323,6 @@
             }
         };
 
-        // Image Input
         document.getElementById('inp-ref-img').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if(file) {
@@ -353,28 +335,28 @@
             }
         });
 
-        // Submit
         window.submitRequest = async () => {
             const prompt = document.getElementById('inp-prompt').value;
             if(!prompt) return showToast("Enter a prompt!");
 
-            // Rate Limit (1 Hour Window)
+            // Rate Limit
             const oneHourAgo = new Date(Date.now() - 3600000);
-            const q = query(collection(db, "requests"), where("uid", "==", state.user.uid), where("createdAt", ">", oneHourAgo));
             
-            // NOTE: If this fails, look at console for Index Link!
+            // IMPORTANT: Using 'ai_studio_requests' to match original data
+            const q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("timestamp", ">", oneHourAgo));
+            
             try {
                 const snap = await getDocs(q);
                 if(snap.size >= 10) return showToast("Rate Limit Hit (10/hr)");
 
-                await addDoc(collection(db, "requests"), {
-                    uid: state.user.uid,
-                    user: state.user.displayName,
+                await addDoc(collection(db, "ai_studio_requests"), {
+                    userId: state.user.uid,
+                    userName: state.user.displayName,
                     prompt: prompt,
-                    model: state.model,
+                    model: state.model === 'banana' ? "Nano Banana Pro" : (state.model === 'sora' ? "Sora 2" : "Flux"),
                     status: 'pending',
-                    createdAt: serverTimestamp(),
-                    refImg: state.refImg,
+                    timestamp: serverTimestamp(),
+                    refImage: state.refImg,
                     duration: state.model === 'sora' ? document.getElementById('sora-dur').value : null
                 });
 
@@ -385,46 +367,53 @@
 
             } catch(e) {
                 console.error(e);
-                alert("Database Error: " + e.message + "\n(Check Console if index needed)");
+                if(e.code === 'failed-precondition') {
+                    alert("MISSING INDEX! Open Console (F12) and click the link from Firebase!");
+                } else {
+                    alert("Database Error: " + e.message);
+                }
             }
         };
 
         // --- GALLERY ---
         function loadUserQueue(uid) {
-            const q = query(collection(db, "requests"), where("uid", "==", uid), orderBy("createdAt", "desc"), limit(20));
+            const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), orderBy("timestamp", "desc"), limit(20));
             onSnapshot(q, (snap) => {
                 const grid = document.getElementById('gallery');
                 grid.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
+                    // Handle variable names from both versions
+                    const status = d.status;
+                    const result = d.resultUrl || d.result;
+                    const prompt = d.prompt;
+
                     let html = '';
-                    
-                    if(d.status === 'pending') {
+                    if(status === 'pending') {
                         html = `
                             <div class="state-box state-pending">
                                 <div class="loader" style="width:30px; height:30px;"></div>
                                 <span>PROCESSING</span>
                             </div>`;
-                    } else if (d.status === 'error') {
+                    } else if (status === 'error') {
                         html = `
                             <div class="state-box state-error">
                                 <i class="fa-solid fa-triangle-exclamation"></i>
                                 <span>FAILED</span>
                             </div>`;
                     } else {
-                        // Success
-                        const isVid = d.model === 'sora';
-                        html = isVid ? `<video src="${d.result}" controls class="creation-media"></video>` 
-                                     : `<img src="${d.result}" class="creation-media">`;
+                        const isVid = d.model && d.model.includes('Sora');
+                        html = isVid ? `<video src="${result}" controls class="creation-media"></video>` 
+                                     : `<img src="${result}" class="creation-media">`;
                     }
 
                     const div = document.createElement('div');
                     div.className = 'creation-card';
                     div.innerHTML = `
-                        <div class="status-tag status-${d.status}">${d.status}</div>
+                        <div class="status-tag status-${status}">${status}</div>
                         ${html}
                         <div style="padding:10px; font-size:0.8rem; color:#888; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">
-                            ${d.prompt}
+                            ${prompt}
                         </div>
                     `;
                     grid.appendChild(div);
@@ -455,27 +444,28 @@
         }
 
         function loadAdminQueue() {
-            const q = query(collection(db, "requests"), orderBy("createdAt", "desc"), limit(30));
+            const q = query(collection(db, "ai_studio_requests"), orderBy("timestamp", "desc"), limit(30));
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('admin-list');
                 list.innerHTML = "";
                 snap.forEach(docSnap => {
                     const d = docSnap.data();
                     const id = docSnap.id;
+                    const status = d.status;
                     
                     const el = document.createElement('div');
                     el.className = 'req-card';
                     el.innerHTML = `
                         <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.8rem; margin-bottom:5px;">
-                            <span>${d.user}</span>
+                            <span>${d.userName}</span>
                             <span style="color:var(--primary)">${d.model}</span>
                         </div>
                         <div style="margin-bottom:10px; cursor:pointer;" onclick="navigator.clipboard.writeText('${d.prompt}')">
                             ${d.prompt}
                         </div>
-                        ${d.refImg ? '<div style="color:cyan; font-size:0.8rem;">[Has Ref Image]</div>' : ''}
+                        ${d.refImage ? '<div style="color:cyan; font-size:0.8rem;">[Has Ref Image]</div>' : ''}
                         
-                        ${d.status === 'pending' ? `
+                        ${status === 'pending' ? `
                             <div class="admin-input-row">
                                 <input type="text" id="res-${id}" placeholder="Result URL..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:5px;">
                                 <label style="cursor:pointer; background:#333; padding:5px 10px; color:white;">
@@ -487,10 +477,15 @@
                                 <button onclick="finishReq('${id}', 'completed')" style="flex:1; background:#00ff88; border:none; padding:5px; cursor:pointer;">SEND</button>
                                 <button onclick="finishReq('${id}', 'error')" style="width:40px; background:var(--danger); border:none; padding:5px; cursor:pointer; color:white;"><i class="fa-solid fa-x"></i></button>
                             </div>
-                        ` : `<div style="color:${d.status==='completed'?'lime':'red'}">Status: ${d.status}</div>`}
+                        ` : `<div style="color:${status==='completed'?'lime':'red'}">Status: ${status}</div>`}
                     `;
                     list.appendChild(el);
                 });
+            }, (error) => {
+                console.error("Admin Load Error", error);
+                if(error.code === 'failed-precondition') {
+                    alert("ADMIN ERROR: Missing Index! Check Console.");
+                }
             });
         }
 
@@ -509,9 +504,9 @@
             const url = document.getElementById(`res-${id}`)?.value;
             if(status === 'completed' && !url) return alert("Missing URL/File");
 
-            await updateDoc(doc(db, "requests", id), {
+            await updateDoc(doc(db, "ai_studio_requests", id), {
                 status: status,
-                result: url || ""
+                resultUrl: url || ""
             });
         };
 
