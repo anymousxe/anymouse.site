@@ -59,6 +59,9 @@
         #screen-loading { z-index: 5000; background: #000; }
         .loader { width: 50px; height: 50px; border: 5px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite; }
 
+        /* --- FILE PROTOCOL WARNING --- */
+        #screen-protocol-error { z-index: 6000; background: #000; text-align: center; padding: 20px;}
+
         /* --- LOGIN --- */
         #screen-login { z-index: 3000; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); }
         .login-card { 
@@ -185,6 +188,15 @@
         <p style="margin-top: 20px; color: #666; font-family:'Space Grotesk'; letter-spacing:2px;">INITIALIZING SYSTEM</p>
     </div>
 
+    <div id="screen-protocol-error" class="screen centered">
+        <i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:20px;"></i>
+        <h2 style="font-family:'Space Grotesk'; color:white; margin-bottom:10px;">CANNOT RUN LOCALLY</h2>
+        <p style="color:#aaa; max-width:500px;">
+            Google Security blocks logging in from a downloaded file (file://).<br><br>
+            To share this app with friends, you must <b>Host It</b> on a real website like <b>anymouse.site</b>, GitHub Pages, or Vercel.
+        </p>
+    </div>
+
     <div id="screen-login" class="screen centered">
         <div class="login-card">
             <h2 class="logo" style="font-size: 2.5rem; margin-bottom: 10px;">The Ai <span class="highlight">STudio</span></h2>
@@ -303,7 +315,10 @@
             soraDur: 10
         };
 
-        // --- IMAGE COMPRESSION UTIL ---
+        // GLOBAL UNSUBSCRIBE to Fix Listener Leak
+        let unsubscribeUserQueue = null;
+
+        // --- IMAGE COMPRESSION UTIL (Smart Resize) ---
         function compressImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -313,15 +328,25 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const elem = document.createElement('canvas');
-                        const scaleFactor = 800 / Math.max(img.width, img.height);
-                        const w = img.width > 800 ? img.width * scaleFactor : img.width;
-                        const h = img.height > 800 ? img.height * scaleFactor : img.height;
+                        // INCREASED SIZE to 1280px (HD)
+                        const scaleFactor = 1280 / Math.max(img.width, img.height);
+                        const w = img.width > 1280 ? img.width * scaleFactor : img.width;
+                        const h = img.height > 1280 ? img.height * scaleFactor : img.height;
                         
                         elem.width = w;
                         elem.height = h;
                         const ctx = elem.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
-                        resolve(elem.toDataURL('image/jpeg', 0.6));
+                        
+                        // Output as JPEG at 0.7 quality (Good balance)
+                        let result = elem.toDataURL('image/jpeg', 0.7);
+                        
+                        // FAILSAFE: If still > 950KB (approx 1MB limit), compress harder
+                        if(result.length > 950000) {
+                             result = elem.toDataURL('image/jpeg', 0.5);
+                        }
+                        
+                        resolve(result);
                     };
                     img.onerror = (e) => reject(e);
                 };
@@ -331,6 +356,12 @@
         // --- CORE UI ---
         function renderApp() {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            
+            // CHECK FOR FILE PROTOCOL
+            if (window.location.protocol === 'file:') {
+                 document.getElementById('screen-protocol-error').classList.add('active');
+                 return;
+            }
 
             if (state.loading) {
                 document.getElementById('screen-loading').classList.add('active');
@@ -354,6 +385,9 @@
                 if(state.isAdmin) document.getElementById('btn-open-admin').classList.remove('hidden');
                 loadUserQueue(user.uid);
                 if(state.isAdmin) loadAdminQueue();
+            } else {
+                // Cleanup on logout
+                if(unsubscribeUserQueue) unsubscribeUserQueue();
             }
             state.loading = false; 
             renderApp();
@@ -369,6 +403,7 @@
         });
 
         window.doLogout = () => {
+            if(unsubscribeUserQueue) unsubscribeUserQueue(); // Cleanup
             signOut(auth);
             window.location.reload();
         };
@@ -405,12 +440,20 @@
                 document.getElementById('ref-status').innerText = "COMPRESSING...";
                 try {
                     const compressed = await compressImage(file);
+                    
+                    // DOUBLE CHECK SIZE
+                    if(compressed.length > 1000000) {
+                         alert("File still too large. Try a different image.");
+                         document.getElementById('ref-status').innerText = "TOO LARGE";
+                         return;
+                    }
+                    
                     state.refImg = compressed;
                     document.getElementById('ref-status').innerText = "IMAGE READY";
                 } catch(err) {
                     console.error(err);
-                    document.getElementById('ref-status').innerText = "ERROR LOADING IMG";
-                    showToast("Image too weird/large");
+                    document.getElementById('ref-status').innerText = "ERROR";
+                    showToast("Error processing image");
                 }
             }
         });
@@ -453,15 +496,18 @@
 
         // --- USER GALLERY ---
         function loadUserQueue(uid) {
-            // FIXED: Removed 'orderBy' from Firestore query to prevent index error.
-            // Sorting is done in JS now.
+            // FIX: If a listener already exists, kill it first.
+            if(unsubscribeUserQueue) {
+                unsubscribeUserQueue();
+            }
+
             const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), limit(50));
             
-            onSnapshot(q, (snap) => {
+            unsubscribeUserQueue = onSnapshot(q, (snap) => {
                 const grid = document.getElementById('gallery');
                 grid.innerHTML = "";
                 
-                // Convert to array and Sort manually
+                // Convert to array and Sort manually in JS
                 const docs = [];
                 snap.forEach(d => docs.push({id: d.id, ...d.data()}));
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
