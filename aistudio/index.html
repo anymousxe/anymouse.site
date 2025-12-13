@@ -130,9 +130,11 @@
         .status-pending { color: #ffe135; border-color: #ffe135; animation: pulse 1s infinite; }
 
         .delete-btn {
-            position: absolute; top: 12px; right: 12px; padding: 4px 8px; font-size: 0.8rem;
-            background: rgba(255, 42, 42, 0.8); color: white; border: none; border-radius: 50%;
-            cursor: pointer; transition: 0.2s; z-index: 10;
+            position: absolute; top: 12px; right: 12px; padding: 8px; font-size: 1rem;
+            background: rgba(255, 42, 42, 0.9); color: white; border: none; border-radius: 50%;
+            cursor: pointer; transition: 0.2s; z-index: 50; width:35px; height:35px;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         .delete-btn:hover { background: var(--danger); transform: scale(1.1); }
 
@@ -305,7 +307,7 @@
 
         let unsubscribeUserQueue = null;
 
-        // --- COMPRESSION FOR EVERYONE (ADMIN & USER) ---
+        // --- COMPRESSION FOR EVERYONE ---
         function compressImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -315,7 +317,7 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const elem = document.createElement('canvas');
-                        // AGGRESSIVE COMPRESSION: Max 800px width/height
+                        // Aggressive 800px limit
                         const scaleFactor = 800 / Math.max(img.width, img.height);
                         const w = img.width > 800 ? img.width * scaleFactor : img.width;
                         const h = img.height > 800 ? img.height * scaleFactor : img.height;
@@ -325,7 +327,6 @@
                         const ctx = elem.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
                         
-                        // Quality 0.5 (50%) to ensure it fits in Firestore 1MB limit
                         resolve(elem.toDataURL('image/jpeg', 0.5));
                     };
                     img.onerror = (e) => reject(e);
@@ -403,7 +404,6 @@
             }
         };
 
-        // --- USER UPLOAD ---
         document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
@@ -419,20 +419,20 @@
             }
         });
 
-        // --- ADMIN UPLOAD HANDLER ---
+        // ADMIN UPLOAD HANDLER
         window.adminFile = async (input, id) => {
             const file = input.files[0];
             if(file) {
                 const label = input.parentElement;
-                label.style.opacity = "0.5"; // Visual feedback
+                label.style.opacity = "0.5"; 
                 try {
-                    // COMPRESS ADMIN UPLOAD TOO
+                    // COMPRESS ADMIN UPLOAD
                     const compressed = await compressImage(file);
                     document.getElementById(`res-${id}`).value = compressed; 
-                    label.style.background = "#00ff88"; // Success color
+                    label.style.background = "#00ff88"; 
                     label.style.opacity = "1";
                 } catch(err) {
-                    alert("Admin Upload Error: " + err);
+                    alert("Upload Error: " + err);
                     label.style.background = "var(--danger)";
                 }
             }
@@ -496,17 +496,27 @@
 
                     const div = document.createElement('div');
                     div.className = 'creation-card';
+                    // NO ONCLICK IN HTML. PURE JS LISTENER.
                     div.innerHTML = `
-                        <button class="delete-btn" onclick="deleteCreation('${d.id}')"><i class="fa-solid fa-trash"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                         <div class="status-tag status-${d.status}">${d.status}</div>${html}
                         <div style="padding:15px; border-top:1px solid #222;"><div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${d.prompt}</div></div>
                     `;
                     
+                    // Manual Delete Listener
+                    const delBtn = div.querySelector('.delete-btn');
+                    if(delBtn) {
+                        delBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            deleteCreation(d.id);
+                        });
+                    }
+
+                    // Manual Card Click Listener
                     if (d.status === 'completed') {
-                        div.onclick = (e) => {
-                            if(e.target.closest('.delete-btn')) return;
+                        div.addEventListener('click', () => {
                             viewMedia(d.resultUrl, isVideo ? 'video' : 'image');
-                        }
+                        });
                     }
                     
                     grid.appendChild(div);
@@ -514,12 +524,14 @@
             });
         }
 
-        window.deleteCreation = async (id) => {
-            if (confirm("Delete this creation?")) {
+        async function deleteCreation(id) {
+            if (confirm("Delete this?")) {
                 try {
                     await deleteDoc(doc(db, "ai_studio_requests", id));
+                    showToast("Deleted");
                 } catch (error) {
-                    console.error("Error deleting document: ", error);
+                    console.error(error);
+                    showToast("Error deleting");
                 }
             }
         };
@@ -545,7 +557,6 @@
             document.getElementById('modal-media-container').innerHTML = '';
         }
 
-        // --- ADMIN ---
         window.toggleAdmin = (show) => {
             const el = document.getElementById('screen-admin');
             if(show) el.classList.add('active');
