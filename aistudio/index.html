@@ -34,39 +34,47 @@
         }
         @keyframes bgPulse { 0% { opacity: 0.8; } 100% { opacity: 1; } }
 
-        /* --- UI LAYERS --- */
+        /* --- LAYOUT --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; /* Hidden by default */
-            flex-direction: column; 
-            overflow-y: auto;
+            display: none; flex-direction: column; overflow-y: auto;
             animation: fadeIn 0.5s ease;
         }
         .screen.active { display: flex; }
         .centered { align-items: center; justify-content: center; }
 
-        /* --- 1. LOADING SCREEN --- */
+        /* --- WATERMARK --- */
+        .watermark {
+            position: fixed; bottom: 10px; width: 100%; text-align: center;
+            z-index: 9999; pointer-events: none;
+        }
+        .watermark a {
+            color: rgba(255,255,255,0.3); font-size: 0.8rem; text-decoration: none;
+            font-family: 'Space Grotesk'; text-transform: uppercase; letter-spacing: 2px;
+            pointer-events: auto; transition: 0.3s;
+        }
+        .watermark a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+
+        /* --- LOADING --- */
         #screen-loading { z-index: 5000; background: #000; }
         .loader { width: 50px; height: 50px; border: 5px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite; }
 
-        /* --- 2. OFFLINE SCREEN (THE SCARY ONE) --- */
+        /* --- OFFLINE --- */
         #screen-offline { z-index: 4000; background: rgba(5,5,8,0.95); backdrop-filter: blur(20px); }
         .glitch-text { 
             font-family: 'Space Grotesk'; font-size: 4rem; font-weight: 800; 
             color: var(--danger); text-shadow: 3px 3px 0 #fff; 
-            animation: glitch 0.3s infinite; 
-            text-align: center;
+            animation: glitch 0.3s infinite; text-align: center;
         }
         .bypass-btn { margin-top: 50px; background: transparent; border: 1px solid #333; color: #555; padding: 10px 20px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;}
         .bypass-btn:hover { color: #fff; border-color: var(--danger); box-shadow: 0 0 15px rgba(255, 42, 42, 0.5); }
 
-        /* --- 3. LOGIN SCREEN --- */
+        /* --- LOGIN --- */
         #screen-login { z-index: 3000; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); }
         .login-card { 
             background: rgba(15, 15, 19, 0.7); border: 1px solid var(--glass-border); 
             padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.8); 
-            backdrop-filter: blur(10px);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
         }
         .glow-btn { 
             background: var(--glass); border: 1px solid var(--glass-border); color: white; 
@@ -75,7 +83,7 @@
         }
         .glow-btn:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
 
-        /* --- 4. MAIN APP --- */
+        /* --- APP --- */
         #screen-app { z-index: 1000; }
         nav { 
             display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; 
@@ -85,9 +93,8 @@
         .logo { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 700; }
         .highlight { color: var(--primary); }
         
-        #app-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; width: 100%; }
+        #app-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; width: 100%; padding-bottom: 50px; }
 
-        /* Model Selector */
         .model-selector { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
         .model-card { 
             flex: 1; background: var(--glass); border: 1px solid var(--glass-border); 
@@ -99,7 +106,6 @@
         .model-card i { font-size: 2rem; margin-bottom: 15px; display: block; color: #888; }
         .model-card.active i { color: var(--primary); }
 
-        /* Controls */
         .controls { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         textarea { 
             width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; 
@@ -107,7 +113,6 @@
             transition: 0.3s;
         }
         textarea:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); }
-        
         .action-btn { 
             background: var(--primary); color: #000; padding: 15px 40px; border: none; border-radius: 15px; 
             font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 1rem;
@@ -115,7 +120,6 @@
         }
         .action-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
 
-        /* Gallery */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .creation-card { 
             background: #000; border: 1px solid #333; border-radius: 15px; overflow: hidden; position: relative; 
@@ -124,11 +128,9 @@
         .creation-card:hover { border-color: var(--primary); transform: translateY(-3px); }
         .creation-media { height: 220px; width: 100%; object-fit: cover; display: block; }
         
-        /* Loading/Error States */
         .state-box { height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; background: rgba(255,255,255,0.02); }
         .state-pending { color: #aaa; }
         .state-error { background: #2a0505; color: #ff4444; }
-        
         .status-tag { 
             position: absolute; top: 12px; left: 12px; padding: 4px 10px; font-size: 0.7rem; font-weight: bold; 
             border-radius: 6px; background: rgba(0,0,0,0.8); color: white; text-transform: uppercase; 
@@ -137,7 +139,7 @@
         .status-completed { color: #00ff88; border-color: #00ff88; }
         .status-pending { color: #ffe135; border-color: #ffe135; animation: pulse 1s infinite; }
 
-        /* --- 5. ADMIN PANEL --- */
+        /* --- ADMIN --- */
         #screen-admin { z-index: 2000; background: #0f0f13; padding: 30px; display: none; }
         #screen-admin.active { display: flex; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333; }
@@ -145,7 +147,7 @@
         .req-card:hover { border-color: #555; }
         .admin-input-row { display: flex; gap: 10px; margin-top: 15px; }
         
-        /* Util */
+        /* UTIL */
         .hidden { display: none !important; }
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 30px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
@@ -158,6 +160,10 @@
 <body>
 
     <div class="background-fx"></div>
+
+    <div class="watermark">
+        <a href="https://anymouse.site" target="_blank">made by anymousxe</a>
+    </div>
 
     <div id="screen-loading" class="screen active centered">
         <div class="loader"></div>
@@ -252,7 +258,6 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, orderBy, limit, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        // --- PASTE YOUR FIREBASE CONFIG HERE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDQacpiI3oIqOUx8ciMfdlQgBtHZEVdcMo",
             authDomain: "anymousxe-aistudio.firebaseapp.com",
@@ -270,7 +275,6 @@
 
         const ADMIN_EMAIL = "anymousxe.info@gmail.com"; 
 
-        // State
         let state = {
             user: null,
             serverOnline: true, 
@@ -281,10 +285,8 @@
             soraDur: 10
         };
 
-        // --- CORE UI MANAGER ---
+        // --- CORE UI ---
         function renderApp() {
-            // Logic Priority: 1. Loading -> 2. Server Down (unless Admin) -> 3. Login/App
-            
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
 
             if (state.loading) {
@@ -292,18 +294,14 @@
                 return;
             }
 
+            // IMMUNITY CHECK:
             if (!state.serverOnline) {
-                // Server is DOWN
                 if (state.isAdmin && state.user) {
-                    // Admin Logged In -> Show App (Bypass)
-                    document.getElementById('screen-app').classList.add('active');
-                    showToast("⚠️ ADMIN BYPASS: SERVER OFFLINE");
+                    document.getElementById('screen-app').classList.add('active'); // Admin Immune
                 } else {
-                    // Everyone else -> Show Offline
-                    document.getElementById('screen-offline').classList.add('active');
+                    document.getElementById('screen-offline').classList.add('active'); // Public blocked
                 }
             } else {
-                // Server is UP
                 if (state.user) {
                     document.getElementById('screen-app').classList.add('active');
                 } else {
@@ -312,7 +310,7 @@
             }
         }
 
-        // --- LISTENERS ---
+        // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
             state.user = user;
             state.isAdmin = user && user.email === ADMIN_EMAIL;
@@ -327,12 +325,11 @@
             renderApp();
         });
 
-        // Server Config Listener
+        // --- SERVER STATUS ---
         onSnapshot(doc(db, "server_config", "global"), (snap) => {
             if (snap.exists()) {
                 state.serverOnline = snap.data().isOnline;
             } else {
-                // Auto-create doc if missing (Fixes the button not working first time)
                 setDoc(doc(db, "server_config", "global"), { isOnline: true });
                 state.serverOnline = true;
             }
@@ -365,7 +362,6 @@
             btn.style.opacity = '1';
         };
 
-        // --- CREATION LOGIC ---
         window.setModel = (m) => {
             state.model = m;
             document.querySelectorAll('.model-card').forEach(el => el.classList.remove('active'));
@@ -423,20 +419,16 @@
                 document.getElementById('inp-prompt').value = "";
                 state.refImg = null;
                 document.getElementById('ref-status').innerText = "";
-                document.getElementById('inp-ref-img').value = ""; // Clear file input
+                document.getElementById('inp-ref-img').value = ""; 
                 showToast("Sent to Admin Queue");
 
             } catch(e) {
                 console.error(e);
-                if(e.code === 'failed-precondition') {
-                    alert("MISSING INDEX! Open Console (F12) and click the link from Firebase!");
-                } else {
-                    alert("Database Error: " + e.message);
-                }
+                alert("Database Error: " + e.message);
             }
         };
 
-        // --- GALLERY ---
+        // --- USER GALLERY ---
         function loadUserQueue(uid) {
             const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), orderBy("timestamp", "desc"), limit(20));
             onSnapshot(q, (snap) => {
@@ -444,39 +436,15 @@
                 grid.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const status = d.status;
-                    const result = d.resultUrl || d.result;
-                    const prompt = d.prompt;
-
-                    let html = '';
-                    if(status === 'pending') {
-                        html = `
-                            <div class="state-box state-pending">
-                                <div class="loader" style="width:30px; height:30px;"></div>
-                                <span style="font-size:0.8rem; letter-spacing:2px;">PROCESSING</span>
-                            </div>`;
-                    } else if (status === 'error') {
-                        html = `
-                            <div class="state-box state-error">
-                                <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
-                                <span>FAILED</span>
-                            </div>`;
-                    } else {
-                        const isVid = d.model && d.model.includes('Sora');
-                        html = isVid ? `<video src="${result}" controls class="creation-media"></video>` 
-                                     : `<img src="${result}" class="creation-media">`;
-                    }
+                    const html = d.status === 'pending' ? 
+                        `<div class="state-box state-pending"><div class="loader" style="width:30px; height:30px;"></div><span>PROCESSING</span></div>` :
+                        (d.status === 'error' ? 
+                            `<div class="state-box state-error"><i class="fa-solid fa-triangle-exclamation fa-2x"></i><span>FAILED</span></div>` :
+                            (d.model.includes('Sora') ? `<video src="${d.resultUrl}" controls class="creation-media"></video>` : `<img src="${d.resultUrl}" class="creation-media">`));
 
                     const div = document.createElement('div');
                     div.className = 'creation-card';
-                    div.innerHTML = `
-                        <div class="status-tag status-${status}">${status}</div>
-                        ${html}
-                        <div style="padding:15px; border-top:1px solid #222;">
-                            <div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${prompt}</div>
-                            <div style="font-size:0.7rem; color:var(--primary); text-transform:uppercase;">${d.model}</div>
-                        </div>
-                    `;
+                    div.innerHTML = `<div class="status-tag status-${d.status}">${d.status}</div>${html}<div style="padding:15px; border-top:1px solid #222;"><div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${d.prompt}</div></div>`;
                     grid.appendChild(div);
                 });
             });
@@ -505,14 +473,21 @@
         }
 
         function loadAdminQueue() {
-            const q = query(collection(db, "ai_studio_requests"), orderBy("timestamp", "desc"), limit(30));
+            // ONLY LOAD PENDING REQUESTS
+            // NOTE: If you get a "Missing Index" error, click the link in the console F12.
+            const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"), orderBy("timestamp", "desc"));
+            
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('admin-list');
                 list.innerHTML = "";
+                if(snap.empty) {
+                    list.innerHTML = "<div style='text-align:center; color:#555;'>No pending requests.</div>";
+                    return;
+                }
+
                 snap.forEach(docSnap => {
                     const d = docSnap.data();
                     const id = docSnap.id;
-                    const status = d.status;
                     
                     const el = document.createElement('div');
                     el.className = 'req-card';
@@ -526,24 +501,23 @@
                         </div>
                         ${d.refImage ? `<div style="margin-bottom:10px;"><img src="${d.refImage}" style="height:60px; border-radius:5px; border:1px solid #555;"></div>` : ''}
                         
-                        ${status === 'pending' ? `
-                            <div class="admin-input-row">
-                                <input type="text" id="res-${id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
-                                <label style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px;">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
-                                    <input type="file" style="display:none;" onchange="adminFile(this, '${id}')">
-                                </label>
-                            </div>
-                            <div class="admin-input-row">
-                                <button onclick="finishReq('${id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
-                                <button onclick="finishReq('${id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
-                            </div>
-                        ` : `<div style="color:${status==='completed'?'#00ff88':'#ff2a2a'}; font-weight:bold; text-transform:uppercase;">Status: ${status}</div>`}
+                        <div class="admin-input-row">
+                            <input type="text" id="res-${id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
+                            <label style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px;">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                                <input type="file" style="display:none;" onchange="adminFile(this, '${id}')">
+                            </label>
+                        </div>
+                        <div class="admin-input-row">
+                            <button onclick="finishReq('${id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
+                            <button onclick="finishReq('${id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
+                        </div>
                     `;
                     list.appendChild(el);
                 });
             }, (error) => {
                 console.error("Admin Load Error", error);
+                if(error.code === 'failed-precondition') alert("ADMIN: Open Console (F12) & Create the Index for 'status' + 'timestamp'!");
             });
         }
 
