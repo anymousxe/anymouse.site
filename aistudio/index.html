@@ -40,6 +40,7 @@
             display: none; /* Hidden by default */
             flex-direction: column; 
             overflow-y: auto;
+            animation: fadeIn 0.5s ease;
         }
         .screen.active { display: flex; }
         .centered { align-items: center; justify-content: center; }
@@ -48,21 +49,39 @@
         #screen-loading { z-index: 5000; background: #000; }
         .loader { width: 50px; height: 50px; border: 5px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite; }
 
-        /* --- 2. OFFLINE SCREEN --- */
-        #screen-offline { z-index: 4000; background: rgba(5,5,8,0.95); backdrop-filter: blur(10px); }
-        .glitch-text { font-family: 'Space Grotesk'; font-size: 3rem; font-weight: 700; color: var(--danger); text-shadow: 2px 2px 0 #fff; animation: glitch 0.3s infinite; }
-        .bypass-btn { margin-top: 50px; background: transparent; border: 1px solid #333; color: #555; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; }
-        .bypass-btn:hover { color: #fff; border-color: #fff; }
+        /* --- 2. OFFLINE SCREEN (THE SCARY ONE) --- */
+        #screen-offline { z-index: 4000; background: rgba(5,5,8,0.95); backdrop-filter: blur(20px); }
+        .glitch-text { 
+            font-family: 'Space Grotesk'; font-size: 4rem; font-weight: 800; 
+            color: var(--danger); text-shadow: 3px 3px 0 #fff; 
+            animation: glitch 0.3s infinite; 
+            text-align: center;
+        }
+        .bypass-btn { margin-top: 50px; background: transparent; border: 1px solid #333; color: #555; padding: 10px 20px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;}
+        .bypass-btn:hover { color: #fff; border-color: var(--danger); box-shadow: 0 0 15px rgba(255, 42, 42, 0.5); }
 
         /* --- 3. LOGIN SCREEN --- */
         #screen-login { z-index: 3000; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); }
-        .login-card { background: #0f0f13; border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
-        .glow-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 15px; border-radius: 30px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
-        .glow-btn:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 225, 53, 0.2); }
+        .login-card { 
+            background: rgba(15, 15, 19, 0.7); border: 1px solid var(--glass-border); 
+            padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); 
+            backdrop-filter: blur(10px);
+        }
+        .glow-btn { 
+            background: var(--glass); border: 1px solid var(--glass-border); color: white; 
+            padding: 15px; border-radius: 30px; font-weight: 600; cursor: pointer; 
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; 
+        }
+        .glow-btn:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
 
         /* --- 4. MAIN APP --- */
         #screen-app { z-index: 1000; }
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(5,5,8,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
+        nav { 
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; 
+            background: rgba(5,5,8,0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); 
+            position: sticky; top: 0; z-index: 100; 
+        }
         .logo { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 700; }
         .highlight { color: var(--primary); }
         
@@ -70,42 +89,70 @@
 
         /* Model Selector */
         .model-selector { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
-        .model-card { flex: 1; background: var(--glass); border: 1px solid var(--glass-border); padding: 20px; border-radius: 15px; cursor: pointer; text-align: center; transition: 0.3s; }
-        .model-card.active { border-color: var(--primary); background: rgba(255,255,255,0.08); }
-        .model-card i { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+        .model-card { 
+            flex: 1; background: var(--glass); border: 1px solid var(--glass-border); 
+            padding: 25px; border-radius: 20px; cursor: pointer; text-align: center; transition: 0.3s; 
+            position: relative; overflow: hidden;
+        }
+        .model-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
+        .model-card.active { border-color: var(--primary); background: rgba(255,255,255,0.1); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .model-card i { font-size: 2rem; margin-bottom: 15px; display: block; color: #888; }
+        .model-card.active i { color: var(--primary); }
 
         /* Controls */
-        .controls { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-bottom: 30px; }
-        textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 10px; min-height: 80px; resize: none; outline: none; font-size: 1.1rem; margin-bottom: 15px; }
-        .action-btn { background: var(--primary); color: #000; padding: 12px 30px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .controls { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        textarea { 
+            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; 
+            color: white; padding: 15px; min-height: 100px; resize: none; outline: none; font-size: 1.1rem; margin-bottom: 15px; 
+            transition: 0.3s;
+        }
+        textarea:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); }
+        
+        .action-btn { 
+            background: var(--primary); color: #000; padding: 15px 40px; border: none; border-radius: 15px; 
+            font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 1rem;
+            transition: 0.3s; width: 100%;
+        }
+        .action-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
 
         /* Gallery */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-        .creation-card { background: #000; border: 1px solid #333; border-radius: 12px; overflow: hidden; position: relative; }
-        .creation-media { height: 200px; width: 100%; object-fit: cover; display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .creation-card { 
+            background: #000; border: 1px solid #333; border-radius: 15px; overflow: hidden; position: relative; 
+            animation: fadeIn 0.5s ease; transition: 0.3s;
+        }
+        .creation-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .creation-media { height: 220px; width: 100%; object-fit: cover; display: block; }
         
-        /* Loading/Error States within Cards */
-        .state-box { height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        /* Loading/Error States */
+        .state-box { height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; background: rgba(255,255,255,0.02); }
         .state-pending { color: #aaa; }
         .state-error { background: #2a0505; color: #ff4444; }
         
-        .status-tag { position: absolute; top: 10px; left: 10px; padding: 2px 8px; font-size: 0.7rem; font-weight: bold; border-radius: 4px; background: rgba(0,0,0,0.8); color: white; text-transform: uppercase; }
-        .status-completed { color: #00ff88; }
-        .status-pending { color: #ffe135; }
+        .status-tag { 
+            position: absolute; top: 12px; left: 12px; padding: 4px 10px; font-size: 0.7rem; font-weight: bold; 
+            border-radius: 6px; background: rgba(0,0,0,0.8); color: white; text-transform: uppercase; 
+            backdrop-filter: blur(5px); border: 1px solid #333;
+        }
+        .status-completed { color: #00ff88; border-color: #00ff88; }
+        .status-pending { color: #ffe135; border-color: #ffe135; animation: pulse 1s infinite; }
 
         /* --- 5. ADMIN PANEL --- */
-        #screen-admin { z-index: 2000; background: #0f0f13; padding: 20px; display: none; }
+        #screen-admin { z-index: 2000; background: #0f0f13; padding: 30px; display: none; }
         #screen-admin.active { display: flex; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #333; }
-        .req-card { background: #1a1a20; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; }
-        .admin-input-row { display: flex; gap: 10px; margin-top: 10px; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333; }
+        .req-card { background: #1a1a20; padding: 20px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; transition: 0.2s;}
+        .req-card:hover { border-color: #555; }
+        .admin-input-row { display: flex; gap: 10px; margin-top: 15px; }
         
         /* Util */
         .hidden { display: none !important; }
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 10px 20px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 30px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-3px, 3px); } 40% { transform: translate(3px, -3px); } 60% { transform: translate(-1px, -2px); } 100% { transform: translate(0); } }
     </style>
 </head>
 <body>
@@ -114,85 +161,88 @@
 
     <div id="screen-loading" class="screen active centered">
         <div class="loader"></div>
-        <p style="margin-top: 15px; color: #666;">INITIALIZING...</p>
+        <p style="margin-top: 20px; color: #666; font-family:'Space Grotesk'; letter-spacing:2px;">INITIALIZING SYSTEM</p>
     </div>
 
     <div id="screen-offline" class="screen centered">
-        <i class="fa-solid fa-triangle-exclamation fa-3x" style="color:var(--danger); margin-bottom:20px;"></i>
-        <div class="glitch-text">SYSTEM OFFLINE</div>
-        <p style="color: #888; margin-top:10px;">MAINTENANCE IN PROGRESS</p>
+        <i class="fa-solid fa-triangle-exclamation fa-4x" style="color:var(--danger); margin-bottom:30px; animation:pulse 0.2s infinite;"></i>
+        <div class="glitch-text">SYSTEM<br>OFFLINE</div>
+        <p style="color: #666; margin-top:20px; font-family:'Space Grotesk';">MAINTENANCE IN PROGRESS</p>
         <button class="bypass-btn" onclick="openLoginModal()">ADMIN ACCESS</button>
     </div>
 
     <div id="screen-login" class="screen centered">
         <div class="login-card">
-            <h2 class="logo" style="font-size: 2rem; margin-bottom: 10px;">The Ai <span class="highlight">STudio</span></h2>
-            <p style="color:#aaa; margin-bottom: 30px;">Identify yourself.</p>
-            <button id="btn-login-google" class="glow-btn">
+            <h2 class="logo" style="font-size: 2.5rem; margin-bottom: 10px;">The Ai <span class="highlight">STudio</span></h2>
+            <p style="color:#aaa; margin-bottom: 40px;">Identify yourself.</p>
+            <button id="btn-login-google" class="glow-btn" style="font-size:1.1rem;">
                 <i class="fa-brands fa-google"></i> Sign in with Google
             </button>
-            <p id="login-error" style="color: #ff4444; margin-top: 15px; font-size: 0.9rem;"></p>
+            <p id="login-error" style="color: #ff4444; margin-top: 20px; font-size: 0.9rem;"></p>
         </div>
     </div>
 
     <div id="screen-app" class="screen">
         <nav>
             <div class="logo">The Ai <span class="highlight">STudio</span></div>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <span id="credits-txt" style="font-size:0.8rem; color:#888;"></span>
-                <button id="btn-open-admin" class="hidden" onclick="toggleAdmin(true)" style="background:transparent; border:1px solid var(--danger); color:var(--danger); padding:5px 10px; border-radius:20px; cursor:pointer;">ADMIN</button>
-                <img id="user-pfp" style="width:32px; height:32px; border-radius:50%; border:2px solid var(--primary);" src="">
-                <i class="fa-solid fa-right-from-bracket" onclick="doLogout()" style="cursor:pointer; color:#aaa;"></i>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <span id="credits-txt" style="font-size:0.9rem; color:#aaa; font-weight:600;">10 Credits/Hr</span>
+                <button id="btn-open-admin" class="hidden" onclick="toggleAdmin(true)" style="background:rgba(255, 42, 42, 0.1); border:1px solid var(--danger); color:var(--danger); padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:bold; transition:0.3s;">ADMIN</button>
+                <img id="user-pfp" style="width:40px; height:40px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;" src="">
+                <i class="fa-solid fa-right-from-bracket" onclick="doLogout()" style="cursor:pointer; color:#aaa; font-size:1.2rem; transition:0.3s;"></i>
             </div>
         </nav>
 
         <div id="app-container">
             <div class="model-selector">
                 <div class="model-card active" id="m-banana" onclick="setModel('banana')">
-                    <i class="fa-solid fa-image"></i> Nano Banana Pro
+                    <i class="fa-solid fa-image"></i> 
+                    <h3>Nano Banana Pro</h3>
                 </div>
                 <div class="model-card" id="m-sora" onclick="setModel('sora')">
-                    <i class="fa-solid fa-video"></i> Sora 2
+                    <i class="fa-solid fa-video"></i> 
+                    <h3>Sora 2</h3>
                 </div>
                 <div class="model-card" id="m-flux" onclick="setModel('flux')">
-                    <i class="fa-solid fa-bug"></i> Flux
+                    <i class="fa-solid fa-bug"></i> 
+                    <h3>Flux</h3>
                 </div>
             </div>
 
             <div class="controls">
-                <div id="opt-sora" class="hidden" style="margin-bottom:15px;">
-                    <label style="color:#aaa; font-size:0.9rem;">Duration:</label>
-                    <select id="sora-dur" style="background:#000; color:white; border:1px solid #333; padding:5px; border-radius:5px;">
-                        <option value="10">10s</option>
-                        <option value="15">15s</option>
-                    </select>
+                <div id="opt-sora" class="hidden" style="margin-bottom:20px;">
+                    <label style="color:#aaa; font-size:0.9rem; margin-bottom:10px; display:block;">Video Duration:</label>
+                    <div style="display:flex; gap:10px;">
+                        <button class="glow-btn" style="width:auto; padding:5px 20px;" onclick="setDur(10, this)">10s</button>
+                        <button class="glow-btn" style="width:auto; padding:5px 20px; opacity:0.5;" onclick="setDur(15, this)">15s</button>
+                    </div>
                 </div>
-                <div id="opt-banana" style="margin-bottom:15px;">
-                    <label style="cursor:pointer; background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px; font-size:0.9rem;">
-                        <i class="fa-solid fa-upload"></i> Upload Reference
+                <div id="opt-banana" style="margin-bottom:20px;">
+                    <label style="cursor:pointer; background:rgba(255,255,255,0.05); padding:10px 20px; border-radius:10px; font-size:0.9rem; border:1px solid var(--glass-border); display:inline-flex; align-items:center; gap:10px; transition:0.3s;">
+                        <i class="fa-solid fa-upload"></i> Upload Reference Image
                         <input type="file" id="inp-ref-img" accept="image/*" style="display:none;">
                     </label>
-                    <span id="ref-status" style="margin-left:10px; font-size:0.8rem; color:#aaa;"></span>
+                    <span id="ref-status" style="margin-left:15px; font-size:0.8rem; color:#00ff88; font-weight:bold;"></span>
                 </div>
 
-                <textarea id="inp-prompt" placeholder="Imagine something insane..."></textarea>
-                <button class="action-btn" onclick="submitRequest()">Generate</button>
+                <textarea id="inp-prompt" placeholder="Describe your imagination..."></textarea>
+                <button class="action-btn" onclick="submitRequest()">Generate Content</button>
             </div>
 
-            <h3 style="font-weight:300; opacity:0.7; margin-bottom:20px;">Your Queue</h3>
+            <h2 style="font-weight:300; opacity:0.7; margin-bottom:25px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">Your Creations</h2>
             <div id="gallery" class="grid"></div>
         </div>
     </div>
 
     <div id="screen-admin" class="screen">
         <div class="admin-header">
-            <h2 style="color:var(--danger);">ADMIN TERMINAL</h2>
-            <div style="display:flex; gap:10px;">
-                <button id="btn-server-toggle" onclick="toggleServer()" style="padding:10px; background:#000; border:1px solid #333; color:white; cursor:pointer;">Checking...</button>
-                <button onclick="toggleAdmin(false)" style="padding:10px; cursor:pointer;">EXIT</button>
+            <h2 style="color:var(--danger); font-family:'Space Grotesk'; text-transform:uppercase; letter-spacing:2px;"><i class="fa-solid fa-terminal"></i> Admin Terminal</h2>
+            <div style="display:flex; gap:15px;">
+                <button id="btn-server-toggle" onclick="toggleServer()" style="padding:10px 20px; background:#000; border:1px solid #333; color:white; cursor:pointer; font-weight:bold; border-radius:8px; transition:0.3s;">Checking...</button>
+                <button onclick="toggleAdmin(false)" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid var(--glass-border); color:white; border-radius:8px;">EXIT</button>
             </div>
         </div>
-        <div id="admin-list">Waiting for requests...</div>
+        <div id="admin-list" style="max-width:1000px; margin:0 auto; width:100%;">Waiting for requests...</div>
     </div>
 
     <div id="toast"></div>
@@ -218,7 +268,6 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // CHANGE THIS TO YOUR EMAIL
         const ADMIN_EMAIL = "anymousxe.info@gmail.com"; 
 
         // State
@@ -228,11 +277,14 @@
             isAdmin: false,
             model: 'banana',
             refImg: null,
-            loading: true
+            loading: true,
+            soraDur: 10
         };
 
         // --- CORE UI MANAGER ---
         function renderApp() {
+            // Logic Priority: 1. Loading -> 2. Server Down (unless Admin) -> 3. Login/App
+            
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
 
             if (state.loading) {
@@ -241,13 +293,17 @@
             }
 
             if (!state.serverOnline) {
-                if (state.isAdmin) {
+                // Server is DOWN
+                if (state.isAdmin && state.user) {
+                    // Admin Logged In -> Show App (Bypass)
                     document.getElementById('screen-app').classList.add('active');
-                    showToast("SERVER OFFLINE (ADMIN MODE)");
+                    showToast("⚠️ ADMIN BYPASS: SERVER OFFLINE");
                 } else {
+                    // Everyone else -> Show Offline
                     document.getElementById('screen-offline').classList.add('active');
                 }
             } else {
+                // Server is UP
                 if (state.user) {
                     document.getElementById('screen-app').classList.add('active');
                 } else {
@@ -263,7 +319,6 @@
             
             if (user) {
                 document.getElementById('user-pfp').src = user.photoURL;
-                document.getElementById('credits-txt').innerText = "10 Credits/Hr";
                 if(state.isAdmin) document.getElementById('btn-open-admin').classList.remove('hidden');
                 loadUserQueue(user.uid);
                 if(state.isAdmin) loadAdminQueue();
@@ -272,10 +327,12 @@
             renderApp();
         });
 
+        // Server Config Listener
         onSnapshot(doc(db, "server_config", "global"), (snap) => {
             if (snap.exists()) {
                 state.serverOnline = snap.data().isOnline;
             } else {
+                // Auto-create doc if missing (Fixes the button not working first time)
                 setDoc(doc(db, "server_config", "global"), { isOnline: true });
                 state.serverOnline = true;
             }
@@ -284,7 +341,6 @@
         });
 
         // --- FUNCTIONS ---
-
         window.openLoginModal = () => {
             document.getElementById('screen-offline').classList.remove('active');
             document.getElementById('screen-login').classList.add('active');
@@ -301,6 +357,12 @@
         window.doLogout = () => {
             signOut(auth);
             window.location.reload();
+        };
+
+        window.setDur = (val, btn) => {
+            state.soraDur = val;
+            btn.parentNode.querySelectorAll('button').forEach(b => b.style.opacity = '0.5');
+            btn.style.opacity = '1';
         };
 
         // --- CREATION LOGIC ---
@@ -329,7 +391,7 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     state.refImg = e.target.result;
-                    document.getElementById('ref-status').innerText = "Image Loaded";
+                    document.getElementById('ref-status').innerText = "IMAGE LOADED";
                 };
                 reader.readAsDataURL(file);
             }
@@ -339,10 +401,8 @@
             const prompt = document.getElementById('inp-prompt').value;
             if(!prompt) return showToast("Enter a prompt!");
 
-            // Rate Limit
             const oneHourAgo = new Date(Date.now() - 3600000);
             
-            // IMPORTANT: Using 'ai_studio_requests' to match original data
             const q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("timestamp", ">", oneHourAgo));
             
             try {
@@ -357,13 +417,14 @@
                     status: 'pending',
                     timestamp: serverTimestamp(),
                     refImage: state.refImg,
-                    duration: state.model === 'sora' ? document.getElementById('sora-dur').value : null
+                    duration: state.model === 'sora' ? state.soraDur : null
                 });
 
                 document.getElementById('inp-prompt').value = "";
                 state.refImg = null;
                 document.getElementById('ref-status').innerText = "";
-                showToast("Request sent to Queue");
+                document.getElementById('inp-ref-img').value = ""; // Clear file input
+                showToast("Sent to Admin Queue");
 
             } catch(e) {
                 console.error(e);
@@ -383,7 +444,6 @@
                 grid.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    // Handle variable names from both versions
                     const status = d.status;
                     const result = d.resultUrl || d.result;
                     const prompt = d.prompt;
@@ -393,12 +453,12 @@
                         html = `
                             <div class="state-box state-pending">
                                 <div class="loader" style="width:30px; height:30px;"></div>
-                                <span>PROCESSING</span>
+                                <span style="font-size:0.8rem; letter-spacing:2px;">PROCESSING</span>
                             </div>`;
                     } else if (status === 'error') {
                         html = `
                             <div class="state-box state-error">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
                                 <span>FAILED</span>
                             </div>`;
                     } else {
@@ -412,8 +472,9 @@
                     div.innerHTML = `
                         <div class="status-tag status-${status}">${status}</div>
                         ${html}
-                        <div style="padding:10px; font-size:0.8rem; color:#888; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">
-                            ${prompt}
+                        <div style="padding:15px; border-top:1px solid #222;">
+                            <div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${prompt}</div>
+                            <div style="font-size:0.7rem; color:var(--primary); text-transform:uppercase;">${d.model}</div>
                         </div>
                     `;
                     grid.appendChild(div);
@@ -435,11 +496,11 @@
         function updateServerBtn() {
             const btn = document.getElementById('btn-server-toggle');
             if(state.serverOnline) {
-                btn.innerText = "SERVER: ONLINE";
-                btn.style.borderColor = "#00ff88"; btn.style.color = "#00ff88";
+                btn.innerHTML = '<i class="fa-solid fa-power-off"></i> SERVER IS ONLINE';
+                btn.style.borderColor = "#00ff88"; btn.style.color = "#00ff88"; btn.style.background = "rgba(0,255,136,0.1)";
             } else {
-                btn.innerText = "SERVER: OFFLINE";
-                btn.style.borderColor = "#ff2a2a"; btn.style.color = "#ff2a2a";
+                btn.innerHTML = '<i class="fa-solid fa-ban"></i> SERVER IS OFFLINE';
+                btn.style.borderColor = "#ff2a2a"; btn.style.color = "#ff2a2a"; btn.style.background = "rgba(255,42,42,0.1)";
             }
         }
 
@@ -456,36 +517,33 @@
                     const el = document.createElement('div');
                     el.className = 'req-card';
                     el.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.8rem; margin-bottom:5px;">
-                            <span>${d.userName}</span>
+                        <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.9rem; margin-bottom:10px;">
+                            <span style="color:white; font-weight:bold;">${d.userName}</span>
                             <span style="color:var(--primary)">${d.model}</span>
                         </div>
-                        <div style="margin-bottom:10px; cursor:pointer;" onclick="navigator.clipboard.writeText('${d.prompt}')">
-                            ${d.prompt}
+                        <div style="margin-bottom:15px; padding:10px; background:#000; border-radius:8px; cursor:pointer; font-family:monospace; color:#ccc;" onclick="navigator.clipboard.writeText('${d.prompt}')">
+                            ${d.prompt} <i class="fa-solid fa-copy" style="float:right;"></i>
                         </div>
-                        ${d.refImage ? '<div style="color:cyan; font-size:0.8rem;">[Has Ref Image]</div>' : ''}
+                        ${d.refImage ? `<div style="margin-bottom:10px;"><img src="${d.refImage}" style="height:60px; border-radius:5px; border:1px solid #555;"></div>` : ''}
                         
                         ${status === 'pending' ? `
                             <div class="admin-input-row">
-                                <input type="text" id="res-${id}" placeholder="Result URL..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:5px;">
-                                <label style="cursor:pointer; background:#333; padding:5px 10px; color:white;">
-                                    <i class="fa-solid fa-file"></i>
+                                <input type="text" id="res-${id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
+                                <label style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px;">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
                                     <input type="file" style="display:none;" onchange="adminFile(this, '${id}')">
                                 </label>
                             </div>
                             <div class="admin-input-row">
-                                <button onclick="finishReq('${id}', 'completed')" style="flex:1; background:#00ff88; border:none; padding:5px; cursor:pointer;">SEND</button>
-                                <button onclick="finishReq('${id}', 'error')" style="width:40px; background:var(--danger); border:none; padding:5px; cursor:pointer; color:white;"><i class="fa-solid fa-x"></i></button>
+                                <button onclick="finishReq('${id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
+                                <button onclick="finishReq('${id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
                             </div>
-                        ` : `<div style="color:${status==='completed'?'lime':'red'}">Status: ${status}</div>`}
+                        ` : `<div style="color:${status==='completed'?'#00ff88':'#ff2a2a'}; font-weight:bold; text-transform:uppercase;">Status: ${status}</div>`}
                     `;
                     list.appendChild(el);
                 });
             }, (error) => {
                 console.error("Admin Load Error", error);
-                if(error.code === 'failed-precondition') {
-                    alert("ADMIN ERROR: Missing Index! Check Console.");
-                }
             });
         }
 
