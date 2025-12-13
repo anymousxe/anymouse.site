@@ -59,16 +59,6 @@
         #screen-loading { z-index: 5000; background: #000; }
         .loader { width: 50px; height: 50px; border: 5px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite; }
 
-        /* --- OFFLINE --- */
-        #screen-offline { z-index: 4000; background: rgba(5,5,8,0.95); backdrop-filter: blur(20px); }
-        .glitch-text { 
-            font-family: 'Space Grotesk'; font-size: 4rem; font-weight: 800; 
-            color: var(--danger); text-shadow: 3px 3px 0 #fff; 
-            animation: glitch 0.3s infinite; text-align: center;
-        }
-        .bypass-btn { margin-top: 50px; background: transparent; border: 1px solid #333; color: #555; padding: 10px 20px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;}
-        .bypass-btn:hover { color: #fff; border-color: var(--danger); box-shadow: 0 0 15px rgba(255, 42, 42, 0.5); }
-
         /* --- LOGIN --- */
         #screen-login { z-index: 3000; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); }
         .login-card { 
@@ -154,7 +144,6 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-        @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-3px, 3px); } 40% { transform: translate(3px, -3px); } 60% { transform: translate(-1px, -2px); } 100% { transform: translate(0); } }
     </style>
 </head>
 <body>
@@ -168,13 +157,6 @@
     <div id="screen-loading" class="screen active centered">
         <div class="loader"></div>
         <p style="margin-top: 20px; color: #666; font-family:'Space Grotesk'; letter-spacing:2px;">INITIALIZING SYSTEM</p>
-    </div>
-
-    <div id="screen-offline" class="screen centered">
-        <i class="fa-solid fa-triangle-exclamation fa-4x" style="color:var(--danger); margin-bottom:30px; animation:pulse 0.2s infinite;"></i>
-        <div class="glitch-text">SYSTEM<br>OFFLINE</div>
-        <p style="color: #666; margin-top:20px; font-family:'Space Grotesk';">MAINTENANCE IN PROGRESS</p>
-        <button class="bypass-btn" onclick="openLoginModal()">ADMIN ACCESS</button>
     </div>
 
     <div id="screen-login" class="screen centered">
@@ -192,7 +174,7 @@
         <nav>
             <div class="logo">The Ai <span class="highlight">STudio</span></div>
             <div style="display:flex; align-items:center; gap:20px;">
-                <span id="credits-txt" style="font-size:0.9rem; color:#aaa; font-weight:600;">10 Credits/Hr</span>
+                <span id="credits-txt" style="font-size:0.9rem; color:#aaa; font-weight:600;">Unlimited Access</span>
                 <button id="btn-open-admin" class="hidden" onclick="toggleAdmin(true)" style="background:rgba(255, 42, 42, 0.1); border:1px solid var(--danger); color:var(--danger); padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:bold; transition:0.3s;">ADMIN</button>
                 <img id="user-pfp" style="width:40px; height:40px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;" src="">
                 <i class="fa-solid fa-right-from-bracket" onclick="doLogout()" style="cursor:pointer; color:#aaa; font-size:1.2rem; transition:0.3s;"></i>
@@ -244,7 +226,6 @@
         <div class="admin-header">
             <h2 style="color:var(--danger); font-family:'Space Grotesk'; text-transform:uppercase; letter-spacing:2px;"><i class="fa-solid fa-terminal"></i> Admin Terminal</h2>
             <div style="display:flex; gap:15px;">
-                <button id="btn-server-toggle" onclick="toggleServer()" style="padding:10px 20px; background:#000; border:1px solid #333; color:white; cursor:pointer; font-weight:bold; border-radius:8px; transition:0.3s;">Checking...</button>
                 <button onclick="toggleAdmin(false)" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid var(--glass-border); color:white; border-radius:8px;">EXIT</button>
             </div>
         </div>
@@ -277,7 +258,6 @@
 
         let state = {
             user: null,
-            serverOnline: true, 
             isAdmin: false,
             model: 'banana',
             refImg: null,
@@ -294,19 +274,11 @@
                 return;
             }
 
-            // IMMUNITY CHECK:
-            if (!state.serverOnline) {
-                if (state.isAdmin && state.user) {
-                    document.getElementById('screen-app').classList.add('active'); // Admin Immune
-                } else {
-                    document.getElementById('screen-offline').classList.add('active'); // Public blocked
-                }
+            // SIMPLIFIED LOGIC: No more offline checks
+            if (state.user) {
+                document.getElementById('screen-app').classList.add('active');
             } else {
-                if (state.user) {
-                    document.getElementById('screen-app').classList.add('active');
-                } else {
-                    document.getElementById('screen-login').classList.add('active');
-                }
+                document.getElementById('screen-login').classList.add('active');
             }
         }
 
@@ -325,23 +297,8 @@
             renderApp();
         });
 
-        // --- SERVER STATUS ---
-        onSnapshot(doc(db, "server_config", "global"), (snap) => {
-            if (snap.exists()) {
-                state.serverOnline = snap.data().isOnline;
-            } else {
-                setDoc(doc(db, "server_config", "global"), { isOnline: true });
-                state.serverOnline = true;
-            }
-            updateServerBtn();
-            renderApp();
-        });
-
         // --- FUNCTIONS ---
-        window.openLoginModal = () => {
-            document.getElementById('screen-offline').classList.remove('active');
-            document.getElementById('screen-login').classList.add('active');
-        };
+        // Removed openLoginModal (no longer needed since offline screen is gone)
 
         document.getElementById('btn-login-google').addEventListener('click', async () => {
             try {
@@ -397,14 +354,9 @@
             const prompt = document.getElementById('inp-prompt').value;
             if(!prompt) return showToast("Enter a prompt!");
 
-            const oneHourAgo = new Date(Date.now() - 3600000);
-            
-            const q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("timestamp", ">", oneHourAgo));
+            // --- REMOVED RATE LIMIT QUERY TO FIX TIMESTAMP INDEX ERROR ---
             
             try {
-                const snap = await getDocs(q);
-                if(snap.size >= 10) return showToast("Rate Limit Hit (10/hr)");
-
                 await addDoc(collection(db, "ai_studio_requests"), {
                     userId: state.user.uid,
                     userName: state.user.displayName,
@@ -430,6 +382,8 @@
 
         // --- USER GALLERY ---
         function loadUserQueue(uid) {
+            // Note: This needs an index for userId + timestamp DESC. 
+            // If this errors, check console link.
             const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), orderBy("timestamp", "desc"), limit(20));
             onSnapshot(q, (snap) => {
                 const grid = document.getElementById('gallery');
@@ -457,25 +411,10 @@
             else el.classList.remove('active');
         };
 
-        window.toggleServer = async () => {
-            await setDoc(doc(db, "server_config", "global"), { isOnline: !state.serverOnline });
-        };
-
-        function updateServerBtn() {
-            const btn = document.getElementById('btn-server-toggle');
-            if(state.serverOnline) {
-                btn.innerHTML = '<i class="fa-solid fa-power-off"></i> SERVER IS ONLINE';
-                btn.style.borderColor = "#00ff88"; btn.style.color = "#00ff88"; btn.style.background = "rgba(0,255,136,0.1)";
-            } else {
-                btn.innerHTML = '<i class="fa-solid fa-ban"></i> SERVER IS OFFLINE';
-                btn.style.borderColor = "#ff2a2a"; btn.style.color = "#ff2a2a"; btn.style.background = "rgba(255,42,42,0.1)";
-            }
-        }
-
         function loadAdminQueue() {
-            // ONLY LOAD PENDING REQUESTS
-            // NOTE: If you get a "Missing Index" error, click the link in the console F12.
-            const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"), orderBy("timestamp", "desc"));
+            // REMOVED 'orderBy' to prevent Index Error here too.
+            // Sorting is done in JS now for safety.
+            const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"));
             
             onSnapshot(q, (snap) => {
                 const list = document.getElementById('admin-list');
@@ -485,10 +424,14 @@
                     return;
                 }
 
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    const id = docSnap.id;
-                    
+                // Convert to array and sort manually
+                const docs = [];
+                snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
+                
+                // Sort by timestamp if it exists, new ones on top
+                docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                docs.forEach(d => {
                     const el = document.createElement('div');
                     el.className = 'req-card';
                     el.innerHTML = `
@@ -502,22 +445,19 @@
                         ${d.refImage ? `<div style="margin-bottom:10px;"><img src="${d.refImage}" style="height:60px; border-radius:5px; border:1px solid #555;"></div>` : ''}
                         
                         <div class="admin-input-row">
-                            <input type="text" id="res-${id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
+                            <input type="text" id="res-${d.id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
                             <label style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px;">
                                 <i class="fa-solid fa-file-arrow-up"></i>
-                                <input type="file" style="display:none;" onchange="adminFile(this, '${id}')">
+                                <input type="file" style="display:none;" onchange="adminFile(this, '${d.id}')">
                             </label>
                         </div>
                         <div class="admin-input-row">
-                            <button onclick="finishReq('${id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
-                            <button onclick="finishReq('${id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
+                            <button onclick="finishReq('${d.id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
+                            <button onclick="finishReq('${d.id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
                         </div>
                     `;
                     list.appendChild(el);
                 });
-            }, (error) => {
-                console.error("Admin Load Error", error);
-                if(error.code === 'failed-precondition') alert("ADMIN: Open Console (F12) & Create the Index for 'status' + 'timestamp'!");
             });
         }
 
