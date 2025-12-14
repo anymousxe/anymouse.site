@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V2</title>
+    <title>The Ai STudio - V3</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,22 +108,6 @@
         .highlight { color: var(--primary); }
         #app-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; width: 100%; padding-bottom: 50px; }
 
-        /* CREDITS */
-        .credit-badge {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #ffd700;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-family: 'Space Grotesk';
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .credit-badge:hover { background: rgba(255, 215, 0, 0.2); }
-
         .model-selector { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
         .model-card { 
             flex: 1; min-width: 140px; background: var(--glass); border: 1px solid var(--glass-border); 
@@ -136,17 +120,9 @@
         .model-card.active i { color: var(--primary); }
         .model-card h3 { font-size: 0.9rem; }
 
-        /* LOCKED STATE */
-        .model-card.locked { opacity: 0.6; filter: grayscale(0.5); }
-        .model-card.locked i { color: #555; }
-        .lock-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
-            flex-direction: column; gap: 5px; opacity: 0; transition: 0.3s;
-        }
-        .model-card.locked:hover .lock-overlay { opacity: 1; }
-        .model-card.locked:hover { transform: none; border-color: var(--danger); }
-        .lock-icon { font-size: 1.5rem !important; color: white !important; margin: 0; }
+        /* Coming Soon State */
+        .coming-soon-card { opacity: 0.5; cursor: not-allowed !important; background: rgba(255,255,255,0.02) !important; border-color: transparent !important; pointer-events: none; }
+        .coming-soon-card i { color: #555 !important; }
 
         .controls { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         textarea { 
@@ -270,10 +246,6 @@
         <nav>
             <div class="logo">The Ai <span class="highlight">STudio</span></div>
             <div style="display:flex; align-items:center; gap:20px;">
-                <div class="credit-badge" onclick="claimDaily()">
-                    <i class="fa-solid fa-coins"></i> <span id="credit-count">...</span>
-                </div>
-
                 <button id="btn-open-admin" class="hidden" onclick="toggleAdmin(true)" style="background:rgba(255, 42, 42, 0.1); border:1px solid var(--danger); color:var(--danger); padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:bold; transition:0.3s;">ADMIN</button>
                 <img id="user-pfp" style="width:40px; height:40px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;" src="https://ui-avatars.com/api/?name=User&background=random">
                 <i class="fa-solid fa-right-from-bracket" onclick="doLogout()" style="cursor:pointer; color:#aaa; font-size:1.2rem; transition:0.3s;" title="Logout"></i>
@@ -290,15 +262,12 @@
                     <i class="fa-solid fa-video"></i> 
                     <h3>Sora 2</h3>
                 </div>
-                <div class="model-card locked" id="m-sora-pro" onclick="setModel('sora-pro')">
+                <div class="model-card coming-soon-card">
                     <i class="fa-solid fa-film"></i> 
                     <h3>Sora 2 Pro</h3>
-                    <div class="lock-overlay" id="lock-overlay-sora">
-                        <i class="fa-solid fa-lock lock-icon"></i>
-                        <span style="font-size:0.8rem; font-weight:bold;">100 CREDITS</span>
-                    </div>
+                    <span style="font-size: 0.8rem; opacity: 0.7; display: block; margin-top: 5px;">COMING SOON</span>
                 </div>
-                </div>
+            </div>
 
             <div class="controls">
                 <div id="opt-sora" class="hidden" style="margin-bottom:20px;">
@@ -358,7 +327,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, orderBy, limit, getDocs, setDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, orderBy, limit, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQacpiI3oIqOUx8ciMfdlQgBtHZEVdcMo",
@@ -385,12 +354,10 @@
             loading: true,
             soraDur: 10,
             isOffline: false,
-            credits: 0,
-            unlockedPro: false
+            // Credits removed from state
         };
 
         let unsubscribeUserQueue = null;
-        let unsubscribeUserData = null;
 
         // --- GLOBAL STATUS LISTENER ---
         onSnapshot(doc(db, "system", "status"), (docSnap) => {
@@ -521,61 +488,7 @@
             }
         }
 
-        // --- USER DATA SYNC ---
-        function syncUserData(uid) {
-            const userRef = doc(db, "users", uid);
-            unsubscribeUserData = onSnapshot(userRef, async (snap) => {
-                if(snap.exists()) {
-                    const d = snap.data();
-                    state.credits = d.credits || 0;
-                    state.unlockedPro = d.unlockedPro || false;
-                } else {
-                    // New User Setup: Give 50 free credits
-                    await setDoc(userRef, { credits: 50, unlockedPro: false });
-                    state.credits = 50;
-                    state.unlockedPro = false;
-                }
-                updateUIForUser();
-            });
-        }
-
-        function updateUIForUser() {
-            document.getElementById('credit-count').innerText = state.credits;
-            
-            const proCard = document.getElementById('m-sora-pro');
-            const overlay = document.getElementById('lock-overlay-sora');
-            
-            if (state.unlockedPro) {
-                proCard.classList.remove('locked');
-                overlay.innerHTML = '<i class="fa-solid fa-check"></i> UNLOCKED';
-                overlay.style.background = 'rgba(0, 255, 136, 0.2)';
-                overlay.style.color = '#00ff88';
-            } else {
-                proCard.classList.add('locked');
-                overlay.innerHTML = '<i class="fa-solid fa-lock lock-icon"></i><span style="font-size:0.8rem; font-weight:bold;">100 CREDITS</span>';
-                overlay.style.background = 'rgba(0,0,0,0.6)';
-                overlay.style.color = 'white';
-            }
-        }
-
-        // --- DAILY CLAIM (FAKE PAYMENT SIM) ---
-        window.claimDaily = async () => {
-            if(!state.user) return;
-            const btn = document.querySelector('.credit-badge');
-            btn.style.pointerEvents = 'none';
-            
-            // Add 10 credits
-            const userRef = doc(db, "users", state.user.uid);
-            try {
-                await updateDoc(userRef, {
-                    credits: increment(10)
-                });
-                showToast("+10 Credits Added! (Daily)");
-            } catch(e) {
-                console.log(e);
-            }
-            setTimeout(() => { btn.style.pointerEvents = 'auto'; }, 1000);
-        }
+        // Credit system functions removed (syncUserData, updateUIForUser, claimDaily)
 
         onAuthStateChanged(auth, (user) => {
             state.user = user;
@@ -587,12 +500,10 @@
                 
                 if(state.isAdmin) document.getElementById('btn-open-admin').classList.remove('hidden');
                 
-                syncUserData(user.uid); // Load credits
                 loadUserQueue(user.uid);
                 if(state.isAdmin) loadAdminQueue();
             } else {
                 if(unsubscribeUserQueue) unsubscribeUserQueue();
-                if(unsubscribeUserData) unsubscribeUserData();
             }
             state.loading = false; 
             renderApp();
@@ -613,7 +524,6 @@
         });
         window.doLogout = () => { 
             if(unsubscribeUserQueue) unsubscribeUserQueue(); 
-            if(unsubscribeUserData) unsubscribeUserData();
             signOut(auth); 
             window.location.reload(); 
         };
@@ -626,29 +536,7 @@
         };
 
         window.setModel = async (m) => {
-            if (m === 'sora-pro') {
-                if (!state.unlockedPro) {
-                    if (state.credits >= 100) {
-                        const confirmUnlock = confirm("Unlock Sora 2 Pro for 100 Credits?");
-                        if (confirmUnlock) {
-                            try {
-                                const userRef = doc(db, "users", state.user.uid);
-                                await updateDoc(userRef, {
-                                    credits: increment(-100),
-                                    unlockedPro: true
-                                });
-                                showToast("Purchase Successful! Pro Unlocked.");
-                                // Selection happens automatically via sync listener
-                            } catch(e) {
-                                showToast("Transaction Failed.");
-                            }
-                        }
-                    } else {
-                        showToast("LOCKED: Need 100 Credits. Click credit badge to grind.");
-                        return;
-                    }
-                }
-            }
+            // Credit unlocking logic removed
 
             // Normal selection logic
             state.model = m;
@@ -660,13 +548,11 @@
             if(m === 'sora') {
                 document.getElementById('opt-sora').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#00f2ff');
-            } else if (m === 'sora-pro') {
-                document.getElementById('opt-sora').classList.remove('hidden'); 
-                document.documentElement.style.setProperty('--primary', '#bd00ff');
             } else if (m === 'banana') {
                 document.getElementById('opt-banana').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#ffe135');
             }
+            // Sora Pro logic removed
         };
 
         // --- USER REF UPLOAD (CHUNKING) ---
@@ -755,7 +641,7 @@
 
                 let modelName = "Nano Banana Pro";
                 if(state.model === 'sora') modelName = "Sora 2";
-                if(state.model === 'sora-pro') modelName = "Sora 2 Pro";
+                // Sora Pro removed
 
                 const userName = state.user.displayName || state.user.email.split('@')[0];
 
@@ -767,7 +653,7 @@
                     status: 'pending',
                     timestamp: serverTimestamp(),
                     refImage: state.refImg, 
-                    duration: (state.model === 'sora' || state.model === 'sora-pro') ? state.soraDur : null
+                    duration: (state.model === 'sora') ? state.soraDur : null
                 });
 
                 document.getElementById('inp-prompt').value = "";
