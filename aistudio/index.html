@@ -307,7 +307,7 @@
 
         let unsubscribeUserQueue = null;
 
-        // --- SECURITY SANITIZER (Actually used now) ---
+        // --- SECURITY SANITIZER ---
         function escapeHtml(text) {
             if (!text) return "";
             return text
@@ -319,10 +319,9 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // --- URL VALIDATOR (New) ---
+        // --- URL VALIDATOR ---
         function isValidUrl(string) {
             try {
-                // Allow http/https/data urls, reject javascript:
                 if (!string) return false;
                 if (string.startsWith('data:image')) return true;
                 const url = new URL(string);
@@ -470,8 +469,22 @@
             btn.innerText = "Sending...";
 
             try {
-                // Note: We don't sanitize here because we want to store the raw prompt
-                // We sanitize when READING it back to the screen.
+                // --- RATE LIMIT CHECK START ---
+                // Query Firestore for how many requests this user has that are still 'pending'
+                const pendingQ = query(
+                    collection(db, "ai_studio_requests"),
+                    where("userId", "==", state.user.uid),
+                    where("status", "==", "pending")
+                );
+                
+                const pendingSnap = await getDocs(pendingQ);
+                
+                // If they have 2 or more active requests, stop them.
+                if(pendingSnap.size >= 2) {
+                    return showToast("Limit reached! Wait for one to finish.");
+                }
+                // --- RATE LIMIT CHECK END ---
+
                 await addDoc(collection(db, "ai_studio_requests"), {
                     userId: state.user.uid,
                     userName: state.user.displayName,
@@ -514,7 +527,6 @@
                 docs.forEach(d => {
                     const isVideo = d.model.includes('Sora');
                     
-                    // SECURITY: Ensure URL is valid protocol before rendering
                     let mediaHtml = '';
                     if (d.status === 'completed' && isValidUrl(d.resultUrl)) {
                          mediaHtml = isVideo ? 
@@ -529,7 +541,6 @@
                     const div = document.createElement('div');
                     div.className = 'creation-card';
                     
-                    // SECURITY FIX: WRAP d.prompt IN escapeHtml()
                     div.innerHTML = `
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                         <div class="status-tag status-${d.status}">${d.status}</div>${mediaHtml}
@@ -568,7 +579,6 @@
         };
 
         window.viewMedia = (url, type) => {
-            // SECURITY CHECK: Don't open if URL is shady
             if(!isValidUrl(url)) {
                 return showToast("Error: Invalid Media URL");
             }
@@ -617,7 +627,6 @@
                     const el = document.createElement('div');
                     el.className = 'req-card';
                     
-                    // SECURITY FIX: escapeHtml everything user-submitted
                     el.innerHTML = `
                         <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.9rem; margin-bottom:10px;">
                             <span style="color:white; font-weight:bold;">${escapeHtml(d.userName)}</span>
