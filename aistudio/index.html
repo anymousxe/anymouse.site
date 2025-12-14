@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V4</title>
+    <title>The Ai STudio - V5</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -767,8 +767,18 @@
                 snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
-                docs.forEach(d => {
+                docs.forEach(async (d) => {
                     const durationTag = d.duration ? `<span style="background:#333; padding:2px 8px; border-radius:4px; font-size:0.8rem; margin-left:10px;">⏱ ${d.duration}s</span>` : '';
+                    
+                    // Logic to handle reference image retrieval
+                    let refImgHtml = '';
+                    if (d.refImage) {
+                         if (d.refImage.startsWith('group:')) {
+                             refImgHtml = `<div id="adm-img-${d.id}" style="margin-bottom:10px; height:60px; display:flex; align-items:center; gap:10px;"><div class="loader" style="width:20px; height:20px;"></div> <span style="font-size:0.8rem; color:#666;">LOADING REF...</span></div>`;
+                         } else {
+                             refImgHtml = `<div style="margin-bottom:10px;"><img src="${d.refImage}" style="height:60px; border-radius:5px; border:1px solid #555;"></div>`;
+                         }
+                    }
 
                     const el = document.createElement('div');
                     el.className = 'req-card';
@@ -780,7 +790,7 @@
                         <div style="margin-bottom:15px; padding:10px; background:#000; border-radius:8px; cursor:pointer; font-family:monospace; color:#ccc;" onclick="navigator.clipboard.writeText(this.innerText)">
                             ${escapeHtml(d.prompt)} <i class="fa-solid fa-copy" style="float:right;"></i>
                         </div>
-                        ${d.refImage ? `<div style="margin-bottom:10px;"><img src="${d.refImage}" style="height:60px; border-radius:5px; border:1px solid #555;"></div>` : ''}
+                        ${refImgHtml}
                         
                         <div class="admin-input-row">
                             <input type="text" id="res-${d.id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
@@ -802,6 +812,22 @@
                         </div>
                     `;
                     list.appendChild(el);
+
+                    // If chunked, fetch it now
+                    if (d.refImage && d.refImage.startsWith('group:')) {
+                        const groupId = d.refImage.split(":")[1];
+                        try {
+                            const blobUrl = await downloadFileFromChunks(groupId);
+                            const container = document.getElementById(`adm-img-${d.id}`);
+                            if(container) {
+                                container.innerHTML = `<img src="${blobUrl}" style="height:60px; border-radius:5px; border:1px solid #555;">`;
+                            }
+                        } catch(e) {
+                             console.error("Failed to load admin ref image", e);
+                             const container = document.getElementById(`adm-img-${d.id}`);
+                             if(container) container.innerHTML = `<span style="color:var(--danger); font-size:0.8rem;">IMG ERROR</span>`;
+                        }
+                    }
                 });
             });
         }
