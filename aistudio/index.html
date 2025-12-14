@@ -26,6 +26,21 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
 
+        /* --- OFFLINE BANNER --- */
+        #offline-banner {
+            position: fixed; top: 0; left: 0; width: 100%; 
+            background: repeating-linear-gradient(
+                45deg,
+                #ff2a2a,
+                #ff2a2a 10px,
+                #cc0000 10px,
+                #cc0000 20px
+            );
+            color: white; text-align: center; padding: 8px; font-weight: 800; letter-spacing: 1px;
+            z-index: 99999; display: none; font-family: 'Space Grotesk'; text-transform: uppercase;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
         /* --- BACKGROUND FX --- */
         .background-fx {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -119,6 +134,7 @@
             transition: 0.3s; width: 100%;
         }
         .action-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
+        .action-btn:disabled { background: #333; color: #777; cursor: not-allowed; box-shadow: none; transform: none; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .creation-card { 
@@ -189,6 +205,10 @@
 <body>
 
     <div class="background-fx"></div>
+
+    <div id="offline-banner">
+        <i class="fa-solid fa-triangle-exclamation"></i> SYSTEMS OFFLINE: MAINTENANCE IN PROGRESS
+    </div>
 
     <div class="watermark">
         <a href="https://anymouse.site" target="_blank">made by anymousxe</a>
@@ -280,7 +300,10 @@
     <div id="screen-admin" class="screen">
         <div class="admin-header">
             <h2 style="color:var(--danger); font-family:'Space Grotesk'; text-transform:uppercase; letter-spacing:2px;"><i class="fa-solid fa-terminal"></i> Admin Terminal</h2>
-            <div style="display:flex; gap:15px;">
+            <div style="display:flex; gap:15px; align-items:center;">
+                <button id="btn-offline-toggle" onclick="toggleSystemStatus()" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid #555; color:white; border-radius:8px; font-weight:bold;">
+                    TOGGLE OFFLINE
+                </button>
                 <button onclick="toggleAdmin(false)" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid var(--glass-border); color:white; border-radius:8px;">EXIT</button>
             </div>
         </div>
@@ -329,10 +352,61 @@
             model: 'banana',
             refImg: null,
             loading: true,
-            soraDur: 10
+            soraDur: 10,
+            isOffline: false
         };
 
         let unsubscribeUserQueue = null;
+
+        // --- GLOBAL STATUS LISTENER ---
+        // This listens to a document called "status" in the "system" collection.
+        // If it changes, everyone's UI updates instantly.
+        onSnapshot(doc(db, "system", "status"), (docSnap) => {
+            const banner = document.getElementById('offline-banner');
+            const submitBtn = document.getElementById('btn-submit');
+            
+            if (docSnap.exists() && docSnap.data().offline === true) {
+                state.isOffline = true;
+                banner.style.display = 'block';
+                submitBtn.disabled = true;
+                submitBtn.innerText = "SYSTEM OFFLINE";
+                
+                // Admin Button Visual Sync
+                if(document.getElementById('btn-offline-toggle')) {
+                    const btn = document.getElementById('btn-offline-toggle');
+                    btn.style.background = 'var(--danger)';
+                    btn.innerText = "SET ONLINE";
+                }
+            } else {
+                state.isOffline = false;
+                banner.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Generate Content";
+
+                // Admin Button Visual Sync
+                if(document.getElementById('btn-offline-toggle')) {
+                    const btn = document.getElementById('btn-offline-toggle');
+                    btn.style.background = '#00ff88';
+                    btn.style.color = 'black';
+                    btn.innerText = "SET OFFLINE";
+                }
+            }
+        });
+
+        // --- ADMIN TOGGLE FUNCTION ---
+        window.toggleSystemStatus = async () => {
+            const ref = doc(db, "system", "status");
+            try {
+                const snap = await getDoc(ref);
+                if(!snap.exists()) {
+                    await setDoc(ref, { offline: true });
+                } else {
+                    await updateDoc(ref, { offline: !snap.data().offline });
+                }
+            } catch(e) {
+                alert("Error toggling status: " + e.message);
+            }
+        }
 
         // --- SECURITY SANITIZER ---
         function escapeHtml(text) {
@@ -404,7 +478,6 @@
             state.isAdmin = user && user.email === ADMIN_EMAIL;
             
             if (user) {
-                // If user logged in via email, they might not have a photoURL
                 const pfp = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.substring(0,2)}&background=random`;
                 document.getElementById('user-pfp').src = pfp;
                 
@@ -462,7 +535,7 @@
                 document.getElementById('opt-sora').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#00f2ff');
             } else if (m === 'sora-pro') {
-                document.getElementById('opt-sora').classList.remove('hidden'); // Uses same video options
+                document.getElementById('opt-sora').classList.remove('hidden'); 
                 document.documentElement.style.setProperty('--primary', '#bd00ff');
             } else if (m === 'banana') {
                 document.getElementById('opt-banana').classList.remove('hidden');
@@ -506,6 +579,8 @@
         };
 
         window.submitRequest = async () => {
+            if(state.isOffline) return showToast("SYSTEM OFFLINE");
+
             const btn = document.getElementById('btn-submit');
             const prompt = document.getElementById('inp-prompt').value;
             if(!prompt) return showToast("Enter a prompt!");
