@@ -440,22 +440,27 @@
             const q = query(collection(db, "ai_studio_files"), where("group", "==", groupId), orderBy("index"));
             const snapshot = await getDocs(q);
             
-            if(snapshot.empty) return null;
+            if(snapshot.empty) {
+                console.error("No chunks found for group:", groupId);
+                throw new Error("Missing File Data");
+            }
 
-            // 2. Reassemble
-            let fullBase64 = "";
-            let mimeType = "application/octet-stream";
-            
+            // 2. Reassemble Strings Efficiently (Use Array Join instead of Concat)
+            const parts = [];
             snapshot.forEach(doc => {
-                const d = doc.data();
-                fullBase64 += d.data;
-                if(d.index === 0) mimeType = d.mime;
+                parts.push(doc.data().data);
             });
+            const fullDataUri = parts.join('');
 
-            // 3. Convert to Blob URL (so it plays in <video>)
-            const res = await fetch(fullBase64);
-            const blob = await res.blob();
-            return URL.createObjectURL(blob);
+            // 3. Convert to Blob
+            try {
+                const res = await fetch(fullDataUri);
+                const blob = await res.blob();
+                return URL.createObjectURL(blob);
+            } catch(e) {
+                console.error("Blob Conversion Failed", e);
+                throw new Error("Corrupt Data");
+            }
         }
 
         // --- UTIL ---
@@ -469,7 +474,7 @@
                 if (!string) return false;
                 if (string.startsWith('data:image')) return true;
                 if (string.startsWith('blob:')) return true; // Blob URLs are safe
-                if (string.startsWith('group_')) return true; // Chunk Groups
+                if (string.startsWith('group:')) return true; // Chunk Groups
                 const url = new URL(string);
                 return url.protocol === "http:" || url.protocol === "https:";
             } catch (_) { return false; }
@@ -683,24 +688,11 @@
                     const isVideo = d.model.includes('Sora');
                     let mediaHtml = '';
                     let displayUrl = d.resultUrl;
+                    let isChunked = displayUrl && displayUrl.startsWith("group:");
 
-                    // If it's a chunk group, we need to assemble it
-                    if (displayUrl && displayUrl.startsWith("group:")) {
-                        const groupId = displayUrl.split(":")[1];
-                        // We use a placeholder first, then replace async
+                    // Prepare placeholders
+                    if (isChunked) {
                         mediaHtml = `<div class="state-box state-pending" id="load-${d.id}"><div class="loader" style="width:20px; height:20px;"></div><span>LOADING MEDIA</span></div>`;
-                        
-                        // Async fetch chunks
-                        downloadFileFromChunks(groupId).then(blobUrl => {
-                             const container = document.getElementById(`media-box-${d.id}`);
-                             if(container) {
-                                 const tag = isVideo ? `<video src="${blobUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${blobUrl}" class="creation-media">`;
-                                 container.innerHTML = tag;
-                                 
-                                 // Update click listener to use the Blob URL
-                                 container.parentElement.onclick = () => viewMedia(blobUrl, isVideo ? 'video' : 'image');
-                             }
-                        });
                     } else if (d.status === 'completed' && isValidUrl(d.resultUrl)) {
                          mediaHtml = isVideo ? `<video src="${d.resultUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${d.resultUrl}" class="creation-media">`;
                     } else if (d.status === 'error') {
@@ -714,21 +706,34 @@
                     div.innerHTML = `
                         <button class="delete-btn" id="del-${d.id}"><i class="fa-solid fa-trash"></i></button>
                         <div class="status-tag status-${d.status}">${d.status}</div>
-                        <div id="media-box-${d.id}" style="height:220px; width:100%;">${mediaHtml}</div>
+                        <div id="media-box-${d.id}" style="height:220px; width:100%; position:relative;">${mediaHtml}</div>
                         <div style="padding:15px; border-top:1px solid #222;"><div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${escapeHtml(d.prompt)}</div></div>
                     `;
                     grid.appendChild(div);
 
+                    // LOGIC FOR DELETION
                     document.getElementById(`del-${d.id}`).addEventListener('click', (e) => {
                         e.stopPropagation(); 
                         deleteCreation(d.id);
                     });
 
-                    // If normal URL, add listener immediately
-                    if (d.status === 'completed' && !displayUrl.startsWith("group:")) {
-                        div.addEventListener('click', (e) => {
-                            viewMedia(d.resultUrl, isVideo ? 'video' : 'image');
+                    // ASYNC LOAD CHUNKS IF NEEDED
+                    if (isChunked) {
+                        const groupId = displayUrl.split(":")[1];
+                        downloadFileFromChunks(groupId).then(blobUrl => {
+                             const container = document.getElementById(`media-box-${d.id}`);
+                             if(container) {
+                                 const tag = isVideo ? `<video src="${blobUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${blobUrl}" class="creation-media">`;
+                                 container.innerHTML = tag;
+                                 div.addEventListener('click', () => viewMedia(blobUrl, isVideo ? 'video' : 'image'));
+                             }
+                        }).catch(err => {
+                             console.error(err);
+                             const container = document.getElementById(`media-box-${d.id}`);
+                             if(container) container.innerHTML = `<div class="state-box state-error"><span>LOAD ERROR</span></div>`;
                         });
+                    } else if (d.status === 'completed') {
+                        div.addEventListener('click', () => viewMedia(d.resultUrl, isVideo ? 'video' : 'image'));
                     }
                 });
             });
