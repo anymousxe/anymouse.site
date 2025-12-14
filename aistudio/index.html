@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V3</title>
+    <title>The Ai STudio - V4</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -277,7 +277,7 @@
                         <button class="glow-btn" style="width:auto; padding:5px 20px; opacity:0.5;" onclick="setDur(15, this)">15s</button>
                     </div>
                 </div>
-                <div id="opt-banana" style="margin-bottom:20px;">
+                <div id="opt-upload" style="margin-bottom:20px;">
                     <label id="lbl-ref-upload" style="cursor:pointer; background:rgba(255,255,255,0.05); padding:10px 20px; border-radius:10px; font-size:0.9rem; border:1px solid var(--glass-border); display:inline-flex; align-items:center; gap:10px; transition:0.3s;">
                         <i class="fa-solid fa-upload"></i> Upload Reference Image
                         <input type="file" id="inp-ref-img" accept="image/*" style="display:none;">
@@ -354,7 +354,6 @@
             loading: true,
             soraDur: 10,
             isOffline: false,
-            // Credits removed from state
         };
 
         let unsubscribeUserQueue = null;
@@ -488,8 +487,6 @@
             }
         }
 
-        // Credit system functions removed (syncUserData, updateUIForUser, claimDaily)
-
         onAuthStateChanged(auth, (user) => {
             state.user = user;
             state.isAdmin = user && user.email === ADMIN_EMAIL;
@@ -536,23 +533,22 @@
         };
 
         window.setModel = async (m) => {
-            // Credit unlocking logic removed
-
-            // Normal selection logic
             state.model = m;
             document.querySelectorAll('.model-card').forEach(el => el.classList.remove('active'));
             document.getElementById(`m-${m}`).classList.add('active');
+            
+            // HIDE ALL INITIALLY
             document.getElementById('opt-sora').classList.add('hidden');
-            document.getElementById('opt-banana').classList.add('hidden');
+            document.getElementById('opt-upload').classList.add('hidden'); // Default hide upload
             
             if(m === 'sora') {
-                document.getElementById('opt-sora').classList.remove('hidden');
+                document.getElementById('opt-sora').classList.remove('hidden'); // Show Duration
+                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload (Added for Image2Video)
                 document.documentElement.style.setProperty('--primary', '#00f2ff');
             } else if (m === 'banana') {
-                document.getElementById('opt-banana').classList.remove('hidden');
+                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload
                 document.documentElement.style.setProperty('--primary', '#ffe135');
             }
-            // Sora Pro logic removed
         };
 
         // --- USER REF UPLOAD (CHUNKING) ---
@@ -641,7 +637,6 @@
 
                 let modelName = "Nano Banana Pro";
                 if(state.model === 'sora') modelName = "Sora 2";
-                // Sora Pro removed
 
                 const userName = state.user.displayName || state.user.email.split('@')[0];
 
@@ -773,12 +768,14 @@
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 docs.forEach(d => {
+                    const durationTag = d.duration ? `<span style="background:#333; padding:2px 8px; border-radius:4px; font-size:0.8rem; margin-left:10px;">⏱ ${d.duration}s</span>` : '';
+
                     const el = document.createElement('div');
                     el.className = 'req-card';
                     el.innerHTML = `
                         <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.9rem; margin-bottom:10px;">
                             <span style="color:white; font-weight:bold;">${escapeHtml(d.userName)}</span>
-                            <span style="color:var(--primary)">${d.model}</span>
+                            <span style="color:var(--primary)">${d.model} ${durationTag}</span>
                         </div>
                         <div style="margin-bottom:15px; padding:10px; background:#000; border-radius:8px; cursor:pointer; font-family:monospace; color:#ccc;" onclick="navigator.clipboard.writeText(this.innerText)">
                             ${escapeHtml(d.prompt)} <i class="fa-solid fa-copy" style="float:right;"></i>
