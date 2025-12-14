@@ -317,7 +317,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, orderBy, limit, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQacpiI3oIqOUx8ciMfdlQgBtHZEVdcMo",
@@ -341,7 +341,7 @@
             user: null,
             isAdmin: false,
             model: 'banana',
-            refImg: null, // This will now hold a URL, not base64
+            refImg: null, 
             loading: true,
             soraDur: 10,
             isOffline: false
@@ -392,11 +392,25 @@
             }
         }
 
-        // --- UPLOAD HANDLER (STORAGE) ---
-        async function uploadToStorage(file, path) {
-            const storageRef = ref(storage, path);
-            await uploadBytes(storageRef, file);
-            return await getDownloadURL(storageRef);
+        // --- UPLOAD HANDLER WITH PROGRESS (STORAGE) ---
+        function uploadToStorageWithProgress(file, path, onProgress) {
+            return new Promise((resolve, reject) => {
+                const storageRef = ref(storage, path);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        onProgress(progress);
+                    }, 
+                    (error) => { reject(error); }, 
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            resolve(downloadURL);
+                        });
+                    }
+                );
+            });
         }
 
         // --- UTIL ---
@@ -494,12 +508,16 @@
             if(file) {
                 document.getElementById('ref-status').innerText = "UPLOADING...";
                 try {
-                    const url = await uploadToStorage(file, `user_refs/${state.user.uid}_${Date.now()}_${file.name}`);
-                    state.refImg = url;
-                    document.getElementById('ref-status').innerText = "UPLOADED";
+                    // Simple upload for user ref (usually small)
+                    await uploadToStorageWithProgress(file, `user_refs/${state.user.uid}_${Date.now()}_${file.name}`, (prog) => {
+                        document.getElementById('ref-status').innerText = `UPLOADING ${Math.round(prog)}%`;
+                    }).then(url => {
+                        state.refImg = url;
+                        document.getElementById('ref-status').innerText = "UPLOADED";
+                    });
                 } catch(err) {
                     console.error(err);
-                    document.getElementById('ref-status').innerText = "ERROR: " + err.message;
+                    document.getElementById('ref-status').innerText = "ERROR";
                 }
             }
         });
@@ -508,17 +526,39 @@
         window.adminFile = async (input, id) => {
             const file = input.files[0];
             if(file) {
-                const label = input.parentElement;
-                label.style.opacity = "0.5"; 
+                const label = document.getElementById(`lbl-upload-${id}`);
+                const sendBtn = document.getElementById(`btn-send-${id}`);
+                const urlInput = document.getElementById(`res-${id}`);
+
+                // LOCK UI
+                label.style.opacity = "0.8"; 
                 label.style.background = "#fff"; 
+                label.style.color = "#000";
+                label.innerText = "INITIALIZING...";
+                
+                sendBtn.disabled = true;
+                sendBtn.innerText = "WAITING FOR UPLOAD...";
+                
                 try {
-                    const url = await uploadToStorage(file, `results/${id}_${file.name}`);
-                    document.getElementById(`res-${id}`).value = url; 
+                    const url = await uploadToStorageWithProgress(file, `results/${id}_${file.name}`, (progress) => {
+                         label.innerText = `UPLOADING ${Math.round(progress)}%`;
+                    });
+
+                    // UNLOCK UI
+                    urlInput.value = url; 
                     label.style.background = "#00ff88"; 
                     label.style.opacity = "1";
+                    label.innerHTML = `<i class="fa-solid fa-check"></i> FILE READY`;
+                    
+                    sendBtn.disabled = false;
+                    sendBtn.innerText = "SEND SUCCESS";
+
                 } catch(err) {
-                    alert("Storage Error: " + err.message + " (Did you enable Storage in Console?)");
+                    alert("Storage Error: " + err.message);
                     label.style.background = "var(--danger)";
+                    label.innerText = "FAILED";
+                    sendBtn.innerText = "RETRY?";
+                    sendBtn.disabled = false;
                 }
             }
         };
@@ -669,13 +709,13 @@
                         
                         <div class="admin-input-row">
                             <input type="text" id="res-${d.id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
-                            <label style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px;">
+                            <label id="lbl-upload-${d.id}" style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px; width:45px; display:flex; align-items:center; justify-content:center; white-space:nowrap; overflow:hidden;">
                                 <i class="fa-solid fa-file-arrow-up"></i>
                                 <input type="file" style="display:none;" onchange="adminFile(this, '${d.id}')">
                             </label>
                         </div>
                         <div class="admin-input-row">
-                            <button onclick="finishReq('${d.id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
+                            <button id="btn-send-${d.id}" onclick="finishReq('${d.id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
                             <button onclick="finishReq('${d.id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
                         </div>
                     `;
@@ -686,7 +726,7 @@
 
         window.finishReq = async (id, status) => {
             const url = document.getElementById(`res-${id}`)?.value;
-            if(status === 'completed' && !url) return alert("Missing URL/File");
+            if(status === 'completed' && !url) return alert("Missing URL/File. Did the upload finish?");
             await updateDoc(doc(db, "ai_studio_requests", id), { status: status, resultUrl: url || "" });
         };
 
