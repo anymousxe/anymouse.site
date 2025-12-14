@@ -26,6 +26,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
 
+        /* --- PROGRESS BAR --- */
+        .progress-container {
+            width: 100%; height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 5px; display: none;
+        }
+        .progress-fill {
+            height: 100%; background: #00ff88; width: 0%; transition: width 0.2s;
+        }
+
         /* --- OFFLINE BANNER --- */
         #offline-banner {
             position: fixed; top: 0; left: 0; width: 100%; 
@@ -180,7 +188,7 @@
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333; }
         .req-card { background: #1a1a20; padding: 20px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; transition: 0.2s;}
         .req-card:hover { border-color: #555; }
-        .admin-input-row { display: flex; gap: 10px; margin-top: 15px; }
+        .admin-input-row { display: flex; gap: 10px; margin-top: 15px; align-items: center; flex-wrap: wrap; }
         
         /* UTIL */
         .hidden { display: none !important; }
@@ -274,6 +282,9 @@
                         <i class="fa-solid fa-upload"></i> Upload Reference Image
                         <input type="file" id="inp-ref-img" accept="image/*" style="display:none;">
                     </label>
+                    <div id="ref-progress-bar" class="progress-container" style="width: 200px; display: none; margin-left: 10px;">
+                        <div id="ref-progress-fill" class="progress-fill"></div>
+                    </div>
                     <span id="ref-status" style="margin-left:15px; font-size:0.8rem; color:#00ff88; font-weight:bold;"></span>
                 </div>
 
@@ -317,7 +328,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, orderBy, limit, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQacpiI3oIqOUx8ciMfdlQgBtHZEVdcMo",
@@ -332,7 +342,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
         const ADMIN_EMAIL = "anymousxe.info@gmail.com"; 
@@ -341,7 +350,7 @@
             user: null,
             isAdmin: false,
             model: 'banana',
-            refImg: null, 
+            refImg: null, // This will be { type: 'chunked', group: 'xyz' } or base64 if small
             loading: true,
             soraDur: 10,
             isOffline: false
@@ -388,29 +397,65 @@
                     await updateDoc(ref, { offline: !snap.data().offline });
                 }
             } catch(e) {
-                alert("Error: " + e.message + "\n(Fix this by updating Firestore Rules in Console)");
+                alert("Error: " + e.message + "\n(Did you update the Firestore Rules?)");
             }
         }
 
-        // --- UPLOAD HANDLER WITH PROGRESS (STORAGE) ---
-        function uploadToStorageWithProgress(file, path, onProgress) {
-            return new Promise((resolve, reject) => {
-                const storageRef = ref(storage, path);
-                const uploadTask = uploadBytesResumable(storageRef, file);
-
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        onProgress(progress);
-                    }, 
-                    (error) => { reject(error); }, 
-                    () => {
-                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            resolve(downloadURL);
-                        });
-                    }
-                );
+        // --- DATABASE CHUNKING SYSTEM (Replaces Storage) ---
+        // Splits file into <800KB chunks to fit in Firestore documents
+        async function uploadFileAsChunks(file, onProgress) {
+            const CHUNK_SIZE = 800000; // ~800KB characters safe limit
+            
+            // 1. Convert to Base64
+            const base64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
             });
+
+            const totalChunks = Math.ceil(base64.length / CHUNK_SIZE);
+            const groupId = `group_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            // 2. Upload chunks
+            for (let i = 0; i < totalChunks; i++) {
+                const chunkData = base64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+                
+                await addDoc(collection(db, "ai_studio_files"), {
+                    group: groupId,
+                    index: i,
+                    total: totalChunks,
+                    data: chunkData,
+                    mime: file.type
+                });
+
+                const percent = Math.round(((i + 1) / totalChunks) * 100);
+                onProgress(percent);
+            }
+
+            return groupId; // Return the ID group, not a URL
+        }
+
+        async function downloadFileFromChunks(groupId) {
+            // 1. Fetch all chunks
+            const q = query(collection(db, "ai_studio_files"), where("group", "==", groupId), orderBy("index"));
+            const snapshot = await getDocs(q);
+            
+            if(snapshot.empty) return null;
+
+            // 2. Reassemble
+            let fullBase64 = "";
+            let mimeType = "application/octet-stream";
+            
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                fullBase64 += d.data;
+                if(d.index === 0) mimeType = d.mime;
+            });
+
+            // 3. Convert to Blob URL (so it plays in <video>)
+            const res = await fetch(fullBase64);
+            const blob = await res.blob();
+            return URL.createObjectURL(blob);
         }
 
         // --- UTIL ---
@@ -423,6 +468,8 @@
             try {
                 if (!string) return false;
                 if (string.startsWith('data:image')) return true;
+                if (string.startsWith('blob:')) return true; // Blob URLs are safe
+                if (string.startsWith('group_')) return true; // Chunk Groups
                 const url = new URL(string);
                 return url.protocol === "http:" || url.protocol === "https:";
             } catch (_) { return false; }
@@ -502,62 +549,74 @@
             }
         };
 
-        // --- USER REF UPLOAD (TO STORAGE) ---
+        // --- USER REF UPLOAD (CHUNKING) ---
         document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(file) {
-                document.getElementById('ref-status').innerText = "UPLOADING...";
+                const barContainer = document.getElementById('ref-progress-bar');
+                const barFill = document.getElementById('ref-progress-fill');
+                const statusText = document.getElementById('ref-status');
+
+                barContainer.style.display = 'block';
+                statusText.innerText = "DB UPLOADING...";
+
                 try {
-                    // Simple upload for user ref (usually small)
-                    await uploadToStorageWithProgress(file, `user_refs/${state.user.uid}_${Date.now()}_${file.name}`, (prog) => {
-                        document.getElementById('ref-status').innerText = `UPLOADING ${Math.round(prog)}%`;
-                    }).then(url => {
-                        state.refImg = url;
-                        document.getElementById('ref-status').innerText = "UPLOADED";
+                    const groupId = await uploadFileAsChunks(file, (prog) => {
+                        barFill.style.width = `${prog}%`;
                     });
+                    
+                    // We store the Group ID as a special string
+                    state.refImg = "group:" + groupId;
+                    statusText.innerText = "COMPLETED";
+                    barFill.style.background = "#00ff88";
+                    
                 } catch(err) {
                     console.error(err);
-                    document.getElementById('ref-status').innerText = "ERROR";
+                    statusText.innerText = "FAILED";
+                    alert("Chunk Upload Failed: " + err.message);
                 }
             }
         });
 
-        // --- ADMIN RESULT UPLOAD (TO STORAGE) ---
+        // --- ADMIN RESULT UPLOAD (CHUNKING) ---
         window.adminFile = async (input, id) => {
             const file = input.files[0];
             if(file) {
                 const label = document.getElementById(`lbl-upload-${id}`);
                 const sendBtn = document.getElementById(`btn-send-${id}`);
                 const urlInput = document.getElementById(`res-${id}`);
+                const progressBar = document.getElementById(`bar-${id}`);
+                const progressFill = document.getElementById(`fill-${id}`);
 
-                // LOCK UI
-                label.style.opacity = "0.8"; 
-                label.style.background = "#fff"; 
-                label.style.color = "#000";
-                label.innerText = "INITIALIZING...";
+                label.style.display = "none";
+                progressBar.style.display = "block";
                 
                 sendBtn.disabled = true;
-                sendBtn.innerText = "WAITING FOR UPLOAD...";
+                sendBtn.innerText = "UPLOADING CHUNKS...";
                 
                 try {
-                    const url = await uploadToStorageWithProgress(file, `results/${id}_${file.name}`, (progress) => {
-                         label.innerText = `UPLOADING ${Math.round(progress)}%`;
+                    const groupId = await uploadFileAsChunks(file, (progress) => {
+                         progressFill.style.width = `${progress}%`;
                     });
 
-                    // UNLOCK UI
-                    urlInput.value = url; 
+                    // We store "group:xyz" in the URL box.
+                    // The viewer knows how to handle this.
+                    urlInput.value = "group:" + groupId; 
+                    
+                    progressBar.style.display = "none";
+                    label.style.display = "flex";
                     label.style.background = "#00ff88"; 
-                    label.style.opacity = "1";
-                    label.innerHTML = `<i class="fa-solid fa-check"></i> FILE READY`;
+                    label.innerHTML = `<i class="fa-solid fa-check"></i>`;
                     
                     sendBtn.disabled = false;
                     sendBtn.innerText = "SEND SUCCESS";
 
                 } catch(err) {
-                    alert("Storage Error: " + err.message);
+                    alert("Upload Error: " + err.message);
+                    label.style.display = "flex";
+                    progressBar.style.display = "none";
                     label.style.background = "var(--danger)";
-                    label.innerText = "FAILED";
-                    sendBtn.innerText = "RETRY?";
+                    sendBtn.innerText = "FAILED";
                     sendBtn.disabled = false;
                 }
             }
@@ -620,10 +679,29 @@
                 snap.forEach(d => docs.push({id: d.id, ...d.data()}));
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
-                docs.forEach(d => {
+                docs.forEach(async (d) => {
                     const isVideo = d.model.includes('Sora');
                     let mediaHtml = '';
-                    if (d.status === 'completed' && isValidUrl(d.resultUrl)) {
+                    let displayUrl = d.resultUrl;
+
+                    // If it's a chunk group, we need to assemble it
+                    if (displayUrl && displayUrl.startsWith("group:")) {
+                        const groupId = displayUrl.split(":")[1];
+                        // We use a placeholder first, then replace async
+                        mediaHtml = `<div class="state-box state-pending" id="load-${d.id}"><div class="loader" style="width:20px; height:20px;"></div><span>LOADING MEDIA</span></div>`;
+                        
+                        // Async fetch chunks
+                        downloadFileFromChunks(groupId).then(blobUrl => {
+                             const container = document.getElementById(`media-box-${d.id}`);
+                             if(container) {
+                                 const tag = isVideo ? `<video src="${blobUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${blobUrl}" class="creation-media">`;
+                                 container.innerHTML = tag;
+                                 
+                                 // Update click listener to use the Blob URL
+                                 container.parentElement.onclick = () => viewMedia(blobUrl, isVideo ? 'video' : 'image');
+                             }
+                        });
+                    } else if (d.status === 'completed' && isValidUrl(d.resultUrl)) {
                          mediaHtml = isVideo ? `<video src="${d.resultUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${d.resultUrl}" class="creation-media">`;
                     } else if (d.status === 'error') {
                         mediaHtml = `<div class="state-box state-error"><i class="fa-solid fa-triangle-exclamation fa-2x"></i><span>FAILED</span></div>`;
@@ -635,7 +713,8 @@
                     div.className = 'creation-card';
                     div.innerHTML = `
                         <button class="delete-btn" id="del-${d.id}"><i class="fa-solid fa-trash"></i></button>
-                        <div class="status-tag status-${d.status}">${d.status}</div>${mediaHtml}
+                        <div class="status-tag status-${d.status}">${d.status}</div>
+                        <div id="media-box-${d.id}" style="height:220px; width:100%;">${mediaHtml}</div>
                         <div style="padding:15px; border-top:1px solid #222;"><div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${escapeHtml(d.prompt)}</div></div>
                     `;
                     grid.appendChild(div);
@@ -645,7 +724,8 @@
                         deleteCreation(d.id);
                     });
 
-                    if (d.status === 'completed') {
+                    // If normal URL, add listener immediately
+                    if (d.status === 'completed' && !displayUrl.startsWith("group:")) {
                         div.addEventListener('click', (e) => {
                             viewMedia(d.resultUrl, isVideo ? 'video' : 'image');
                         });
@@ -662,7 +742,6 @@
         };
 
         window.viewMedia = (url, type) => {
-            if(!isValidUrl(url)) return showToast("Error: Invalid Media URL");
             const modal = document.getElementById('media-modal');
             const container = document.getElementById('modal-media-container');
             const downloadBtn = document.getElementById('download-btn');
@@ -709,10 +788,17 @@
                         
                         <div class="admin-input-row">
                             <input type="text" id="res-${d.id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
-                            <label id="lbl-upload-${d.id}" style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px; width:45px; display:flex; align-items:center; justify-content:center; white-space:nowrap; overflow:hidden;">
-                                <i class="fa-solid fa-file-arrow-up"></i>
-                                <input type="file" style="display:none;" onchange="adminFile(this, '${d.id}')">
-                            </label>
+                            
+                            <div style="position:relative;">
+                                <label id="lbl-upload-${d.id}" style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px; width:45px; display:flex; align-items:center; justify-content:center; white-space:nowrap; overflow:hidden;">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                    <input type="file" style="display:none;" onchange="adminFile(this, '${d.id}')">
+                                </label>
+                                <div id="bar-${d.id}" style="display:none; width:45px; height:38px; background:#222; border-radius:5px; overflow:hidden;">
+                                    <div id="fill-${d.id}" style="height:100%; width:0%; background:#00ff88;"></div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="admin-input-row">
                             <button id="btn-send-${d.id}" onclick="finishReq('${d.id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
