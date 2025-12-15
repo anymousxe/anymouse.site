@@ -3,613 +3,874 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V6 (Sora Style)</title>
+    <title>The Ai STudio - V6 Ultimate</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-dark: #050508;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-strong: #1a1a20;
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --banana-yellow: #ffe135;
-            --sora-cyan: #00f2ff;
-            --danger: #ff2a2a;
+            --bg-deep: #030304;
+            --glass-panel: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            
+            --accent-cyan: #00f2ff;
+            --accent-purple: #bd00ff;
+            --accent-banana: #ffe135;
+            --accent-danger: #ff2a2a;
+            --accent-warning: #ffaa00;
+            
             --text-main: #ffffff;
-            --primary: var(--banana-yellow);
+            --text-muted: #888888;
+            
+            --primary: var(--accent-cyan);
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-deep); color: var(--text-main); height: 100vh; font-family: var(--font-main); overflow: hidden; display: flex; flex-direction: column; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
 
         /* --- UTILS --- */
         .hidden { display: none !important; }
-        .centered { display: flex; align-items: center; justify-content: center; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .col { display: flex; flex-direction: column; }
+        .row { display: flex; flex-direction: row; align-items: center; }
+        .gap-10 { gap: 10px; }
+        .gap-20 { gap: 20px; }
+
+        /* --- ANIMATED BG --- */
+        .ambient-glow {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(0, 242, 255, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(189, 0, 255, 0.05), transparent 40%);
+            animation: breathe 15s ease-in-out infinite alternate;
+        }
+        @keyframes breathe { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1.1); } }
+
+        /* --- UI COMPONENTS --- */
+        button { cursor: pointer; border: none; font-family: var(--font-display); }
+        
+        .glass-btn {
+            background: var(--glass-panel); border: 1px solid var(--glass-border);
+            color: white; padding: 10px 20px; border-radius: 30px;
+            font-size: 0.9rem; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        .glass-btn:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .glass-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 20px rgba(0,242,255,0.2); }
+        .glass-btn.danger { border-color: var(--accent-danger); color: var(--accent-danger); }
+        .glass-btn.danger:hover { background: var(--accent-danger); color: white; }
+
+        .input-box {
+            background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);
+            color: white; padding: 12px 16px; border-radius: 12px; width: 100%;
+            font-family: var(--font-main); transition: 0.3s;
+        }
+        .input-box:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
 
         /* --- BANNERS --- */
-        #offline-banner, #queue-banner {
-            position: fixed; top: 0; left: 0; width: 100%; 
-            text-align: center; padding: 8px; font-weight: 800; letter-spacing: 1px;
-            z-index: 99999; display: none; font-family: 'Space Grotesk'; text-transform: uppercase;
+        #system-banner {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
+            text-align: center; padding: 8px; font-weight: 700; font-family: var(--font-display);
+            font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+            transform: translateY(-100%); transition: 0.4s;
         }
-        #offline-banner { background: repeating-linear-gradient(45deg, #ff2a2a, #ff2a2a 10px, #cc0000 10px, #cc0000 20px); }
-        #queue-banner { background: #ffcc00; color: black; top: 35px; /* Below offline banner if both active */ }
+        #system-banner.visible { transform: translateY(0); }
+        .banner-offline { background: var(--accent-danger); color: white; }
+        .banner-queue { background: var(--accent-warning); color: black; }
 
-        /* --- BACKGROUND --- */
-        .background-fx {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 15% 50%, rgba(86, 0, 245, 0.15), transparent 25%),
-                        radial-gradient(circle at 85% 30%, rgba(0, 242, 255, 0.1), transparent 25%);
-            z-index: -1;
+        /* --- NAVIGATION --- */
+        .nav-sidebar {
+            position: fixed; left: 0; top: 0; height: 100%; width: 80px;
+            background: rgba(0,0,0,0.2); backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border); z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 40px;
+        }
+        .nav-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
+        .nav-item {
+            color: var(--text-muted); font-size: 1.4rem; cursor: pointer;
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+            border-radius: 15px; transition: 0.3s; position: relative;
+        }
+        .nav-item:hover { color: white; background: var(--glass-panel); }
+        .nav-item.active { color: var(--primary); background: rgba(0,242,255,0.1); }
+        .nav-item.active::after {
+            content: ''; position: absolute; right: -16px; top: 50%; transform: translateY(-50%);
+            width: 4px; height: 20px; background: var(--primary); border-radius: 4px 0 0 4px;
         }
 
-        /* --- LAYOUT --- */
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column; overflow-y: auto;
+        /* --- SCREENS --- */
+        .main-content {
+            margin-left: 80px; height: 100%; overflow-y: auto; overflow-x: hidden;
+            position: relative; padding: 40px; scroll-behavior: smooth;
         }
+        .screen { display: none; flex-direction: column; max-width: 1200px; margin: 0 auto; width: 100%; animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .screen.active { display: flex; }
 
-        /* --- NAV --- */
-        nav { 
-            display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; 
-            background: rgba(5,5,8,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); 
-            position: sticky; top: 0; z-index: 100; 
-        }
-        .nav-tabs { display: flex; gap: 20px; }
-        .nav-tab { cursor: pointer; color: #666; font-weight: bold; transition: 0.3s; }
-        .nav-tab.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- FEED / CREATION CARDS (Sora Style) --- */
-        #gallery { 
-            display: flex; flex-direction: column; align-items: center; gap: 40px; 
-            padding-bottom: 100px; width: 100%; max-width: 800px; margin: 0 auto;
+        /* --- HOME & FEED --- */
+        .feed-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;
         }
-
-        .creation-card { 
-            background: #000; border: 1px solid #333; border-radius: 20px; overflow: hidden; position: relative; 
-            width: 100%; animation: fadeIn 0.5s ease;
+        .feed-card {
+            background: #0a0a0c; border-radius: 20px; overflow: hidden; position: relative;
+            border: 1px solid #222; transition: 0.4s; aspect-ratio: 16/9; cursor: pointer;
         }
+        .feed-card:hover { transform: scale(1.02); border-color: var(--primary); z-index: 10; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .feed-media { width: 100%; height: 100%; object-fit: cover; }
         
-        .media-container {
-            width: 100%; aspect-ratio: 16/9; background: #111; position: relative;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .creation-media { width: 100%; height: 100%; object-fit: contain; }
-
-        /* Overlays */
-        .card-overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%;
+        .feed-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 20px; pointer-events: none;
+            opacity: 0; transition: 0.3s; display: flex; flex-direction: column; gap: 5px;
         }
-        .card-info { pointer-events: auto; }
-        .card-prompt { font-size: 1rem; color: white; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .card-author { font-size: 0.8rem; color: var(--primary); font-weight: bold; display: flex; align-items: center; gap: 8px; }
-
-        /* Social Bar */
-        .social-bar {
-            padding: 15px; background: #0a0a0a; border-top: 1px solid #222;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .social-actions { display: flex; gap: 20px; }
-        .social-btn { 
-            background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem; 
-            display: flex; align-items: center; gap: 6px; transition: 0.2s;
-        }
-        .social-btn:hover { color: white; }
-        .social-btn.liked { color: #ff2a2a; }
-
-        /* Comments Section */
-        .comments-section {
-            background: #050505; border-top: 1px solid #222; padding: 15px; display: none;
-        }
-        .comments-section.active { display: block; }
-        .comment-list { max-height: 200px; overflow-y: auto; margin-bottom: 10px; font-size: 0.9rem; }
-        .comment-item { margin-bottom: 8px; color: #ccc; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .comment-input-row { display: flex; gap: 10px; }
-        .comment-input { flex: 1; background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 20px; outline: none; }
+        .feed-card:hover .feed-overlay { opacity: 1; }
         
-        /* --- ADMIN --- */
-        #screen-admin { background: #0f0f13; padding: 30px; z-index: 2000; }
-        .req-card { background: #1a1a20; padding: 20px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; }
-        .admin-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #333; color: #aaa; margin-left: 10px; }
-        .admin-row { display: flex; gap: 10px; margin-top: 10px; }
-        
-        /* --- OTHERS --- */
-        .controls { background: var(--glass); padding: 20px; border-radius: 20px; margin-bottom: 30px; }
-        .action-btn { background: var(--primary); width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 30px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; }
-        
-        /* Loaders */
-        .loader { width: 30px; height: 30px; border: 4px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .user-tag { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #eee; }
+        .user-avatar-sm { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border); }
 
-        /* Login */
-        .login-card { background: rgba(20,20,25,0.9); padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #333; }
-        .auth-input { width: 100%; padding: 12px; margin-bottom: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 5px; }
-        .glow-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid #444; background: transparent; color: white; cursor: pointer; }
+        /* --- STUDIO (CREATE) --- */
+        .studio-container {
+            background: var(--glass-panel); border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 40px; backdrop-filter: blur(20px);
+        }
+        .model-pill {
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
+            border-radius: 20px; border: 1px solid var(--glass-border); color: #888;
+            cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.2);
+        }
+        .model-pill.active { border-color: var(--primary); color: white; background: rgba(0,242,255,0.1); }
+        
+        textarea {
+            width: 100%; background: transparent; border: none; color: white;
+            font-size: 1.5rem; font-family: var(--font-display); resize: none;
+            min-height: 120px; padding: 20px 0; border-bottom: 2px solid #333;
+            transition: 0.3s;
+        }
+        textarea:focus { border-color: var(--primary); }
+        textarea::placeholder { color: #444; }
+
+        /* --- PROFILE --- */
+        .profile-header {
+            display: flex; align-items: center; gap: 30px; margin-bottom: 40px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);
+            padding: 30px; border-radius: 24px; border: 1px solid var(--glass-border);
+        }
+        .profile-pic-lg {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--primary); cursor: pointer; transition: 0.3s;
+        }
+        .profile-pic-lg:hover { filter: brightness(1.2); }
+
+        /* --- ADMIN PANEL --- */
+        .admin-row {
+            background: #0f0f12; border: 1px solid #222; border-radius: 12px;
+            padding: 15px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .st-pending { background: rgba(255, 225, 53, 0.1); color: var(--accent-banana); border: 1px solid var(--accent-banana); }
+        .st-completed { background: rgba(0, 242, 255, 0.1); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+        .st-error { background: rgba(255, 42, 42, 0.1); color: var(--accent-danger); border: 1px solid var(--accent-danger); }
+        .st-copyright { background: rgba(189, 0, 255, 0.1); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+
+        /* --- LOGIN --- */
+        #screen-login {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5000;
+            background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 4000; display: none;
+            justify-content: center; align-items: center; padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #111; border: 1px solid #333; border-radius: 20px;
+            padding: 30px; max-width: 500px; width: 100%;
+        }
+
+        /* --- TOAST --- */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: white; color: black; padding: 12px 25px; border-radius: 30px;
+            font-weight: 700; font-family: var(--font-display); opacity: 0; pointer-events: none;
+            transition: 0.3s; z-index: 9999; box-shadow: 0 10px 40px rgba(255,255,255,0.2);
+        }
+        #toast.show { opacity: 1; transform: translate(-50%, -10px); }
+
+        /* --- LOADER --- */
+        .loader { width: 24px; height: 24px; border: 3px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
-    <div class="background-fx"></div>
-    <div id="offline-banner"><i class="fa-solid fa-triangle-exclamation"></i> SYSTEMS OFFLINE</div>
-    <div id="queue-banner"><i class="fa-solid fa-clock"></i> HIGH TRAFFIC: QUEUE TIMES EXTENDED</div>
+    <div class="ambient-glow"></div>
 
-    <div id="screen-loading" class="screen active centered" style="background:black; z-index:5000;">
-        <div class="loader"></div>
-        <p style="margin-top:20px; color:#666; font-family:'Space Grotesk';">LOADING V6</p>
-    </div>
+    <div id="system-banner"></div>
 
-    <div id="screen-login" class="screen centered" style="z-index:3000;">
-        <div class="login-card">
-            <h2 style="font-family:'Space Grotesk'; margin-bottom:20px;">The Ai <span style="color:var(--primary)">STudio</span></h2>
-            <input type="email" id="auth-email" class="auth-input" placeholder="Email">
-            <input type="password" id="auth-pass" class="auth-input" placeholder="Password">
-            <button id="btn-login-email" class="glow-btn" style="background:var(--primary); color:black; width:100%; margin-bottom:10px;">Login</button>
-            <button id="btn-signup-email" class="glow-btn" style="width:100%; margin-bottom:20px;">Sign Up</button>
-            <button id="btn-login-google" class="glow-btn" style="border-color:#4285F4; color:#4285F4;"><i class="fa-brands fa-google"></i> Google</button>
-            <p id="login-error" style="color:var(--danger); margin-top:10px; font-size:0.9rem;"></p>
+    <div id="toast">ACTION COMPLETED</div>
+
+    <div id="screen-login">
+        <h1 style="font-family: 'Space Grotesk'; font-size: 4rem; letter-spacing: -2px; margin-bottom: 20px;">
+            The Ai <span style="color:var(--primary)">STudio</span>
+        </h1>
+        <p style="color: #666; margin-bottom: 40px;">Next Gen Creative Intelligence.</p>
+        
+        <div style="width: 300px; display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-google" class="glass-btn" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; padding: 15px;">
+                <i class="fa-brands fa-google"></i> Continue with Google
+            </button>
         </div>
+        <p id="login-status" style="margin-top: 20px; color: var(--accent-danger); font-size: 0.9rem;"></p>
     </div>
 
-    <div id="screen-app" class="screen">
-        <nav>
-            <div style="font-family:'Space Grotesk'; font-weight:bold; font-size:1.2rem;">Ai <span style="color:var(--primary)">STudio</span></div>
-            <div class="nav-tabs">
-                <div class="nav-tab active" id="tab-community" onclick="switchFeed('community')">COMMUNITY</div>
-                <div class="nav-tab" id="tab-personal" onclick="switchFeed('personal')">MY STUDIO</div>
+    <nav class="nav-sidebar hidden" id="app-nav">
+        <div class="nav-logo"><i class="fa-solid fa-cube"></i></div>
+        
+        <div class="nav-item active" onclick="navTo('home')" title="Global Feed">
+            <i class="fa-solid fa-globe"></i>
+        </div>
+        <div class="nav-item" onclick="navTo('create')" title="Create">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <div class="nav-item" onclick="navTo('profile')" title="My Profile">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="nav-item hidden" id="nav-admin" onclick="navTo('admin')" title="Admin Terminal" style="color: var(--accent-danger);">
+            <i class="fa-solid fa-terminal"></i>
+        </div>
+
+        <div style="margin-top: auto; margin-bottom: 20px;">
+            <img id="mini-pfp" src="" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--glass-border); cursor: pointer;" onclick="doLogout()">
+        </div>
+    </nav>
+
+    <div class="main-content hidden" id="app-content">
+        
+        <div id="screen-home" class="screen active">
+            <h1 style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 30px;">Discover</h1>
+            <div id="feed-container" class="feed-grid">
+                <div style="grid-column: 1/-1; text-align: center; color: #555; padding: 50px;">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Loading Feed...
+                </div>
             </div>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <button id="btn-open-admin" class="hidden glow-btn" onclick="toggleAdmin(true)" style="color:var(--danger); border-color:var(--danger);">ADMIN</button>
-                <img id="user-pfp" style="width:35px; height:35px; border-radius:50%; border:2px solid var(--primary);">
-                <i class="fa-solid fa-right-from-bracket" onclick="doLogout()" style="cursor:pointer; color:#666;"></i>
-            </div>
-        </nav>
+        </div>
 
-        <div id="app-container" style="max-width:900px; margin:0 auto; padding:20px; width:100%;">
-            
-            <div id="create-controls" class="controls hidden">
-                <div style="display:flex; gap:10px; margin-bottom:20px;">
-                    <button class="glow-btn" id="m-banana" onclick="setModel('banana')" style="flex:1; background:rgba(255,255,255,0.1);">Nano Banana</button>
-                    <button class="glow-btn" id="m-sora" onclick="setModel('sora')" style="flex:1;">Sora 2</button>
+        <div id="screen-create" class="screen">
+            <div class="studio-container">
+                <div class="row" style="justify-content: space-between; margin-bottom: 20px;">
+                    <h2 style="font-family: var(--font-display);">Create New</h2>
+                    <div class="row gap-10">
+                        <div class="model-pill active" id="mod-banana" onclick="setModel('banana')">
+                            <i class="fa-solid fa-image"></i> Nano Banana
+                        </div>
+                        <div class="model-pill" id="mod-sora" onclick="setModel('sora')">
+                            <i class="fa-solid fa-video"></i> Sora 2
+                        </div>
+                    </div>
                 </div>
 
-                <div id="opt-sora" class="hidden" style="margin-bottom:15px;">
-                    <span style="color:#aaa; font-size:0.8rem;">Duration:</span>
-                    <button class="glow-btn" style="padding:5px 15px; font-size:0.8rem;" onclick="setDur(10)">10s</button>
-                    <button class="glow-btn" style="padding:5px 15px; font-size:0.8rem; opacity:0.5;" onclick="setDur(15)">15s</button>
+                <div id="opt-sora" class="hidden" style="margin-bottom: 20px;">
+                    <span style="font-size: 0.8rem; color: #888; margin-right: 10px;">DURATION</span>
+                    <button class="glass-btn active" style="padding: 5px 15px;" onclick="state.soraDur=10; updateDurUI(this)">10s</button>
+                    <button class="glass-btn" style="padding: 5px 15px;" onclick="state.soraDur=15; updateDurUI(this)">15s</button>
                 </div>
 
-                <div style="margin-bottom:15px;">
-                    <label style="cursor:pointer; color:var(--primary); font-size:0.9rem;"><i class="fa-solid fa-image"></i> Upload Ref Image <input type="file" id="inp-ref-img" style="display:none;"></label>
-                    <span id="ref-status" style="font-size:0.8rem; color:#666; margin-left:10px;"></span>
+                <div style="margin-bottom: 20px;">
+                    <label for="inp-file" class="glass-btn" style="display: inline-flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-paperclip"></i> Add Reference Image
+                    </label>
+                    <input type="file" id="inp-file" accept="image/*" style="display: none;">
+                    <span id="file-name" style="margin-left: 10px; color: var(--primary); font-size: 0.9rem;"></span>
+                    <div id="upload-bar" style="height: 2px; width: 0%; background: var(--primary); margin-top: 10px; transition: 0.3s;"></div>
                 </div>
 
-                <textarea id="inp-prompt" placeholder="Describe your imagination..." style="width:100%; background:#111; border:1px solid #333; color:white; padding:15px; border-radius:10px; min-height:80px;"></textarea>
+                <textarea id="inp-prompt" placeholder="Imagine something incredible..."></textarea>
                 
-                <div style="display:flex; justify-content:space-between; margin-top:10px; margin-bottom:10px;">
-                    <label style="color:#aaa; font-size:0.9rem;"><input type="checkbox" id="chk-public" checked> Publish to Community</label>
-                    <label style="color:#aaa; font-size:0.9rem;"><input type="checkbox" id="chk-hide-prompt"> Hide Prompt</label>
+                <div class="row" style="justify-content: flex-end; margin-top: 20px;">
+                    <button id="btn-gen" class="glass-btn active" style="padding: 15px 40px; font-weight: 800; font-size: 1.1rem;" onclick="submitGeneration()">
+                        GENERATE <i class="fa-solid fa-bolt"></i>
+                    </button>
                 </div>
+            </div>
+        </div>
 
-                <button id="btn-submit" class="action-btn" onclick="submitRequest()">Generate Content</button>
+        <div id="screen-profile" class="screen">
+            <div class="profile-header">
+                <div style="position: relative;">
+                    <img id="profile-pfp-lg" src="" class="profile-pic-lg" onclick="triggerPfpUpload()">
+                    <div style="position: absolute; bottom: 0; right: 0; background: var(--primary); color: black; padding: 5px; border-radius: 50%; font-size: 0.8rem; pointer-events: none;"><i class="fa-solid fa-pen"></i></div>
+                    <input type="file" id="inp-pfp" style="display: none;" accept="image/*">
+                </div>
+                <div>
+                    <h2 id="profile-name" style="font-size: 2rem; font-family: var(--font-display);">User</h2>
+                    <div class="row gap-10" style="margin-top: 10px;">
+                        <input type="text" id="inp-username" class="input-box" placeholder="Set Username" style="width: 200px; padding: 8px;">
+                        <button class="glass-btn" onclick="saveUsername()">Save</button>
+                    </div>
+                </div>
             </div>
 
-            <div id="gallery"></div>
+            <div class="row gap-20" style="margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 10px;">
+                <button class="glass-btn active" id="tab-drafts" onclick="switchProfileTab('drafts')">Drafts</button>
+                <button class="glass-btn" id="tab-published" onclick="switchProfileTab('published')">Published</button>
+            </div>
+
+            <div id="profile-grid" class="feed-grid"></div>
+        </div>
+
+        <div id="screen-admin" class="screen">
+            <div class="row" style="justify-content: space-between; margin-bottom: 30px;">
+                <h1 style="color: var(--accent-danger); font-family: var(--font-display);">ADMIN CONTROL</h1>
+                <div class="row gap-10">
+                    <button id="btn-toggle-queue" class="glass-btn" onclick="toggleQueueMode()">TOGGLE QUEUE MODE</button>
+                    <button id="btn-toggle-offline" class="glass-btn danger" onclick="toggleOffline()">TOGGLE OFFLINE</button>
+                </div>
+            </div>
+            <div id="admin-list"></div>
+        </div>
+
+    </div>
+
+    <div id="publish-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px; font-family: var(--font-display);">Publish Creation</h2>
+            <input type="text" id="pub-title" class="input-box" placeholder="Title your masterpiece" style="margin-bottom: 15px;">
+            
+            <div class="row gap-10" style="margin-bottom: 15px;">
+                <label style="cursor: pointer;">
+                    <input type="checkbox" id="pub-hide-prompt"> Hide Prompt
+                </label>
+            </div>
+            
+            <div class="row gap-10">
+                <button class="glass-btn active" style="flex: 1;" onclick="confirmPublish()">PUBLISH TO FEED</button>
+                <button class="glass-btn danger" style="flex: 1;" onclick="closeModal('publish-modal')">CANCEL</button>
+            </div>
         </div>
     </div>
 
-    <div id="screen-admin" class="screen">
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px; border-bottom:1px solid #333; padding-bottom:20px;">
-            <h2 style="color:var(--danger); font-family:'Space Grotesk';">ADMIN TERMINAL</h2>
-            <div style="display:flex; gap:10px;">
-                <button id="btn-offline" onclick="toggleSystem('offline')" class="glow-btn">OFFLINE MODE</button>
-                <button id="btn-queue" onclick="toggleSystem('queue')" class="glow-btn" style="color:#ffcc00; border-color:#ffcc00;">HIGH TRAFFIC</button>
-                <button onclick="toggleAdmin(false)" class="glow-btn">EXIT</button>
-            </div>
-        </div>
-        <div id="admin-list" style="max-width:1000px; margin:0 auto;"></div>
+    <div id="media-viewer" class="modal" style="background: rgba(0,0,0,0.98);">
+        <button onclick="closeModal('media-viewer')" style="position: absolute; top: 30px; right: 30px; background: transparent; color: white; font-size: 2rem;"><i class="fa-solid fa-xmark"></i></button>
+        <div id="viewer-content" style="max-width: 90%; max-height: 90vh;"></div>
+        <div id="viewer-info" style="position: absolute; bottom: 50px; left: 50px; max-width: 600px;"></div>
     </div>
-
-    <div id="toast"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, orderBy, limit, getDocs, setDoc, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, updateDoc, doc, deleteDoc, orderBy, limit, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        const firebaseConfig = {
+        // FIREBASE CONFIG
+        const app = initializeApp({
             apiKey: "AIzaSyDQacpiI3oIqOUx8ciMfdlQgBtHZEVdcMo",
             authDomain: "anymousxe-aistudio.firebaseapp.com",
             projectId: "anymousxe-aistudio",
             storageBucket: "anymousxe-aistudio.firebasestorage.app",
             messagingSenderId: "518478280058",
             appId: "1:518478280058:web:422404fc54c21e5ea312c3"
-        };
+        });
 
-        const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
         const ADMIN_EMAIL = "anymousxe.info@gmail.com";
 
-        let state = { user: null, isAdmin: false, model: 'banana', refImg: null, soraDur: 10, currentFeed: 'community' };
-        let feedUnsub = null;
+        // STATE
+        window.state = {
+            user: null,
+            isAdmin: false,
+            model: 'banana',
+            soraDur: 10,
+            refImg: null,
+            activeTab: 'drafts',
+            viewingId: null
+        };
 
-        // --- AUTH & INIT ---
-        onAuthStateChanged(auth, (user) => {
+        // --- AUTH ---
+        document.getElementById('btn-google').addEventListener('click', () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => alert(e.message)));
+        window.doLogout = () => signOut(auth).then(() => window.location.reload());
+
+        onAuthStateChanged(auth, async (user) => {
             state.user = user;
             if (user) {
                 state.isAdmin = (user.email === ADMIN_EMAIL);
-                document.getElementById('user-pfp').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.substring(0,2)}`;
-                if(state.isAdmin) document.getElementById('btn-open-admin').classList.remove('hidden');
-                document.getElementById('screen-app').classList.add('active');
-                document.getElementById('screen-login').classList.remove('active');
+                document.getElementById('screen-login').classList.add('hidden');
+                document.getElementById('app-nav').classList.remove('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
                 
-                switchFeed('community'); // Default to community feed
-                if(state.isAdmin) loadAdminQueue();
-            } else {
-                document.getElementById('screen-app').classList.remove('active');
-                document.getElementById('screen-login').classList.add('active');
-            }
-            document.getElementById('screen-loading').classList.remove('active');
-        });
+                // Update Mini PFP
+                document.getElementById('mini-pfp').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email[0]}&background=random`;
+                
+                // Load Profile Data
+                document.getElementById('profile-pfp-lg').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email[0]}&background=random`;
+                document.getElementById('profile-name').innerText = user.displayName || "Anonymous Creator";
+                document.getElementById('inp-username').value = user.displayName || "";
 
-        // --- SYSTEM STATUS ---
-        onSnapshot(doc(db, "system", "status"), (snap) => {
-            if(snap.exists()) {
-                const d = snap.data();
-                document.getElementById('offline-banner').style.display = d.offline ? 'block' : 'none';
-                document.getElementById('queue-banner').style.display = d.queue ? 'block' : 'none';
-                document.getElementById('btn-submit').disabled = d.offline;
-                
-                if(state.isAdmin) {
-                    document.getElementById('btn-offline').style.background = d.offline ? 'red' : 'transparent';
-                    document.getElementById('btn-queue').style.background = d.queue ? '#ffcc00' : 'transparent';
-                    document.getElementById('btn-queue').style.color = d.queue ? 'black' : '#ffcc00';
+                if (state.isAdmin) {
+                    document.getElementById('nav-admin').classList.remove('hidden');
+                    loadAdminData();
                 }
+
+                loadFeed();
+                loadUserDrafts();
+            } else {
+                document.getElementById('screen-login').classList.remove('hidden');
             }
         });
 
-        // --- UI LOGIC ---
-        window.switchFeed = (type) => {
-            state.currentFeed = type;
-            document.querySelectorAll('.nav-tab').forEach(e => e.classList.remove('active'));
-            document.getElementById(`tab-${type}`).classList.add('active');
+        // --- NAVIGATION ---
+        window.navTo = (scr) => {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
-            // Show/Hide Creator Controls
-            if(type === 'personal') {
-                document.getElementById('create-controls').classList.remove('hidden');
-                loadFeed(true);
-            } else {
-                document.getElementById('create-controls').classList.add('hidden');
-                loadFeed(false);
-            }
+            document.getElementById(`screen-${scr}`).classList.add('active');
+            // Hacky highlight active nav
+            const navMap = { 'home':0, 'create':1, 'profile':2, 'admin':3 };
+            const navItems = document.querySelectorAll('.nav-item');
+            if(navItems[navMap[scr]]) navItems[navMap[scr]].classList.add('active');
+
+            if (scr === 'profile') loadUserDrafts(); 
+            if (scr === 'home') loadFeed();
         };
 
+        // --- SYSTEM STATUS (OFFLINE/QUEUE) ---
+        onSnapshot(doc(db, "system", "status"), (snap) => {
+            const data = snap.exists() ? snap.data() : {};
+            const banner = document.getElementById('system-banner');
+            const genBtn = document.getElementById('btn-gen');
+
+            if (data.offline) {
+                banner.innerText = "SYSTEM MAINTENANCE: OFFLINE";
+                banner.className = "banner-offline visible";
+                genBtn.disabled = true; genBtn.innerText = "OFFLINE";
+            } else if (data.queueMode) {
+                banner.innerText = "HIGH TRAFFIC: YOU ARE IN A QUEUE";
+                banner.className = "banner-queue visible";
+                genBtn.disabled = false; genBtn.innerText = "JOIN QUEUE";
+            } else {
+                banner.classList.remove('visible');
+                genBtn.disabled = false; genBtn.innerText = "GENERATE";
+            }
+            
+            // Admin Button States
+            if(document.getElementById('btn-toggle-queue')) {
+                document.getElementById('btn-toggle-queue').classList.toggle('active', data.queueMode);
+                document.getElementById('btn-toggle-offline').innerText = data.offline ? "SET ONLINE" : "SET OFFLINE";
+            }
+        });
+
+        // --- CREATION LOGIC ---
         window.setModel = (m) => {
             state.model = m;
-            document.getElementById('m-banana').style.background = m === 'banana' ? 'var(--primary)' : 'transparent';
-            document.getElementById('m-banana').style.color = m === 'banana' ? 'black' : 'white';
-            document.getElementById('m-sora').style.background = m === 'sora' ? '#00f2ff' : 'transparent';
-            document.getElementById('m-sora').style.color = m === 'sora' ? 'black' : 'white';
+            document.querySelectorAll('.model-pill').forEach(el => el.classList.remove('active'));
+            document.getElementById(`mod-${m}`).classList.add('active');
             
-            if(m === 'sora') document.getElementById('opt-sora').classList.remove('hidden');
-            else document.getElementById('opt-sora').classList.add('hidden');
+            if(m === 'sora') {
+                document.getElementById('opt-sora').classList.remove('hidden');
+                document.documentElement.style.setProperty('--primary', '#00f2ff');
+            } else {
+                document.getElementById('opt-sora').classList.add('hidden');
+                document.documentElement.style.setProperty('--primary', '#ffe135');
+            }
         };
 
-        window.setDur = (d) => state.soraDur = d;
+        window.updateDurUI = (btn) => {
+            btn.parentNode.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        };
 
-        // --- UPLOAD LOGIC (CHUNKING - KEPT INTACT) ---
-        async function uploadFileAsChunks(file, onProgress) {
+        // File Chunking (Re-used for efficiency)
+        async function uploadChunks(file, progressCb) {
             const CHUNK_SIZE = 800000;
-            const base64 = await new Promise(r => { 
-                const reader = new FileReader(); 
-                reader.onload = e => r(e.target.result); 
-                reader.readAsDataURL(file); 
-            });
+            const reader = new FileReader();
+            const base64 = await new Promise(r => { reader.onload = e => r(e.target.result); reader.readAsDataURL(file); });
             const total = Math.ceil(base64.length / CHUNK_SIZE);
             const gid = `group_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
+            
             for(let i=0; i<total; i++) {
-                await addDoc(collection(db, "ai_studio_files"), {
-                    group: gid, index: i, total: total, data: base64.slice(i*CHUNK_SIZE, (i+1)*CHUNK_SIZE)
-                });
-                if(onProgress) onProgress(Math.round(((i+1)/total)*100));
+                await addDoc(collection(db, "ai_studio_files"), { group: gid, index: i, total: total, data: base64.slice(i*CHUNK_SIZE, (i+1)*CHUNK_SIZE) });
+                progressCb((i+1)/total * 100);
             }
             return gid;
         }
 
-        async function getChunkedFile(gid) {
+        async function fetchChunks(gid) {
             const q = query(collection(db, "ai_studio_files"), where("group", "==", gid), orderBy("index"));
-            const s = await getDocs(q);
-            let parts = []; s.forEach(d => parts.push(d.data().data));
-            const blob = await (await fetch(parts.join(''))).blob();
-            return URL.createObjectURL(blob);
+            const snap = await getDocs(q);
+            let b64 = ""; snap.forEach(d => b64 += d.data().data);
+            return fetch(b64).then(r => r.blob()).then(b => URL.createObjectURL(b));
         }
 
-        document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
-            if(e.target.files[0]) {
-                document.getElementById('ref-status').innerText = "Uploading...";
-                try {
-                    const gid = await uploadFileAsChunks(e.target.files[0]);
-                    state.refImg = "group:" + gid;
-                    document.getElementById('ref-status').innerText = "Uploaded!";
-                } catch(e) { alert("Upload Failed"); }
-            }
+        // Upload Reference
+        document.getElementById('inp-file').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            document.getElementById('file-name').innerText = "Uploading...";
+            try {
+                const gid = await uploadChunks(file, (p) => document.getElementById('upload-bar').style.width = p + "%");
+                state.refImg = "group:" + gid;
+                document.getElementById('file-name').innerText = "Attached: " + file.name;
+            } catch(e) { alert("Upload Failed"); }
         });
 
-        // --- REQUEST LOGIC ---
-        window.submitRequest = async () => {
-            const prompt = document.getElementById('inp-prompt').value;
-            if(!prompt) return alert("Please enter a prompt");
+        // Submit
+        window.submitGeneration = async () => {
+            const p = document.getElementById('inp-prompt').value;
+            if(!p) return showToast("Type a prompt twin!");
             
-            const btn = document.getElementById('btn-submit');
-            btn.disabled = true; btn.innerText = "Sending...";
-            
+            const btn = document.getElementById('btn-gen');
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+
             try {
+                // Check limit
+                const q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("status", "==", "pending"));
+                const snap = await getDocs(q);
+                if(snap.size >= 3) throw new Error("Queue limit reached (3 pending)");
+
                 await addDoc(collection(db, "ai_studio_requests"), {
                     userId: state.user.uid,
                     userName: state.user.displayName || "User",
                     userPfp: state.user.photoURL,
-                    prompt: prompt,
-                    model: state.model === 'sora' ? "Sora 2" : "Nano Banana",
+                    prompt: p,
+                    model: state.model === 'sora' ? 'Sora 2' : 'Nano Banana',
+                    duration: state.model === 'sora' ? state.soraDur : null,
+                    refImage: state.refImg,
                     status: 'pending',
                     timestamp: serverTimestamp(),
-                    refImage: state.refImg,
-                    duration: state.soraDur,
-                    isPublic: document.getElementById('chk-public').checked,
-                    hidePrompt: document.getElementById('chk-hide-prompt').checked,
-                    likes: [],
-                    commentsCount: 0
+                    isPublic: false // Draft by default
                 });
-                document.getElementById('inp-prompt').value = "";
-                showToast("Request Sent!");
-            } catch(e) { alert("Error: " + e.message); }
-            btn.disabled = false; btn.innerText = "Generate Content";
-        };
-
-        // --- FEED LOGIC (SORA STYLE) ---
-        function loadFeed(isPersonal) {
-            if(feedUnsub) feedUnsub();
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '<div class="loader"></div>';
-
-            let q;
-            if(isPersonal) {
-                q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), orderBy("timestamp", "desc"));
-            } else {
-                q = query(collection(db, "ai_studio_requests"), where("isPublic", "==", true), where("status", "==", "completed"), orderBy("timestamp", "desc"), limit(20));
-            }
-
-            feedUnsub = onSnapshot(q, (snap) => {
-                gallery.innerHTML = "";
-                if(snap.empty) { gallery.innerHTML = "<p style='color:#666'>Nothing here yet.</p>"; return; }
                 
-                snap.forEach(d => {
-                    const data = d.data();
-                    const id = d.id;
-                    const card = document.createElement('div');
-                    card.className = 'creation-card';
-                    
-                    // Render Content
-                    let contentHtml = '';
-                    if(data.status === 'pending') {
-                        contentHtml = `<div class="media-container"><div class="loader"></div><div style="margin-left:15px;">Generating...</div></div>`;
-                    } else if (data.status === 'error') {
-                        // Custom Error / Copyright Display
-                        const isCopy = data.customError === "Copyright Violation";
-                        const errColor = isCopy ? "#ff8800" : "#ff2a2a";
-                        const icon = isCopy ? "fa-copyright" : "fa-triangle-exclamation";
-                        contentHtml = `<div class="media-container" style="border:1px solid ${errColor}; color:${errColor}; flex-direction:column;">
-                            <i class="fa-solid ${icon} fa-2x"></i>
-                            <div style="margin-top:10px; font-weight:bold;">${data.customError || "Generation Failed"}</div>
-                        </div>`;
-                    } else {
-                        // Success
-                        const isVid = data.model.includes('Sora');
-                        // Use resultUrl. If chunked, we load async
-                        contentHtml = `<div class="media-container" id="media-${id}">
-                            ${isVid ? `<video class="creation-media" autoplay muted loop playsinline></video>` : `<img class="creation-media">`}
-                            <div class="card-overlay">
-                                <div class="card-info">
-                                    <div class="card-author"><img src="${data.userPfp || 'https://ui-avatars.com/api/?name=User'}" style="width:20px; height:20px; border-radius:50%;"> ${data.userName}</div>
-                                    <div class="card-prompt">${data.hidePrompt ? "<i>Prompt Hidden</i>" : data.prompt}</div>
-                                </div>
-                            </div>
-                        </div>`;
-                    }
+                showToast("Request sent to STudio!");
+                document.getElementById('inp-prompt').value = "";
+                state.refImg = null;
+                document.getElementById('file-name').innerText = "";
+                document.getElementById('upload-bar').style.width = "0%";
+                navTo('profile'); // Send them to drafts
+            } catch(e) {
+                alert(e.message);
+            } finally {
+                btn.disabled = false; btn.innerText = "GENERATE";
+            }
+        };
 
-                    // Social Bar
-                    const liked = data.likes && data.likes.includes(state.user.uid);
-                    const likeCount = data.likes ? data.likes.length : 0;
-                    
-                    const socialHtml = (data.status === 'completed') ? `
-                        <div class="social-bar">
-                            <div class="social-actions">
-                                <button class="social-btn ${liked ? 'liked' : ''}" onclick="toggleLike('${id}')">
-                                    <i class="fa-${liked ? 'solid' : 'regular'} fa-heart"></i> ${likeCount}
-                                </button>
-                                <button class="social-btn" onclick="toggleComments('${id}')">
-                                    <i class="fa-regular fa-comment"></i> ${data.commentsCount || 0}
-                                </button>
-                                <button class="social-btn" onclick="navigator.clipboard.writeText('${data.prompt}')">
-                                    <i class="fa-solid fa-copy"></i>
-                                </button>
-                            </div>
-                            ${isPersonal ? `<button class="social-btn" style="color:var(--danger)" onclick="deletePost('${id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
-                        </div>
-                        <div id="comments-${id}" class="comments-section">
-                            <div id="list-${id}" class="comment-list">Loading...</div>
-                            <div class="comment-input-row">
-                                <input type="text" id="input-${id}" class="comment-input" placeholder="Add a comment...">
-                                <button class="glow-btn" style="padding:5px 15px;" onclick="postComment('${id}')">Post</button>
-                            </div>
-                        </div>
-                    ` : '';
+        // --- PROFILE & FEEDS ---
+        window.saveUsername = async () => {
+            const name = document.getElementById('inp-username').value;
+            if(!name) return;
+            await updateProfile(state.user, { displayName: name });
+            document.getElementById('profile-name').innerText = name;
+            showToast("Username Saved");
+        };
 
-                    card.innerHTML = contentHtml + socialHtml;
-                    gallery.appendChild(card);
+        // PFP Upload
+        window.triggerPfpUpload = () => document.getElementById('inp-pfp').click();
+        document.getElementById('inp-pfp').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            showToast("Uploading PFP...");
+            try {
+                const gid = await uploadChunks(file, ()=>{});
+                const blobUrl = await fetchChunks(gid); // Verify it works locally
+                // Note: For real persistent PFP urls, you'd want Firebase Storage, but here we'll assume chunks work or save the GID
+                // Since updateProfile expects a URL, and blob URLs revoke, this is tricky without Storage.
+                // Workaround: We will skip actual auth profile update for image in this restricted demo and just update UI locally/toast.
+                // Real implementation: Upload to Storage bucket -> Get URL -> updateProfile.
+                showToast("PFP Updated (Session)");
+                document.getElementById('profile-pfp-lg').src = blobUrl;
+                document.getElementById('mini-pfp').src = blobUrl;
+            } catch(e) { alert("Error uploading PFP"); }
+        });
 
-                    // Async Load Media if needed
-                    if(data.status === 'completed') {
-                        const container = card.querySelector(`#media-${id} .creation-media`);
-                        let url = data.resultUrl;
-                        if(url && url.startsWith('group:')) {
-                            const gid = url.split(':')[1];
-                            getChunkedFile(gid).then(u => container.src = u);
-                        } else {
-                            container.src = url;
-                        }
-                    }
-                });
-            });
-        }
+        window.switchProfileTab = (t) => {
+            state.activeTab = t;
+            document.getElementById('tab-drafts').classList.toggle('active', t==='drafts');
+            document.getElementById('tab-published').classList.toggle('active', t==='published');
+            loadUserDrafts();
+        };
 
-        // --- SOCIAL FUNCTIONS ---
-        window.toggleLike = async (id) => {
-            const ref = doc(db, "ai_studio_requests", id);
-            const snap = await getDoc(ref);
-            if(snap.exists()) {
-                const likes = snap.data().likes || [];
-                if(likes.includes(state.user.uid)) {
-                    await updateDoc(ref, { likes: arrayRemove(state.user.uid) });
-                } else {
-                    await updateDoc(ref, { likes: arrayUnion(state.user.uid) });
+        function renderCard(d, isOwner) {
+            const isVideo = d.model.includes('Sora');
+            let mediaContent = '';
+            
+            // Check custom error
+            if(d.status === 'error') {
+                const errMsg = d.customError || "Generation Failed";
+                return `
+                <div class="feed-card" style="border-color: var(--accent-danger); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;">
+                    <i class="fa-solid fa-triangle-exclamation fa-2x" style="color:var(--accent-danger)"></i>
+                    <span style="color:var(--accent-danger); font-weight:bold; text-align:center; padding:10px;">${errMsg}</span>
+                    ${isOwner ? `<button class="glass-btn danger" onclick="deleteReq('${d.id}')">Dismiss</button>` : ''}
+                </div>`;
+            }
+
+            if(d.status === 'pending') {
+                return `
+                <div class="feed-card" style="display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; border-color:var(--accent-banana);">
+                    <div class="loader"></div>
+                    <span style="color:var(--accent-banana); font-size:0.8rem; letter-spacing:1px;">PROCESSING IN QUEUE</span>
+                </div>`;
+            }
+
+            // Completed Media
+            let src = d.resultUrl; 
+            // Handle chunked view logic inside the element creation to keep string literal clean? 
+            // We'll lazy load chunks.
+            const mediaId = `media-${d.id}`;
+            const typeAttr = isVideo ? 'video' : 'image';
+            
+            const controls = isOwner && state.activeTab === 'drafts' ? `
+                <div style="position:absolute; top:10px; right:10px; display:flex; gap:5px; z-index:20;">
+                    <button class="glass-btn active" style="padding:5px 10px; font-size:0.8rem;" onclick="openPublishModal('${d.id}')"><i class="fa-solid fa-share"></i></button>
+                    <button class="glass-btn danger" style="padding:5px 10px; font-size:0.8rem;" onclick="deleteReq('${d.id}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            ` : '';
+
+            // Card HTML
+            setTimeout(async () => {
+                const container = document.getElementById(mediaId);
+                if(src.startsWith('group:')) {
+                    try { src = await fetchChunks(src.split(':')[1]); } catch(e){}
                 }
-            }
-        };
+                if(container) {
+                    if(isVideo) container.innerHTML = `<video src="${src}" class="feed-media" autoplay muted loop playsinline></video>`;
+                    else container.innerHTML = `<img src="${src}" class="feed-media">`;
+                    
+                    container.parentElement.onclick = (e) => {
+                        if(e.target.closest('button')) return; // ignore btn clicks
+                        openViewer(src, isVideo, d);
+                    }
+                }
+            }, 100);
 
-        window.toggleComments = (id) => {
-            const section = document.getElementById(`comments-${id}`);
-            if(section.classList.contains('active')) {
-                section.classList.remove('active');
+            return `
+            <div class="feed-card">
+                ${controls}
+                <div id="${mediaId}" style="width:100%; height:100%; background:#111;"></div>
+                <div class="feed-overlay">
+                    <h3 style="font-family: var(--font-display); line-height:1;">${d.title || "Untitled"}</h3>
+                    <div class="user-tag">
+                        ${d.hidePrompt ? '' : `<span style="opacity:0.7; font-size:0.75rem; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:200px;">${d.prompt}</span>`}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function loadUserDrafts() {
+            if(!state.user) return;
+            const container = document.getElementById('profile-grid');
+            container.innerHTML = '<div class="loader"></div>';
+            
+            let q;
+            if(state.activeTab === 'drafts') {
+                q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("isPublic", "==", false), orderBy("timestamp", "desc"));
             } else {
-                section.classList.add('active');
-                loadComments(id);
+                q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("isPublic", "==", true), orderBy("timestamp", "desc"));
             }
-        };
 
-        function loadComments(id) {
-            const list = document.getElementById(`list-${id}`);
-            const q = query(collection(db, "ai_studio_requests", id, "comments"), orderBy("time", "asc"));
             onSnapshot(q, (snap) => {
-                list.innerHTML = "";
-                snap.forEach(c => {
-                    const cd = c.data();
-                    list.innerHTML += `<div class="comment-item"><b>${cd.user}:</b> ${cd.text}</div>`;
+                container.innerHTML = "";
+                if(snap.empty) { container.innerHTML = "<p style='color:#555; grid-column:1/-1; text-align:center;'>Nothing here yet.</p>"; return; }
+                snap.forEach(doc => {
+                    container.innerHTML += renderCard({id: doc.id, ...doc.data()}, true);
                 });
             });
         }
 
-        window.postComment = async (id) => {
-            const input = document.getElementById(`input-${id}`);
-            if(!input.value) return;
-            await addDoc(collection(db, "ai_studio_requests", id, "comments"), {
-                user: state.user.displayName || "User",
-                text: input.value,
-                time: serverTimestamp()
+        function loadFeed() {
+            const container = document.getElementById('feed-container');
+            // Show only published and completed
+            const q = query(collection(db, "ai_studio_requests"), where("isPublic", "==", true), where("status", "==", "completed"), orderBy("timestamp", "desc"), limit(20));
+            
+            onSnapshot(q, (snap) => {
+                container.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    // Don't show blocked/error stuff in public feed
+                    if(d.status === 'completed') {
+                        container.innerHTML += renderCard({id: doc.id, ...d}, false);
+                    }
+                });
             });
-            // Update count on main doc (simple counter)
-            const ref = doc(db, "ai_studio_requests", id);
-            const snap = await getDoc(ref);
-            await updateDoc(ref, { commentsCount: (snap.data().commentsCount || 0) + 1 });
-            input.value = "";
+        }
+
+        // --- ACTIONS ---
+        window.openPublishModal = (id) => {
+            state.viewingId = id;
+            document.getElementById('publish-modal').classList.add('active');
         };
 
-        window.deletePost = async (id) => {
-            if(confirm("Delete this?")) await deleteDoc(doc(db, "ai_studio_requests", id));
+        window.closeModal = (id) => document.getElementById(id).classList.remove('active');
+
+        window.confirmPublish = async () => {
+            if(!state.viewingId) return;
+            const title = document.getElementById('pub-title').value || "Untitled Creation";
+            const hideP = document.getElementById('pub-hide-prompt').checked;
+            
+            await updateDoc(doc(db, "ai_studio_requests", state.viewingId), {
+                isPublic: true,
+                title: title,
+                hidePrompt: hideP
+            });
+            
+            closeModal('publish-modal');
+            showToast("Published to Global Feed!");
+            switchProfileTab('published');
+        };
+
+        window.deleteReq = async (id) => {
+            if(confirm("Delete this permanently?")) {
+                await deleteDoc(doc(db, "ai_studio_requests", id));
+                showToast("Deleted");
+            }
+        };
+
+        window.openViewer = (src, isVideo, d) => {
+            const v = document.getElementById('media-viewer');
+            const c = document.getElementById('viewer-content');
+            const i = document.getElementById('viewer-info');
+            
+            if(isVideo) c.innerHTML = `<video src="${src}" controls autoplay loop style="width:100%; max-height:80vh; border-radius:10px;"></video>`;
+            else c.innerHTML = `<img src="${src}" style="max-height:80vh; max-width:100%; border-radius:10px;">`;
+            
+            i.innerHTML = `
+                <h2 style="font-family:var(--font-display);">${d.title || "Creation"}</h2>
+                <div class="row gap-10" style="margin: 10px 0;">
+                    <img src="${d.userPfp || 'https://ui-avatars.com/api/?background=random'}" style="width:30px; height:30px; border-radius:50%;">
+                    <span>${d.userName}</span>
+                </div>
+                ${d.hidePrompt ? '' : `<p style="background:rgba(255,255,255,0.1); padding:10px; border-radius:10px; cursor:pointer;" onclick="navigator.clipboard.writeText(this.innerText); showToast('Prompt Copied')">${d.prompt} <i class="fa-solid fa-copy"></i></p>`}
+            `;
+            v.classList.add('active');
         };
 
         // --- ADMIN FUNCTIONS ---
-        function loadAdminQueue() {
-            const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"));
+        function loadAdminData() {
+            const list = document.getElementById('admin-list');
+            const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"), orderBy("timestamp", "asc")); // Oldest first for admin
+            
             onSnapshot(q, (snap) => {
-                const list = document.getElementById('admin-list');
                 list.innerHTML = "";
-                if(snap.empty) { list.innerHTML = "<div style='text-align:center; color:#555;'>No pending requests.</div>"; return; }
+                if(snap.empty) list.innerHTML = "<div style='text-align:center; color:#555;'>No Pending Requests</div>";
                 
-                snap.forEach(d => {
+                snap.forEach(async (d) => {
                     const data = d.data();
-                    const time = data.timestamp ? new Date(data.timestamp.seconds*1000).toLocaleTimeString() : 'Now';
+                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : "Just now";
                     
-                    const div = document.createElement('div');
-                    div.className = 'req-card';
-                    div.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.8rem; margin-bottom:10px;">
-                            <span>${data.userName}</span>
-                            <span>${time} | ${data.model} ${data.duration ? `(${data.duration}s)` : ''}</span>
+                    let refHtml = "";
+                    if(data.refImage) {
+                        if(data.refImage.startsWith('group:')) {
+                            // Fetch ref blob
+                            fetchChunks(data.refImage.split(':')[1]).then(url => {
+                                document.getElementById(`ref-${d.id}`).src = url;
+                            });
+                            refHtml = `<img id="ref-${d.id}" style="height:50px; border-radius:5px; border:1px solid #555;">`;
+                        } else {
+                            refHtml = `<img src="${data.refImage}" style="height:50px; border-radius:5px;">`;
+                        }
+                    }
+
+                    list.innerHTML += `
+                    <div class="admin-row">
+                        <div class="row" style="justify-content:space-between; font-size:0.85rem; color:#aaa;">
+                            <span><i class="fa-regular fa-clock"></i> ${date}</span>
+                            <span style="color:var(--primary)">${data.model} ${data.duration ? `(${data.duration}s)` : ''}</span>
                         </div>
-                        <div style="background:black; padding:10px; font-family:monospace; color:#ccc; margin-bottom:10px;">${data.prompt}</div>
-                        ${data.refImage ? `<div style="color:var(--primary); font-size:0.8rem; margin-bottom:10px;">+ Has Reference Image</div>` : ''}
-                        
-                        <input type="text" id="res-${d.id}" placeholder="Result URL..." style="width:100%; background:#111; border:1px solid #333; color:white; padding:8px; margin-bottom:5px;">
-                        
-                        <div class="admin-row">
-                             <label class="glow-btn" style="padding:5px 10px; cursor:pointer;"><i class="fa-solid fa-upload"></i> <input type="file" style="display:none;" onchange="admUpload(this, '${d.id}')"></label>
-                             <button class="glow-btn" style="background:#00ff88; color:black; flex:1;" onclick="admFinish('${d.id}', 'completed')">SEND</button>
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <img src="${data.userPfp||''}" style="width:30px; height:30px; border-radius:50%;">
+                            <div>
+                                <div style="font-weight:bold; color:white;">${data.userName}</div>
+                                <div style="background:#000; padding:8px; border-radius:6px; margin-top:5px; font-family:monospace; color:#ccc; font-size:0.9rem;">${data.prompt}</div>
+                            </div>
                         </div>
+                        ${refHtml}
                         
-                        <div class="admin-row">
-                            <input type="text" id="err-${d.id}" placeholder="Custom Error Reason" style="background:#330000; border:1px solid #500; color:white; padding:5px; flex:1;">
-                            <button class="glow-btn" style="background:var(--danger); padding:5px 10px;" onclick="admFinish('${d.id}', 'error')">ERR</button>
-                            <button class="glow-btn" style="border-color:#ff8800; color:#ff8800; padding:5px 10px;" onclick="admFinish('${d.id}', 'copyright')">COPYRIGHT</button>
+                        <div class="row gap-10" style="margin-top:10px; flex-wrap:wrap;">
+                            <input type="text" id="res-url-${d.id}" placeholder="Result URL / Upload ->" class="input-box" style="flex:1;">
+                            
+                            <label class="glass-btn" style="padding:10px;">
+                                <i class="fa-solid fa-upload"></i>
+                                <input type="file" hidden onchange="adminUpload(this, '${d.id}')">
+                            </label>
+
+                            <button class="glass-btn active" onclick="resolveReq('${d.id}', 'completed')">SEND</button>
                         </div>
-                    `;
-                    list.appendChild(div);
+                        <div class="row gap-10" style="border-top:1px solid #333; padding-top:10px;">
+                            <button class="glass-btn danger" style="padding:5px 15px; font-size:0.8rem;" onclick="markCopyright('${d.id}')">COPYRIGHT STRIKE</button>
+                            <input type="text" id="err-msg-${d.id}" class="input-box" placeholder="Custom Error Reason..." style="font-size:0.8rem; padding:6px;">
+                            <button class="glass-btn danger" style="padding:5px 15px; font-size:0.8rem;" onclick="resolveReq('${d.id}', 'error')">FAIL</button>
+                        </div>
+                    </div>`;
                 });
             });
         }
 
-        window.admUpload = async (inp, id) => {
-            if(inp.files[0]) {
-                const gid = await uploadFileAsChunks(inp.files[0]);
-                document.getElementById(`res-${id}`).value = "group:" + gid;
+        window.adminUpload = async (el, id) => {
+            const file = el.files[0];
+            if(file) {
+                el.parentElement.style.background = "#fff";
+                const gid = await uploadChunks(file, ()=>{});
+                document.getElementById(`res-url-${id}`).value = "group:" + gid;
+                el.parentElement.style.background = "var(--primary)";
             }
-        };
+        }
 
-        window.admFinish = async (id, status) => {
-            let updates = { status: status };
+        window.resolveReq = async (id, status) => {
+            const updateData = { status: status };
             if(status === 'completed') {
-                updates.resultUrl = document.getElementById(`res-${id}`).value;
-            } else if (status === 'error') {
-                updates.customError = document.getElementById(`err-${id}`).value || "Generation Failed";
-            } else if (status === 'copyright') {
-                updates.status = 'error';
-                updates.customError = "Copyright Violation";
+                updateData.resultUrl = document.getElementById(`res-url-${id}`).value;
+                if(!updateData.resultUrl) return alert("Missing URL");
+            } else {
+                // Error handling
+                const customMsg = document.getElementById(`err-msg-${id}`).value;
+                if(customMsg) updateData.customError = customMsg;
             }
-            await updateDoc(doc(db, "ai_studio_requests", id), updates);
-        };
+            await updateDoc(doc(db, "ai_studio_requests", id), updateData);
+        }
 
-        window.toggleSystem = async (key) => {
+        window.markCopyright = async (id) => {
+            await updateDoc(doc(db, "ai_studio_requests", id), {
+                status: 'error',
+                customError: 'Media removed due to Copyright Violation.'
+            });
+        }
+
+        window.toggleOffline = async () => {
             const ref = doc(db, "system", "status");
             const snap = await getDoc(ref);
-            let d = snap.exists() ? snap.data() : {};
-            d[key] = !d[key];
-            await setDoc(ref, d);
-        };
+            await setDoc(ref, { offline: !snap.data()?.offline }, {merge:true});
+        }
+        
+        window.toggleQueueMode = async () => {
+            const ref = doc(db, "system", "status");
+            const snap = await getDoc(ref);
+            await setDoc(ref, { queueMode: !snap.data()?.queueMode }, {merge:true});
+        }
 
-        window.toggleAdmin = (s) => {
-            document.getElementById('screen-admin').classList.toggle('active', s);
-        };
-
-        // --- AUTH BUTTONS ---
-        document.getElementById('btn-login-google').onclick = () => signInWithPopup(auth, provider);
-        document.getElementById('btn-login-email').onclick = () => signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value).catch(e=>document.getElementById('login-error').innerText=e.message);
-        document.getElementById('btn-signup-email').onclick = () => createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value).catch(e=>document.getElementById('login-error').innerText=e.message);
-        window.doLogout = () => signOut(auth);
-
+        // --- UTIL ---
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg; t.style.display = 'block';
-            setTimeout(()=>t.style.display='none', 3000);
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
+
     </script>
 </body>
 </html>
