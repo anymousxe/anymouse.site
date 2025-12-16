@@ -17,6 +17,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --banana-yellow: #ffe135;
             --sora-cyan: #00f2ff;
+            --apple-red: #ff3b30;
             --pro-purple: #bd00ff;
             --danger: #ff2a2a;
             --text-main: #ffffff;
@@ -112,13 +113,23 @@
         .model-card { 
             flex: 1; min-width: 140px; background: var(--glass); border: 1px solid var(--glass-border); 
             padding: 20px; border-radius: 20px; cursor: pointer; text-align: center; transition: 0.3s; 
-            position: relative; overflow: hidden;
+            position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .model-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
         .model-card.active { border-color: var(--primary); background: rgba(255,255,255,0.1); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
         .model-card i { font-size: 1.8rem; margin-bottom: 10px; display: block; color: #888; }
         .model-card.active i { color: var(--primary); }
-        .model-card h3 { font-size: 0.9rem; }
+        .model-card h3 { font-size: 0.95rem; font-weight: 700; }
+        
+        .model-desc { font-size: 0.75rem; color: #888; margin-top: 5px; font-weight: 400; line-height: 1.2; }
+        .model-card.active .model-desc { color: #ddd; }
+
+        .new-tag {
+            position: absolute; top: 8px; right: 8px; 
+            background: var(--apple-red); color: white; 
+            font-size: 0.6rem; font-weight: 800; padding: 3px 6px; 
+            border-radius: 4px; box-shadow: 0 0 10px var(--apple-red);
+        }
 
         /* Coming Soon State */
         .coming-soon-card { opacity: 0.5; cursor: not-allowed !important; background: rgba(255,255,255,0.02) !important; border-color: transparent !important; pointer-events: none; }
@@ -256,12 +267,30 @@
             <div class="model-selector">
                 <div class="model-card active" id="m-banana" onclick="setModel('banana')">
                     <i class="fa-solid fa-image"></i> 
-                    <h3>Nano Banana</h3>
+                    <h3>Nano Banana Pro</h3>
+                    <span class="model-desc">Google's Image Model</span>
                 </div>
+
+                <div class="model-card" id="m-apple" onclick="setModel('apple')">
+                    <div class="new-tag">NEW!</div>
+                    <i class="fa-brands fa-apple"></i> 
+                    <h3>Nano Apple 1</h3>
+                    <span class="model-desc">Created by anymousxe</span>
+                </div>
+
+                 <div class="model-card" id="m-apple-pro" onclick="setModel('apple-pro')">
+                    <div class="new-tag" style="background: var(--pro-purple); box-shadow: 0 0 10px var(--pro-purple);">PRO</div>
+                    <i class="fa-solid fa-crown"></i> 
+                    <h3>Nano Apple 1 Pro</h3>
+                    <span class="model-desc">Advanced + Ref Image</span>
+                </div>
+
                 <div class="model-card" id="m-sora" onclick="setModel('sora')">
                     <i class="fa-solid fa-video"></i> 
                     <h3>Sora 2</h3>
+                    <span class="model-desc">OpenAI's New Video Model</span>
                 </div>
+
                 <div class="model-card coming-soon-card">
                     <i class="fa-solid fa-film"></i> 
                     <h3>Sora 2 Pro</h3>
@@ -539,15 +568,21 @@
             
             // HIDE ALL INITIALLY
             document.getElementById('opt-sora').classList.add('hidden');
-            document.getElementById('opt-upload').classList.add('hidden'); // Default hide upload
+            document.getElementById('opt-upload').classList.add('hidden'); 
             
             if(m === 'sora') {
                 document.getElementById('opt-sora').classList.remove('hidden'); // Show Duration
-                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload (Added for Image2Video)
+                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload (Image2Video)
                 document.documentElement.style.setProperty('--primary', '#00f2ff');
             } else if (m === 'banana') {
                 document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload
                 document.documentElement.style.setProperty('--primary', '#ffe135');
+            } else if (m === 'apple') {
+                document.getElementById('opt-upload').classList.add('hidden'); // HIDE Upload for normal apple
+                document.documentElement.style.setProperty('--primary', '#ff3b30');
+            } else if (m === 'apple-pro') {
+                document.getElementById('opt-upload').classList.remove('hidden'); // SHOW Upload for apple pro
+                document.documentElement.style.setProperty('--primary', '#bd00ff');
             }
         };
 
@@ -637,6 +672,8 @@
 
                 let modelName = "Nano Banana Pro";
                 if(state.model === 'sora') modelName = "Sora 2";
+                if(state.model === 'apple') modelName = "Nano Apple 1";
+                if(state.model === 'apple-pro') modelName = "Nano Apple 1 Pro";
 
                 const userName = state.user.displayName || state.user.email.split('@')[0];
 
