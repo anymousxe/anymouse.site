@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V5</title>
+    <title>The Ai STudio - V6</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,9 +19,10 @@
             --sora-cyan: #00f2ff;
             --apple-red: #ff3b30;
             --pro-purple: #bd00ff;
+            --solstice-gold: #ffd700;
             --danger: #ff2a2a;
             --text-main: #ffffff;
-            --primary: var(--banana-yellow);
+            --primary: var(--apple-red); /* Default to Apple since Banana is gone */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
@@ -129,6 +130,27 @@
             background: var(--apple-red); color: white; 
             font-size: 0.6rem; font-weight: 800; padding: 3px 6px; 
             border-radius: 4px; box-shadow: 0 0 10px var(--apple-red);
+        }
+
+        /* Greyed Out / High Demand Styles */
+        .model-card.greyed-out {
+            opacity: 0.4;
+            filter: grayscale(100%);
+            pointer-events: none; /* Make unclickable */
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px dashed #444;
+        }
+        .high-demand-badge {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
+            background: var(--danger); color: white; font-weight: 900; padding: 5px 15px;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+            border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            white-space: nowrap; z-index: 10;
+        }
+
+        .section-label {
+            width: 100%; color: #666; font-size: 0.8rem; margin-top: 20px; margin-bottom: 10px; 
+            text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;
         }
 
         /* Coming Soon State */
@@ -264,16 +286,12 @@
         </nav>
 
         <div id="app-container">
+            
             <div class="model-selector">
-                <div class="model-card active" id="m-banana" onclick="setModel('banana')">
-                    <i class="fa-solid fa-image"></i> 
-                    <h3>Nano Banana Pro</h3>
-                    <span class="model-desc">Google's Image Model</span>
-                </div>
-
-                <div class="model-card" id="m-apple" onclick="setModel('apple')">
+                <div class="model-card active" id="m-apple" onclick="setModel('apple')">
                     <div class="new-tag">NEW!</div>
-                    <i class="fa-solid fa-apple-whole"></i> <h3>Nano Apple 1</h3>
+                    <i class="fa-solid fa-apple-whole"></i> 
+                    <h3>Nano Apple 1</h3>
                     <span class="model-desc">Created by anymousxe</span>
                 </div>
 
@@ -284,16 +302,35 @@
                     <span class="model-desc">Advanced + Ref Image</span>
                 </div>
 
-                <div class="model-card" id="m-sora" onclick="setModel('sora')">
-                    <i class="fa-solid fa-video"></i> 
-                    <h3>Sora 2</h3>
-                    <span class="model-desc">OpenAI's New Video Model</span>
+                <div class="model-card" id="m-solstice" onclick="setModel('solstice')">
+                    <i class="fa-solid fa-sun"></i> 
+                    <h3>Solstice 1</h3>
+                    <span class="model-desc">Standard Model</span>
+                </div>
+            </div>
+
+            <div class="section-label">Unavailable Models</div>
+            <div class="model-selector" style="opacity: 0.8;">
+                
+                <div class="model-card greyed-out">
+                    <div class="high-demand-badge">HIGH DEMAND</div>
+                    <i class="fa-solid fa-image"></i> 
+                    <h3>Nano Banana Pro</h3>
+                    <span class="model-desc">Google's Image Model</span>
                 </div>
 
-                <div class="model-card coming-soon-card">
+                <div class="model-card greyed-out">
+                    <div class="high-demand-badge">HIGH DEMAND</div>
+                    <i class="fa-solid fa-video"></i> 
+                    <h3>Sora 2</h3>
+                    <span class="model-desc">OpenAI's Video Model</span>
+                </div>
+
+                <div class="model-card greyed-out">
+                    <div class="high-demand-badge">HIGH DEMAND</div>
                     <i class="fa-solid fa-film"></i> 
                     <h3>Sora 2 Pro</h3>
-                    <span style="font-size: 0.8rem; opacity: 0.7; display: block; margin-top: 5px;">COMING SOON</span>
+                    <span class="model-desc">Advanced Video Model</span>
                 </div>
             </div>
 
@@ -305,7 +342,7 @@
                         <button class="glow-btn" style="width:auto; padding:5px 20px; opacity:0.5;" onclick="setDur(15, this)">15s</button>
                     </div>
                 </div>
-                <div id="opt-upload" style="margin-bottom:20px;">
+                <div id="opt-upload" class="hidden" style="margin-bottom:20px;">
                     <label id="lbl-ref-upload" style="cursor:pointer; background:rgba(255,255,255,0.05); padding:10px 20px; border-radius:10px; font-size:0.9rem; border:1px solid var(--glass-border); display:inline-flex; align-items:center; gap:10px; transition:0.3s;">
                         <i class="fa-solid fa-upload"></i> Upload Reference Image
                         <input type="file" id="inp-ref-img" accept="image/*" style="display:none;">
@@ -377,7 +414,7 @@
         let state = {
             user: null,
             isAdmin: false,
-            model: 'banana',
+            model: 'apple', // Default to active model
             refImg: null, 
             loading: true,
             soraDur: 10,
@@ -569,12 +606,14 @@
             document.getElementById('opt-sora').classList.add('hidden');
             document.getElementById('opt-upload').classList.add('hidden'); 
             
+            // Set styles based on selection
             if(m === 'sora') {
-                document.getElementById('opt-sora').classList.remove('hidden'); // Show Duration
-                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload (Image2Video)
+                // (Disabled logic just in case)
+                document.getElementById('opt-sora').classList.remove('hidden'); 
+                document.getElementById('opt-upload').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#00f2ff');
             } else if (m === 'banana') {
-                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload
+                document.getElementById('opt-upload').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#ffe135');
             } else if (m === 'apple') {
                 document.getElementById('opt-upload').classList.add('hidden'); // HIDE Upload for normal apple
@@ -582,6 +621,9 @@
             } else if (m === 'apple-pro') {
                 document.getElementById('opt-upload').classList.remove('hidden'); // SHOW Upload for apple pro
                 document.documentElement.style.setProperty('--primary', '#bd00ff');
+            } else if (m === 'solstice') {
+                document.getElementById('opt-upload').classList.add('hidden'); // No upload for Solstice (assumed text)
+                document.documentElement.style.setProperty('--primary', '#ffd700');
             }
         };
 
@@ -669,10 +711,12 @@
                 const pendingSnap = await getDocs(pendingQ);
                 if(pendingSnap.size >= 2) return showToast("Limit reached! Wait for one to finish.");
 
-                let modelName = "Nano Banana Pro";
+                let modelName = "Nano Apple 1"; // Default
                 if(state.model === 'sora') modelName = "Sora 2";
+                if(state.model === 'banana') modelName = "Nano Banana Pro";
                 if(state.model === 'apple') modelName = "Nano Apple 1";
                 if(state.model === 'apple-pro') modelName = "Nano Apple 1 Pro";
+                if(state.model === 'solstice') modelName = "Solstice 1";
 
                 const userName = state.user.displayName || state.user.email.split('@')[0];
 
