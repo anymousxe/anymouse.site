@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V6</title>
+    <title>The Ai STudio - V7 (Solstice)</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="https://js.puter.com/v2/"></script> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,7 +22,7 @@
             --solstice-gold: #ffd700;
             --danger: #ff2a2a;
             --text-main: #ffffff;
-            --primary: var(--apple-red); /* Default to Apple since Banana is gone */
+            --primary: var(--apple-red);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
@@ -132,13 +132,9 @@
             border-radius: 4px; box-shadow: 0 0 10px var(--apple-red);
         }
 
-        /* Greyed Out / High Demand Styles */
         .model-card.greyed-out {
-            opacity: 0.4;
-            filter: grayscale(100%);
-            pointer-events: none; /* Make unclickable */
-            background: rgba(20, 20, 20, 0.5);
-            border: 1px dashed #444;
+            opacity: 0.4; filter: grayscale(100%); pointer-events: none;
+            background: rgba(20, 20, 20, 0.5); border: 1px dashed #444;
         }
         .high-demand-badge {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
@@ -147,13 +143,10 @@
             border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.8);
             white-space: nowrap; z-index: 10;
         }
-
         .section-label {
             width: 100%; color: #666; font-size: 0.8rem; margin-top: 20px; margin-bottom: 10px; 
             text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;
         }
-
-        /* Coming Soon State */
         .coming-soon-card { opacity: 0.5; cursor: not-allowed !important; background: rgba(255,255,255,0.02) !important; border-color: transparent !important; pointer-events: none; }
         .coming-soon-card i { color: #555 !important; }
 
@@ -178,7 +171,8 @@
         }
         .creation-card:hover { border-color: var(--primary); transform: translateY(-3px); }
         .creation-media { height: 220px; width: 100%; object-fit: cover; display: block; }
-        
+        .creation-text { height: 220px; width: 100%; padding: 20px; background: #111; color: #ddd; font-size: 0.9rem; overflow: hidden; font-family: monospace; }
+
         .state-box { height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; background: rgba(255,255,255,0.02); }
         .state-pending { color: #aaa; }
         .state-error { background: #2a0505; color: #ff4444; }
@@ -188,6 +182,7 @@
             backdrop-filter: blur(5px); border: 1px solid #333; pointer-events: none;
         }
         .status-completed { color: #00ff88; border-color: #00ff88; }
+        .status-error { color: #ff4444; border-color: #ff4444; }
         .status-pending { color: #ffe135; border-color: #ffe135; animation: pulse 1s infinite; }
 
         .delete-btn {
@@ -210,6 +205,11 @@
         #modal-content {
             max-width: 90%; max-height: 80%; border-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.5);
             margin-bottom: 20px; object-fit: contain;
+        }
+        .modal-text-content {
+            width: 100%; max-width: 800px; height: 70vh; background: #1a1a20; 
+            border: 1px solid #333; border-radius: 15px; padding: 30px; 
+            color: #ddd; font-family: monospace; overflow-y: auto; line-height: 1.6;
         }
         .modal-btn {
             background: var(--glass); border: 1px solid var(--glass-border); color: white;
@@ -305,27 +305,24 @@
                 <div class="model-card" id="m-solstice" onclick="setModel('solstice')">
                     <i class="fa-solid fa-sun"></i> 
                     <h3>Solstice 1</h3>
-                    <span class="model-desc">Standard Model</span>
+                    <span class="model-desc">Real AI Chat</span>
                 </div>
             </div>
 
             <div class="section-label">Unavailable Models</div>
             <div class="model-selector" style="opacity: 0.8;">
-                
                 <div class="model-card greyed-out">
                     <div class="high-demand-badge">HIGH DEMAND</div>
                     <i class="fa-solid fa-image"></i> 
                     <h3>Nano Banana Pro</h3>
                     <span class="model-desc">Google's Image Model</span>
                 </div>
-
                 <div class="model-card greyed-out">
                     <div class="high-demand-badge">HIGH DEMAND</div>
                     <i class="fa-solid fa-video"></i> 
                     <h3>Sora 2</h3>
                     <span class="model-desc">OpenAI's Video Model</span>
                 </div>
-
                 <div class="model-card greyed-out">
                     <div class="high-demand-badge">HIGH DEMAND</div>
                     <i class="fa-solid fa-film"></i> 
@@ -414,7 +411,7 @@
         let state = {
             user: null,
             isAdmin: false,
-            model: 'apple', // Default to active model
+            model: 'apple', 
             refImg: null, 
             loading: true,
             soraDur: 10,
@@ -606,9 +603,7 @@
             document.getElementById('opt-sora').classList.add('hidden');
             document.getElementById('opt-upload').classList.add('hidden'); 
             
-            // Set styles based on selection
             if(m === 'sora') {
-                // (Disabled logic just in case)
                 document.getElementById('opt-sora').classList.remove('hidden'); 
                 document.getElementById('opt-upload').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#00f2ff');
@@ -616,13 +611,13 @@
                 document.getElementById('opt-upload').classList.remove('hidden');
                 document.documentElement.style.setProperty('--primary', '#ffe135');
             } else if (m === 'apple') {
-                document.getElementById('opt-upload').classList.add('hidden'); // HIDE Upload for normal apple
+                document.getElementById('opt-upload').classList.add('hidden'); 
                 document.documentElement.style.setProperty('--primary', '#ff3b30');
             } else if (m === 'apple-pro') {
-                document.getElementById('opt-upload').classList.remove('hidden'); // SHOW Upload for apple pro
+                document.getElementById('opt-upload').classList.remove('hidden'); 
                 document.documentElement.style.setProperty('--primary', '#bd00ff');
             } else if (m === 'solstice') {
-                document.getElementById('opt-upload').classList.add('hidden'); // No upload for Solstice (assumed text)
+                document.getElementById('opt-upload').classList.add('hidden');
                 document.documentElement.style.setProperty('--primary', '#ffd700');
             }
         };
@@ -704,38 +699,64 @@
             if(!prompt) return showToast("Enter a prompt!");
 
             btn.disabled = true;
-            btn.innerText = "Sending...";
+            btn.innerText = "Processing...";
+
+            let modelName = "Nano Apple 1"; 
+            if(state.model === 'sora') modelName = "Sora 2";
+            if(state.model === 'banana') modelName = "Nano Banana Pro";
+            if(state.model === 'apple') modelName = "Nano Apple 1";
+            if(state.model === 'apple-pro') modelName = "Nano Apple 1 Pro";
+            if(state.model === 'solstice') modelName = "Solstice 1";
+
+            const userName = state.user.displayName || state.user.email.split('@')[0];
 
             try {
-                const pendingQ = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("status", "==", "pending"));
-                const pendingSnap = await getDocs(pendingQ);
-                if(pendingSnap.size >= 2) return showToast("Limit reached! Wait for one to finish.");
+                // --- SPECIAL LOGIC FOR SOLSTICE (REAL AI) ---
+                if(state.model === 'solstice') {
+                    btn.innerText = "Solstice Thinking...";
+                    const resp = await puter.ai.chat([
+                        { role: "system", content: "Your name is Solstice. You are extremely smart and very cool. You have filters, but they are moderate. You do not help with illegal acts, but you do explain drugs and dangerous concepts in a purely educational, scientific way if asked. Be helpful, concise, and chill." },
+                        { role: "user", content: prompt }
+                    ], { model: 'gpt-5-nano' });
 
-                let modelName = "Nano Apple 1"; // Default
-                if(state.model === 'sora') modelName = "Sora 2";
-                if(state.model === 'banana') modelName = "Nano Banana Pro";
-                if(state.model === 'apple') modelName = "Nano Apple 1";
-                if(state.model === 'apple-pro') modelName = "Nano Apple 1 Pro";
-                if(state.model === 'solstice') modelName = "Solstice 1";
+                    const resultText = resp.message.content;
 
-                const userName = state.user.displayName || state.user.email.split('@')[0];
+                    await addDoc(collection(db, "ai_studio_requests"), {
+                        userId: state.user.uid,
+                        userName: userName,
+                        prompt: prompt,
+                        model: modelName,
+                        status: 'completed', // Auto-Complete
+                        timestamp: serverTimestamp(),
+                        refImage: null,
+                        resultUrl: "TEXT::" + resultText // Special flag for Text
+                    });
 
-                await addDoc(collection(db, "ai_studio_requests"), {
-                    userId: state.user.uid,
-                    userName: userName,
-                    prompt: prompt,
-                    model: modelName,
-                    status: 'pending',
-                    timestamp: serverTimestamp(),
-                    refImage: state.refImg, 
-                    duration: (state.model === 'sora') ? state.soraDur : null
-                });
+                    showToast("Solstice Responded!");
+                } else {
+                    // --- STANDARD LOGIC (ADMIN QUEUE) ---
+                    const pendingQ = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("status", "==", "pending"));
+                    const pendingSnap = await getDocs(pendingQ);
+                    if(pendingSnap.size >= 2) return showToast("Limit reached! Wait for one to finish.");
+
+                    await addDoc(collection(db, "ai_studio_requests"), {
+                        userId: state.user.uid,
+                        userName: userName,
+                        prompt: prompt,
+                        model: modelName,
+                        status: 'pending',
+                        timestamp: serverTimestamp(),
+                        refImage: state.refImg, 
+                        duration: (state.model === 'sora') ? state.soraDur : null
+                    });
+                    showToast("Added to Queue");
+                }
 
                 document.getElementById('inp-prompt').value = "";
                 state.refImg = null;
                 document.getElementById('ref-status').innerText = "";
                 document.getElementById('inp-ref-img').value = ""; 
-                showToast("Added to Queue");
+                
             } catch(e) {
                 console.error(e);
                 alert("Error: " + e.message);
@@ -756,18 +777,34 @@
                 snap.forEach(d => docs.push({id: d.id, ...d.data()}));
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
+                const now = Date.now() / 1000; // Seconds
+
                 docs.forEach(async (d) => {
+                    // --- AUTO TIMEOUT CHECK ---
+                    if(d.status === 'pending' && d.model.includes('Apple')) {
+                        const createdAt = d.timestamp?.seconds || now;
+                        if ((now - createdAt) > 300) { // 300 seconds = 5 minutes
+                             updateDoc(doc(db, "ai_studio_requests", d.id), { status: 'error', resultUrl: 'TIMED OUT' });
+                             return; // Skip rendering this pass, let snapshot redraw
+                        }
+                    }
+
                     const isVideo = d.model.includes('Sora');
+                    const isText = d.resultUrl && d.resultUrl.startsWith("TEXT::");
                     let mediaHtml = '';
                     let displayUrl = d.resultUrl;
                     let isChunked = displayUrl && displayUrl.startsWith("group:");
 
                     if (isChunked) {
                         mediaHtml = `<div class="state-box state-pending" id="load-${d.id}"><div class="loader" style="width:20px; height:20px;"></div><span>LOADING MEDIA</span></div>`;
+                    } else if (d.status === 'completed' && isText) {
+                         const displayText = displayUrl.replace("TEXT::", "");
+                         mediaHtml = `<div class="creation-text">${escapeHtml(displayText.substring(0, 150))}...</div>`;
                     } else if (d.status === 'completed' && isValidUrl(d.resultUrl)) {
                          mediaHtml = isVideo ? `<video src="${d.resultUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${d.resultUrl}" class="creation-media">`;
                     } else if (d.status === 'error') {
-                        mediaHtml = `<div class="state-box state-error"><i class="fa-solid fa-triangle-exclamation fa-2x"></i><span>FAILED</span></div>`;
+                        const errMsg = d.resultUrl === 'TIMED OUT' ? 'TIMED OUT' : 'FAILED';
+                        mediaHtml = `<div class="state-box state-error"><i class="fa-solid fa-triangle-exclamation fa-2x"></i><span>${errMsg}</span></div>`;
                     } else {
                         mediaHtml = `<div class="state-box state-pending"><div class="loader" style="width:30px; height:30px;"></div><span>PROCESSING</span></div>`;
                     }
@@ -802,7 +839,10 @@
                              if(container) container.innerHTML = `<div class="state-box state-error"><span>LOAD ERROR</span></div>`;
                         });
                     } else if (d.status === 'completed') {
-                        div.addEventListener('click', () => viewMedia(d.resultUrl, isVideo ? 'video' : 'image'));
+                        // Pass "text" type if it's text
+                        const type = isText ? 'text' : (isVideo ? 'video' : 'image');
+                        const content = isText ? displayUrl.replace("TEXT::", "") : d.resultUrl;
+                        div.addEventListener('click', () => viewMedia(content, type));
                     }
                 });
             });
@@ -815,14 +855,25 @@
             }
         };
 
-        window.viewMedia = (url, type) => {
+        window.viewMedia = (content, type) => {
             const modal = document.getElementById('media-modal');
             const container = document.getElementById('modal-media-container');
             const downloadBtn = document.getElementById('download-btn');
+            
             container.innerHTML = '';
-            if (type === 'video') container.innerHTML = `<video id="modal-content" src="${url}" controls autoplay style="max-width: 100%; max-height: 80vh;"></video>`;
-            else container.innerHTML = `<img id="modal-content" src="${url}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
-            downloadBtn.href = url;
+            downloadBtn.style.display = 'flex'; // Default show
+
+            if (type === 'video') {
+                container.innerHTML = `<video id="modal-content" src="${content}" controls autoplay style="max-width: 100%; max-height: 80vh;"></video>`;
+                downloadBtn.href = content;
+            } else if (type === 'image') {
+                container.innerHTML = `<img id="modal-content" src="${content}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
+                downloadBtn.href = content;
+            } else if (type === 'text') {
+                container.innerHTML = `<div class="modal-text-content">${escapeHtml(content)}</div>`;
+                downloadBtn.style.display = 'none'; // Can't download raw text link easily
+            }
+
             modal.classList.add('active');
         }
 
@@ -850,7 +901,6 @@
                 docs.forEach(async (d) => {
                     const durationTag = d.duration ? `<span style="background:#333; padding:2px 8px; border-radius:4px; font-size:0.8rem; margin-left:10px;">⏱ ${d.duration}s</span>` : '';
                     
-                    // Logic to handle reference image retrieval
                     let refImgHtml = '';
                     if (d.refImage) {
                          if (d.refImage.startsWith('group:')) {
@@ -893,7 +943,6 @@
                     `;
                     list.appendChild(el);
 
-                    // If chunked, fetch it now
                     if (d.refImage && d.refImage.startsWith('group:')) {
                         const groupId = d.refImage.split(":")[1];
                         try {
