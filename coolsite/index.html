@@ -109,7 +109,6 @@
 
     <script>
         let isRunning = true;
-        let isLocked = true;
         const messages = [
             "WARNING: KERNEL PANIC",
             "ERROR: MEMORY_DUMP_FAILED",
@@ -122,9 +121,7 @@
             "IDENTIFIED AS maddi IN nc",
             "YOUR FILES ARE GONE",
             "BLUE SCREEN OF DEATH",
-            "ALL YOUR BASE ARE BELONG TO US",
-            "FULLSCREEN LOCK ENGAGED",
-            "YOU CANNOT ESCAPE"
+            "ALL YOUR BASE ARE BELONG TO US"
         ];
         
         const shutdownMessages = [
@@ -136,41 +133,6 @@
             "Confirming user: maddi in nc...",
             "Finalizing destruction..."
         ];
-
-        // Function to request fullscreen
-        function goFullscreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
-        }
-
-        // Function to exit fullscreen
-        function exitFullscreen() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { /* Safari */
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE11 */
-                document.msExitFullscreen();
-            }
-        }
-
-        // Listen for fullscreen change events to prevent escape
-        function handleFullscreenChange() {
-            if (!document.fullscreenElement && isLocked) {
-                // User tried to escape, force it back
-                setTimeout(goFullscreen, 10);
-            }
-        }
-
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('msfullscreenchange', handleFullscreenChange);
 
         function createGlitchElement() {
             if (!isRunning) return;
@@ -238,20 +200,15 @@
         }
 
         document.getElementById('stopButton').addEventListener('click', function() {
-            if (isLocked) {
-                // Don't stop, just mock the user
-                const el = document.createElement('div');
-                el.className = 'glitch-text';
-                el.textContent = "YOU CAN'T LEAVE!";
-                el.style.top = '50%';
-                el.style.left = '50%';
-                el.style.transform = 'translate(-50%, -50%)';
-                el.style.fontSize = '4em';
-                document.body.appendChild(el);
-                setTimeout(() => el.remove(), 1000);
-            } else {
-                // Allow stopping after 5 seconds
-                isRunning = false;
-                document.body.innerHTML = '<h1 style="color: #0f0; text-align: center; margin-top: 20%;">Effects Stopped. Session for maddi in nc terminated.</h1>';
-                document.body.style.animation = 'none';
-                document.body.style.backgroundColor = '#222';
+            isRunning = false;
+            document.body.innerHTML = '<h1 style="color: #0f0; text-align: center; margin-top: 20%;">Effects Stopped. Session for maddi in nc terminated.</h1>';
+            document.body.style.animation = 'none';
+            document.body.style.backgroundColor = '#222';
+        });
+
+        // Start the chaos
+        startEffects();
+
+    </script>
+</body>
+</html>
