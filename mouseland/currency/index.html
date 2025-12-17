@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Mouseland | Exchange</title>
+    
+    <link rel="icon" type="image/png" href="mouseicon.png">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* --- CONFIG & VARIABLES (MATCHING MAIN SITE) --- */
+        :root {
+            --bg-color: #09090b; 
+            --card-bg: #18181b;  
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --mouseland-accent: #10b981; 
+            --gold: #fbbf24;
+            --border: #27272a;            
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            opacity: 0.4;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; flex: 1; }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; text-decoration: none; }
+        .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { color: #fff; border-color: #fff; }
+
+        /* --- CONVERTER SPECIFIC STYLES --- */
+        .bank-card {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-top: 2rem;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            text-align: center;
+            border-top: 4px solid var(--mouseland-accent);
+        }
+
+        .currency-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            outline: none;
+            font-family: monospace;
+        }
+        input[type="number"]:focus { border-color: var(--mouseland-accent); }
+
+        select {
+            background: #27272a;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .arrow-icon {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin: 0 1rem;
+        }
+
+        .result-display {
+            background: linear-gradient(135deg, #111, #0d0d0d);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--mouseland-accent);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .result-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .exchange-rate-tag {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--mouseland-accent);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .info-card {
+            background: #111;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #222;
+        }
+        .info-card h4 { color: #fff; margin-bottom: 0.5rem; }
+        .info-card p { color: #888; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            .currency-input-group { flex-direction: column; }
+            .arrow-icon { transform: rotate(90deg); margin: 1rem 0; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="container">
+        <nav style="margin-bottom: 2rem;">
+            <a href="index.html" class="btn btn-ghost">← Back to Government</a>
+        </nav>
+
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏦 Bank of Mouseland</h1>
+            <p style="color: var(--text-muted);">Secure the bag. Convert your currency.</p>
+        </div>
+
+        <div class="bank-card">
+            <div class="exchange-rate-tag">
+                Official Peg: $1.00 USD = 2.00ᴹ Mousins
+            </div>
+
+            <div class="currency-input-group">
+                <div class="input-wrapper">
+                    <label style="display:block; text-align:left; color:#888; font-size:0.8rem; margin-bottom:5px;">Foreign Amount</label>
+                    <input type="number" id="amount" placeholder="1.00" value="1" min="0" step="0.01">
+                </div>
+
+                <select id="currency-select">
+                    <option value="USD" selected>🇺🇸 USD - US Dollar</option>
+                    <option value="EUR">🇪🇺 EUR - Euro</option>
+                    <option value="GBP">🇬🇧 GBP - British Pound</option>
+                    <option value="JPY">🇯🇵 JPY - Japanese Yen</option>
+                    <option value="CAD">🇨🇦 CAD - Canadian Dollar</option>
+                    <option value="AUD">🇦🇺 AUD - Australian Dollar</option>
+                    <option value="CNY">🇨🇳 CNY - Chinese Yuan</option>
+                    <option value="INR">🇮🇳 INR - Indian Rupee</option>
+                    <option value="KRW">🇰🇷 KRW - South Korean Won</option>
+                    <option value="RUB">🇷🇺 RUB - Russian Ruble</option>
+                    <option value="BRL">🇧🇷 BRL - Brazilian Real</option>
+                    <option value="MXN">🇲🇽 MXN - Mexican Peso</option>
+                    </select>
+            </div>
+
+            <div class="arrow-icon">⬇</div>
+
+            <div class="result-display">
+                <div id="result" class="result-value">2.00</div>
+                <div class="result-label">Mousins (ᴹ)</div>
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 5rem; opacity: 0.05; color: white;">🐁</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>No Fees</h4>
+                    <p>The MIC takes 0% tax on conversions. Keep all your bread.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Purchasing Power</h4>
+                    <p>500ᴹ gets you a Mouse S Gen 2. That's only $250 USD. Absolute steal.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer style="text-align: center; margin-top: 3rem; color: #555; font-size: 0.8rem;">
+            Rates updated via MIC Financial Network.<br>
+            &copy; 2025 Bank of Mouseland.
+        </footer>
+    </div>
+
+    <script>
+        // --- PARTICLES (Shared Logic) ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = (Math.random() * 1) - 0.5;
+                this.speedY = (Math.random() * 1) - 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.3)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        function initParticles() { for(let i=0; i<60; i++) particles.push(new Particle()); }
+        function animateParticles() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        // --- CONVERSION LOGIC ---
+        // 1 Mousin = 0.50 USD.
+        // Formula: (InputAmount in USD) / 0.50 = Mousins
+        // OR: InputAmount in USD * 2 = Mousins
+
+        const amountInput = document.getElementById('amount');
+        const currencySelect = document.getElementById('currency-select');
+        const resultDisplay = document.getElementById('result');
+
+        // Approximate Exchange Rates to USD (1 unit of currency = X USD)
+        // Used to normalize input to USD first.
+        const ratesToUSD = {
+            "USD": 1.00,
+            "EUR": 1.08,  // 1 Euro is approx $1.08
+            "GBP": 1.27,  // 1 Pound is approx $1.27
+            "JPY": 0.007, // 1 Yen is approx $0.007
+            "CAD": 0.73,
+            "AUD": 0.67,
+            "CNY": 0.14,
+            "INR": 0.012,
+            "KRW": 0.00075,
+            "RUB": 0.011,
+            "BRL": 0.20,
+            "MXN": 0.058
+        };
+
+        function calculate() {
+            const amount = parseFloat(amountInput.value);
+            const currency = currencySelect.value;
+            
+            if (isNaN(amount)) {
+                resultDisplay.innerText = "---";
+                return;
+            }
+
+            // 1. Convert Foreign Currency to USD
+            const rate = ratesToUSD[currency] || 1.0;
+            const valueInUSD = amount * rate;
+
+            // 2. Convert USD to Mousins (Divide by 0.5, or multiply by 2)
+            const mousins = valueInUSD * 2;
+
+            // 3. Format Output (Commad, 2 decimals)
+            resultDisplay.innerText = mousins.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Event Listeners
+        amountInput.addEventListener('input', calculate);
+        currencySelect.addEventListener('change', calculate);
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+    </script>
+</body>
+</html>
