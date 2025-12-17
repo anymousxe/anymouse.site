@@ -100,7 +100,7 @@
 
     <div id="shutdown-screen">
         <h1>SYSTEM SHUTDOWN INITIATED</h1>
-        <p>Operator: maddison</p>
+        <p>Current User: maddi</p>
         <p>Location: nc</p>
         <p id="shutdown-message">Deleting system files...</p>
     </div>
@@ -118,7 +118,7 @@
             "DECRYPTING FILES...",
             "SENDING DATA TO [REDACTED]",
             "FATAL EXCEPTION 0E",
-            "HACKED BY maddison FROM nc",
+            "IDENTIFIED AS maddi IN nc",
             "YOUR FILES ARE GONE",
             "BLUE SCREEN OF DEATH",
             "ALL YOUR BASE ARE BELONG TO US"
@@ -130,7 +130,7 @@
             "Uploading personal data to the cloud...",
             "Installing backdoors...",
             "Erasing browser history...",
-            "Contacting operator: maddison in nc...",
+            "Confirming user: maddi in nc...",
             "Finalizing destruction..."
         ];
 
@@ -173,7 +173,7 @@
             if (!isRunning) return;
             for (let i = 0; i < 5; i++) {
                 setTimeout(() => {
-                    if(isRunning) alert(`maddison from nc was here!`);
+                    if(isRunning) alert(`We see you, maddi from nc!`);
                 }, i * 200);
             }
         }
@@ -195,13 +195,13 @@
 
             // Change window title
             setInterval(() => {
-                if(isRunning) document.title = `INFECTED BY maddison (nc)`;
+                if(isRunning) document.title = `USER maddi (nc) COMPROMISED`;
             }, 1000);
         }
 
         document.getElementById('stopButton').addEventListener('click', function() {
             isRunning = false;
-            document.body.innerHTML = '<h1 style="color: #0f0; text-align: center; margin-top: 20%;">Effects Stopped. maddison has left the building.</h1>';
+            document.body.innerHTML = '<h1 style="color: #0f0; text-align: center; margin-top: 20%;">Effects Stopped. Session for maddi in nc terminated.</h1>';
             document.body.style.animation = 'none';
             document.body.style.backgroundColor = '#222';
         });
