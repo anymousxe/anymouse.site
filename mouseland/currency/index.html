@@ -9,7 +9,7 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <style>
-        /* --- CONFIG & VARIABLES (MATCHING MAIN SITE) --- */
+        /* --- CONFIG & VARIABLES --- */
         :root {
             --bg-color: #09090b; 
             --card-bg: #18181b;  
@@ -49,7 +49,7 @@
         .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .btn-ghost:hover { color: #fff; border-color: #fff; }
 
-        /* --- CONVERTER SPECIFIC STYLES --- */
+        /* --- CONVERTER STYLES --- */
         .bank-card {
             background: rgba(24, 24, 27, 0.8);
             backdrop-filter: blur(10px);
@@ -101,11 +101,7 @@
             outline: none;
         }
 
-        .arrow-icon {
-            font-size: 2rem;
-            color: var(--text-muted);
-            margin: 0 1rem;
-        }
+        .arrow-icon { font-size: 2rem; color: var(--text-muted); margin: 0 1rem; }
 
         .result-display {
             background: linear-gradient(135deg, #111, #0d0d0d);
@@ -172,7 +168,7 @@
 
     <div class="container">
         <nav style="margin-bottom: 2rem;">
-            <a href="index.html" class="btn btn-ghost">← Back to Government</a>
+            <a href="https://anymouse.site/mouseland" class="btn btn-ghost">← Back to Government</a>
         </nav>
 
         <div style="text-align: center; margin-bottom: 1rem;">
@@ -204,7 +200,7 @@
                     <option value="RUB">🇷🇺 RUB - Russian Ruble</option>
                     <option value="BRL">🇧🇷 BRL - Brazilian Real</option>
                     <option value="MXN">🇲🇽 MXN - Mexican Peso</option>
-                    </select>
+                </select>
             </div>
 
             <div class="arrow-icon">⬇</div>
@@ -234,7 +230,7 @@
     </div>
 
     <script>
-        // --- PARTICLES (Shared Logic) ---
+        // --- PARTICLES ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -272,21 +268,15 @@
         animateParticles();
 
         // --- CONVERSION LOGIC ---
-        // 1 Mousin = 0.50 USD.
-        // Formula: (InputAmount in USD) / 0.50 = Mousins
-        // OR: InputAmount in USD * 2 = Mousins
-
         const amountInput = document.getElementById('amount');
         const currencySelect = document.getElementById('currency-select');
         const resultDisplay = document.getElementById('result');
 
-        // Approximate Exchange Rates to USD (1 unit of currency = X USD)
-        // Used to normalize input to USD first.
         const ratesToUSD = {
             "USD": 1.00,
-            "EUR": 1.08,  // 1 Euro is approx $1.08
-            "GBP": 1.27,  // 1 Pound is approx $1.27
-            "JPY": 0.007, // 1 Yen is approx $0.007
+            "EUR": 1.08,
+            "GBP": 1.27,
+            "JPY": 0.007,
             "CAD": 0.73,
             "AUD": 0.67,
             "CNY": 0.14,
@@ -306,30 +296,22 @@
                 return;
             }
 
-            // 1. Convert Foreign Currency to USD
             const rate = ratesToUSD[currency] || 1.0;
             const valueInUSD = amount * rate;
+            const mousins = valueInUSD * 2; // 1 Mousin = 0.5 USD
 
-            // 2. Convert USD to Mousins (Divide by 0.5, or multiply by 2)
-            const mousins = valueInUSD * 2;
-
-            // 3. Format Output (Commad, 2 decimals)
             resultDisplay.innerText = mousins.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
         }
 
-        // Event Listeners
         amountInput.addEventListener('input', calculate);
         currencySelect.addEventListener('change', calculate);
-
-        // Resize canvas on window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
-
     </script>
 </body>
 </html>
