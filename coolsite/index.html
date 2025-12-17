@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup Experience</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #stopButton {
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background-color: #d9534f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+            position: relative;
+        }
+        #stopButton:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="stopButton">E</button>
+
+    <script>
+        let popupCount = 0;
+        let isSpamming = true;
+
+        function createPopup() {
+            if (!isSpamming) {
+                return;
+            }
+
+            const popup = window.open(
+                '',
+                `popup_${popupCount++}`,
+                `width=${200 + Math.random() * 200},height=${100 + Math.random() * 100},top=${Math.random() * (screen.height - 200)},left=${Math.random() * (screen.width - 400)}`
+            );
+
+            if (popup) {
+                popup.document.write(`
+                    <html>
+                        <head>
+                            <title>Popup ${popupCount}</title>
+                            <style>
+                                body { margin: 0; padding: 20px; font-family: sans-serif; background-color: #${Math.floor(Math.random()*16777215).toString(16)}; color: white; text-align: center; }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>You can't escape!</h1>
+                            <p>Popup #${popupCount}</p>
+                        </body>
+                    </html>
+                `);
+            }
+
+            if (isSpamming) {
+                setTimeout(createPopup, 100);
+            }
+        }
+
+        document.getElementById('stopButton').addEventListener('click', function() {
+            isSpamming = false;
+            document.body.innerHTML = '<h1>Spam Stopped.</h1>';
+        });
+
+        // Start the spam
+        createPopup();
+
+    </script>
+</body>
+</html>
