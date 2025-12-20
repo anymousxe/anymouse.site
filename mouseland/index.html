@@ -4,33 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mouseland | Official Site</title>
-
+    
     <link rel="icon" type="image/png" href="mouseicon.png">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
-    <meta name="twitter:description" content="Emergency transmissions, MIC updates, and national war alerts.">
+    <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, City Guides, and National News.">
     <meta name="twitter:image" content="https://anymouse.site/boxborough.png">
 
     <style>
+        /* --- CONFIG & VARIABLES --- */
         :root {
-            --bg: #09090b;
-            --card: #18181b;
-            --text: #e4e4e7;
-            --muted: #a1a1aa;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --border: #27272a;
-            font-family: Inter, system-ui, sans-serif;
+            --bg-color: #09090b; 
+            --card-bg: #18181b;  
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --mouseland-accent: #10b981; 
+            --danger: #ef4444;            
+            --warning: #f59e0b;           
+            --border: #27272a;            
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
@@ -44,244 +47,295 @@
         #intro-overlay {
             position: fixed;
             inset: 0;
-            background: black;
+            background: #000;
             z-index: 9999;
             display: flex;
-            align-items: center;
             justify-content: center;
-            transition: transform .8s ease;
+            align-items: center;
+            transition: transform 0.8s ease-in-out;
         }
 
-        .intro-title {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
+        .intro-content { text-align: center; }
+        .intro-title { font-size: 3rem; font-weight: 800; color: var(--mouseland-accent); margin-bottom: 1rem; }
 
         #enter-btn {
             background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
+            border: 1px solid var(--mouseland-accent);
+            color: var(--mouseland-accent);
             padding: 1rem 2rem;
+            font-family: 'Courier New', monospace;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.3s;
         }
 
         #enter-btn:hover {
-            background: var(--accent);
-            color: black;
-            box-shadow: 0 0 20px var(--accent);
+            background: var(--mouseland-accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--mouseland-accent);
         }
 
         .container {
             max-width: 1000px;
-            margin: auto;
+            margin: 0 auto;
             padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
         }
 
-        header {
+        .ml-header {
             padding: 2rem 0;
+            margin-bottom: 2rem;
             border-bottom: 1px solid var(--border);
-            background: radial-gradient(circle at top, rgba(16,185,129,.1), transparent 70%);
-            text-align: center;
+            background: radial-gradient(circle at top, rgba(16,185,129,0.1), transparent 70%);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
         .btn {
-            padding: .6rem 1.2rem;
-            border-radius: 6px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-primary { background: white; color: black; }
-        .btn-danger { background: var(--danger); color: white; }
-
-        .leadership {
-            display: flex;
-            gap: 2rem;
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
-            margin: 3rem 0;
-            flex-wrap: wrap;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
         }
 
-        .leader {
-            background: var(--card);
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { color: #fff; border-color: #fff; }
+        .btn-primary { background: #fff; color: #000; }
+        .btn-mouseland { background: var(--mouseland-accent); color: #000; }
+        .btn-danger { background: rgba(239,68,68,0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        .admin-panel {
+            background: #111;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--mouseland-accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            display: none;
+        }
+
+        .admin-input, .admin-textarea {
+            background: #000;
+            border: 1px solid #333;
+            padding: 0.8rem;
+            color: #fff;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .leadership-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .leader-card {
+            background: var(--card-bg);
             border: 1px solid var(--border);
             padding: 2rem;
             border-radius: 12px;
             text-align: center;
-            width: 260px;
+            width: 280px;
         }
 
-        .leader img {
+        .leader-img {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            border: 2px solid var(--border);
+            border: 3px solid var(--border);
             margin-bottom: 1rem;
         }
 
-        .news-section h2 {
-            margin: 3rem 0 1rem;
+        .news-archive-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 1rem;
+            border: 1px solid #222;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
         }
 
         .news-item {
-            background: var(--card);
+            background: var(--card-bg);
             border: 1px solid var(--border);
-            border-left: 5px solid #555;
+            border-left: 4px solid #555;
             padding: 1.5rem;
-            border-radius: 8px;
+            border-radius: 0 8px 8px 0;
             margin-bottom: 1.5rem;
         }
 
         .news-item.urgent {
             border-left-color: var(--danger);
-            background: linear-gradient(90deg, rgba(239,68,68,.1), transparent);
+            background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent);
         }
 
-        .news-item.decree {
-            border-left-color: var(--warning);
+        .news-item.decree { border-left-color: var(--warning); }
+
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
 
-        footer {
+        .city-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .city-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .city-name {
+            padding: 1rem;
             text-align: center;
-            color: #555;
-            margin: 4rem 0 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width:600px) {
+            .nav-bar { flex-direction: column; gap: 1rem; }
+            .leadership-section { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<audio id="bg-music" loop src="lofi.mp3"></audio>
-
+<audio id="bg-music" loop><source src="lofi.mp3"></audio>
 <canvas id="bg-canvas"></canvas>
 
 <div id="intro-overlay">
-    <div>
+    <div class="intro-content">
         <div class="intro-title">MOUSELAND</div>
-        <p style="text-align:center;color:#777;margin-bottom:2rem;">
-            GOVERNMENT TERMINAL // EMERGENCY ACCESS
-        </p>
+        <p style="color:#888;margin-bottom:2rem;">GOVERNMENT TERMINAL // SECURE CONNECTION</p>
         <button id="enter-btn">ENTER SYSTEM</button>
     </div>
 </div>
 
-<header>
-    <div class="container">
-        <h1>🐀 Welcome to Mouseland</h1>
-        <p>Unity. Cheese. Survival.</p>
-    </div>
+<div id="main-content">
+<header class="ml-header">
+<div class="container">
+<nav class="nav-bar">
+<a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
+<div id="auth-container">
+<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
+</div>
+</nav>
+<div style="text-align:center;">
+<h1>🐀 Welcome to Mouseland</h1>
+<p>Unity. Cheese. Strength.</p>
+</div>
+</div>
 </header>
 
-<main class="container">
+<div class="container">
 
-    <section class="leadership">
-        <div class="leader">
-            <img src="anymousxe.png">
-            <h3>Anymousxe</h3>
-            <p style="color:var(--accent)">MIC</p>
-        </div>
-        <div class="leader">
-            <img src="color.png">
-            <h3>Color</h3>
-            <p style="color:#a855f7">VMIC</p>
-        </div>
-    </section>
+<section class="leadership-section">
+<div class="leader-card">
+<img src="./anymousxe.png" class="leader-img">
+<h3>Anymousxe</h3>
+<p style="color:var(--mouseland-accent);font-weight:bold;">MIC</p>
+</div>
+<div class="leader-card">
+<img src="./color.png" class="leader-img">
+<h3>Color</h3>
+<p style="color:#a855f7;font-weight:bold;">VMIC</p>
+</div>
+</section>
 
-    <section class="news-section">
-        <h2>📰 Emergency Broadcasts</h2>
+<section style="margin:4rem 0;">
+<h2>📜 Decrees & Projects</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;">
 
-        <article class="news-item urgent">
-            <h3>🚨🚨🚨 BREAKING BREAKING BREAKING 🚨🚨🚨</h3>
-            <p style="color:#aaa;font-size:.8rem;">LIVE — Secure Channel Override</p>
-            <p>
-                <strong>THIS IS NOT A DRILL.</strong><br><br>
-                Fryland. Nuggetland. Mouseland. Frogland.<br><br>
-                All four nations are now engaged in <strong>active war</strong>.
-                Borders are collapsing. Airspace is contested.
-                Trade routes are offline.
-                <br><br>
-                Citizens are asking one question:
-                <br><strong>Is this World War 3?</strong>
-                <br><br>
-                MIC has issued a Level Red alert. Further transmissions pending.
-            </p>
-        </article>
+<div style="background:#111;padding:2rem;border-radius:12px;border:1px solid #444;">
+<h3>🚀 MSP: Operation Moon Cheese</h3>
+<p style="color:#aaa;">Updated: Dec 10, 2025</p>
+<p>
+The <strong>Mouse Space Program (MSP)</strong> has been successfully relaunched.
+<br><br>
+All drilling operations have been <strong>paused</strong>.
+The next phase is a <strong>controlled lunar test-landing</strong> to verify terrain stability,
+gravity tolerance, and cheese density before any extraction begins.
+<br><br>
+Mission Control confirms: <em>Moon first. Holes later.</em>
+</p>
+</div>
 
-        <article class="news-item urgent">
-            <h3>🚀 MSP UPDATE: Rocket Relaunched</h3>
-            <p style="color:#aaa;font-size:.8rem;">Dec 10, 2025</p>
-            <p>
-                The first Mouse Space Program rocket has been successfully
-                <strong>sent back into orbit</strong>.
-                <br><br>
-                All drilling operations are officially delayed.
-                The next phase will focus on a <strong>controlled test-landing
-                on the Moon</strong> to evaluate terrain, gravity, and surface stability.
-                <br><br>
-                MIC statement: “We are not drilling blind. Moon first. Holes later.”
-            </p>
-        </article>
+</div>
+</section>
 
-        <article class="news-item decree">
-            <h3>⚔️ Fryland Conflict Status</h3>
-            <p style="color:#aaa;font-size:.8rem;">Dec 10, 2025</p>
-            <p>
-                Fryland has escalated hostilities across multiple borders.
-                Mouseland forces remain mobilized.
-                Alliances are unstable. Expect sudden changes.
-            </p>
-        </article>
+<section>
+<h2>📰 Mouseland News</h2>
+<div class="news-archive-container">
 
-    </section>
+<article class="news-item urgent">
+<h3>🚨🚨🚨 BREAKING BREAKING BREAKING 🚨🚨🚨</h3>
+<p class="date">LIVE — Secure Channel Override</p>
+<p>
+<strong>THIS IS NOT A DRILL.</strong><br><br>
+Fryland. Nuggetland. Mouseland. Frogland.
+<br><br>
+All four nations are engaged in active military conflict.
+<br><br>
+<strong>Is this World War 3?</strong>
+</p>
+</article>
 
-</main>
+<article class="news-item urgent">
+<h3>🚀 MSP UPDATE: Rocket Relaunched — Lunar Test Landing Planned</h3>
+<p class="date">Dec 10, 2025</p>
+<p>
+The MSP rocket has been successfully relaunched.
+<br><br>
+Drilling operations are paused pending a lunar surface test-landing.
+</p>
+</article>
 
-<footer>
-    &copy; 2025 Mouseland Government
-</footer>
+<article class="news-item">
+<h3>⚔️ Fryland Falls</h3>
+<p>
+Nuggetland has declared victory after intervention from allied forces.
+</p>
+</article>
 
-<script>
-    const enterBtn = document.getElementById("enter-btn");
-    const overlay = document.getElementById("intro-overlay");
-    const music = document.getElementById("bg-music");
+</div>
+</section>
 
-    enterBtn.onclick = () => {
-        overlay.style.transform = "translateY(-100%)";
-        music.volume = 0.3;
-        music.play().catch(()=>{});
-    };
+<section style="margin-top:4rem;">
+<h2>The 5 Great Cities</h2>
+<div class="cities-grid">
+<div class="city-card"><img src="./boxborough.png"><div class="city-name">Boxborough</div></div>
+<div class="city-card"><img src="./corrugatecrossing.png"><div class="city-name">Corrugate Crossing</div></div>
+<div class="city-card"><img src="./rodentiamajor.png"><div class="city-name">Rodentia Major</div></div>
+<div class="city-card"><img src="./rubbishheights.png"><div class="city-name">Rubbish Heights</div></div>
+<div class="city-card"><img src="./mec.png"><div class="city-name">Mec</div></div>
+</div>
+</section>
 
-    const canvas = document.getElementById("bg-canvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-
-    const particles = Array.from({length:80}, () => ({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        dx: (Math.random()-.5),
-        dy: (Math.random()-.5)
-    }));
-
-    function animate() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        particles.forEach(p=>{
-            p.x+=p.dx; p.y+=p.dy;
-            if(p.x<0||p.x>canvas.width) p.dx*=-1;
-            if(p.y<0||p.y>canvas.height) p.dy*=-1;
-            ctx.fillStyle="rgba(16,185,129,.4)";
-            ctx.beginPath();
-            ctx.arc(p.x,p.y,2,0,Math.PI*2);
-            ctx.fill();
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
-</script>
+<footer style="text-align:center;margin-top:4rem;color:#555;">© 2025 Mouseland Gov.</footer>
+</div>
+</div>
 
 </body>
 </html>
