@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ai STudio - V5</title>
+    <title>The Ai STudio - V5.1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -120,10 +120,6 @@
         .model-card.active i { color: var(--primary); }
         .model-card h3 { font-size: 0.9rem; }
 
-        /* Coming Soon State */
-        .coming-soon-card { opacity: 0.5; cursor: not-allowed !important; background: rgba(255,255,255,0.02) !important; border-color: transparent !important; pointer-events: none; }
-        .coming-soon-card i { color: #555 !important; }
-
         .controls { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         textarea { 
             width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; 
@@ -194,7 +190,6 @@
         .req-card:hover { border-color: #555; }
         .admin-input-row { display: flex; gap: 10px; margin-top: 15px; align-items: center; flex-wrap: wrap; }
         
-        /* UTIL */
         .hidden { display: none !important; }
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 30px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
@@ -224,17 +219,13 @@
         <div class="login-card">
             <h2 class="logo" style="font-size: 2.5rem; margin-bottom: 10px;">The Ai <span class="highlight">STudio</span></h2>
             <p style="color:#aaa; margin-bottom: 30px;">Access your creative dashboard.</p>
-            
             <input type="email" id="auth-email" class="auth-input" placeholder="Email Address">
             <input type="password" id="auth-pass" class="auth-input" placeholder="Password">
-            
             <button id="btn-login-email" class="glow-btn primary">Login</button>
             <button id="btn-signup-email" class="glow-btn">Create Account</button>
-            
             <div style="margin: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); position: relative;">
                 <span style="background: #15151a; padding: 0 10px; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #666; font-size: 0.8rem;">OR</span>
             </div>
-
             <button id="btn-login-google" class="glow-btn" style="font-size:1rem; border-color: #4285F4; color: #4285F4;">
                 <i class="fa-brands fa-google"></i> Continue with Google
             </button>
@@ -262,7 +253,7 @@
                     <i class="fa-solid fa-video"></i> 
                     <h3>Sora 2</h3>
                 </div>
-                <div class="model-card coming-soon-card">
+                <div class="model-card coming-soon-card" style="opacity:0.5; cursor:not-allowed;">
                     <i class="fa-solid fa-film"></i> 
                     <h3>Sora 2 Pro</h3>
                     <span style="font-size: 0.8rem; opacity: 0.7; display: block; margin-top: 5px;">COMING SOON</span>
@@ -287,7 +278,6 @@
                     </div>
                     <span id="ref-status" style="margin-left:15px; font-size:0.8rem; color:#00ff88; font-weight:bold;"></span>
                 </div>
-
                 <textarea id="inp-prompt" placeholder="Describe your imagination..."></textarea>
                 <button id="btn-submit" class="action-btn" onclick="submitRequest()">Generate Content</button>
             </div>
@@ -301,9 +291,7 @@
         <div class="admin-header">
             <h2 style="color:var(--danger); font-family:'Space Grotesk'; text-transform:uppercase; letter-spacing:2px;"><i class="fa-solid fa-terminal"></i> Admin Terminal</h2>
             <div style="display:flex; gap:15px; align-items:center;">
-                <button id="btn-offline-toggle" onclick="toggleSystemStatus()" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid #555; color:white; border-radius:8px; font-weight:bold;">
-                    TOGGLE OFFLINE
-                </button>
+                <button id="btn-offline-toggle" onclick="toggleSystemStatus()" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid #555; color:white; border-radius:8px; font-weight:bold;">TOGGLE OFFLINE</button>
                 <button onclick="toggleAdmin(false)" style="padding:10px 20px; cursor:pointer; background:var(--glass); border:1px solid var(--glass-border); color:white; border-radius:8px;">EXIT</button>
             </div>
         </div>
@@ -358,492 +346,246 @@
 
         let unsubscribeUserQueue = null;
 
-        // --- GLOBAL STATUS LISTENER ---
-        onSnapshot(doc(db, "system", "status"), (docSnap) => {
-            const banner = document.getElementById('offline-banner');
-            const submitBtn = document.getElementById('btn-submit');
-            
-            if (docSnap.exists() && docSnap.data().offline === true) {
-                state.isOffline = true;
-                banner.style.display = 'block';
-                submitBtn.disabled = true;
-                submitBtn.innerText = "SYSTEM OFFLINE";
-                if(document.getElementById('btn-offline-toggle')) {
-                    const btn = document.getElementById('btn-offline-toggle');
-                    btn.style.background = 'var(--danger)';
-                    btn.innerText = "SET ONLINE";
-                }
-            } else {
-                state.isOffline = false;
-                banner.style.display = 'none';
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Generate Content";
-                if(document.getElementById('btn-offline-toggle')) {
-                    const btn = document.getElementById('btn-offline-toggle');
-                    btn.style.background = '#00ff88';
-                    btn.style.color = 'black';
-                    btn.innerText = "SET OFFLINE";
-                }
-            }
-        });
-
-        window.toggleSystemStatus = async () => {
-            const ref = doc(db, "system", "status");
-            try {
-                const snap = await getDoc(ref);
-                if(!snap.exists()) {
-                    await setDoc(ref, { offline: true });
-                } else {
-                    await updateDoc(ref, { offline: !snap.data().offline });
-                }
-            } catch(e) {
-                alert("Error: " + e.message + "\n(Did you update the Firestore Rules?)");
-            }
-        }
-
-        // --- DATABASE CHUNKING SYSTEM ---
+        // --- UPDATED DATABASE CHUNKING SYSTEM (V5.1 Optimized) ---
         async function uploadFileAsChunks(file, onProgress) {
-            const CHUNK_SIZE = 800000; 
+            const CHUNK_SIZE = 700000; // Safe under 1MB limit
             
-            const base64 = await new Promise((resolve) => {
+            const getBase64 = (file) => new Promise((resolve) => {
                 const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
                 reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
             });
 
-            const totalChunks = Math.ceil(base64.length / CHUNK_SIZE);
+            const fullUri = await getBase64(file);
+            const mime = fullUri.split(',')[0].split(':')[1].split(';')[0];
+            const base64Data = fullUri.split(',')[1]; // Stripped raw data
+
+            const totalChunks = Math.ceil(base64Data.length / CHUNK_SIZE);
             const groupId = `group_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
             for (let i = 0; i < totalChunks; i++) {
-                const chunkData = base64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-                
+                const chunkData = base64Data.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                 await addDoc(collection(db, "ai_studio_files"), {
                     group: groupId,
                     index: i,
                     total: totalChunks,
                     data: chunkData,
-                    mime: file.type
+                    mime: mime
                 });
-
-                const percent = Math.round(((i + 1) / totalChunks) * 100);
-                onProgress(percent);
+                onProgress(Math.round(((i + 1) / totalChunks) * 100));
             }
-
             return groupId;
         }
 
         async function downloadFileFromChunks(groupId) {
-            const q = query(collection(db, "ai_studio_files"), where("group", "==", groupId), orderBy("index"));
+            const q = query(collection(db, "ai_studio_files"), where("group", "==", groupId), orderBy("index", "asc"));
             const snapshot = await getDocs(q);
-            
-            if(snapshot.empty) {
-                console.error("No chunks found for group:", groupId);
-                throw new Error("Missing File Data");
-            }
+            if(snapshot.empty) throw new Error("File Missing");
 
-            const parts = [];
+            let fullBase64 = "";
+            let mime = "application/octet-stream";
             snapshot.forEach(doc => {
-                parts.push(doc.data().data);
+                const d = doc.data();
+                fullBase64 += d.data;
+                if(d.mime) mime = d.mime;
             });
-            const fullDataUri = parts.join('');
 
-            try {
-                const res = await fetch(fullDataUri);
-                const blob = await res.blob();
-                return URL.createObjectURL(blob);
-            } catch(e) {
-                console.error("Blob Conversion Failed", e);
-                throw new Error("Corrupt Data");
-            }
+            const byteChars = atob(fullBase64);
+            const byteNums = new Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
+            const byteArray = new Uint8Array(byteNums);
+            return URL.createObjectURL(new Blob([byteArray], { type: mime }));
         }
 
-        // --- UTIL ---
-        function escapeHtml(text) {
-            if (!text) return "";
-            return text.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        function isValidUrl(string) {
-            try {
-                if (!string) return false;
-                if (string.startsWith('data:image')) return true;
-                if (string.startsWith('blob:')) return true;
-                if (string.startsWith('group:')) return true;
-                const url = new URL(string);
-                return url.protocol === "http:" || url.protocol === "https:";
-            } catch (_) { return false; }
-        }
-
-        function renderApp() {
-            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-            if (state.loading) {
-                document.getElementById('screen-loading').classList.add('active');
-                return;
-            }
-            if (state.user) {
-                document.getElementById('screen-app').classList.add('active');
-            } else {
-                document.getElementById('screen-login').classList.add('active');
-            }
-        }
+        // --- CORE LOGIC ---
+        onSnapshot(doc(db, "system", "status"), (snap) => {
+            state.isOffline = snap.exists() && snap.data().offline;
+            const banner = document.getElementById('offline-banner');
+            const submitBtn = document.getElementById('btn-submit');
+            banner.style.display = state.isOffline ? 'block' : 'none';
+            submitBtn.disabled = state.isOffline;
+            submitBtn.innerText = state.isOffline ? "SYSTEM OFFLINE" : "Generate Content";
+        });
 
         onAuthStateChanged(auth, (user) => {
             state.user = user;
             state.isAdmin = user && user.email === ADMIN_EMAIL;
-            
             if (user) {
-                const pfp = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.substring(0,2)}&background=random`;
-                document.getElementById('user-pfp').src = pfp;
-                
+                document.getElementById('user-pfp').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email.substring(0,2)}&background=random`;
                 if(state.isAdmin) document.getElementById('btn-open-admin').classList.remove('hidden');
-                
                 loadUserQueue(user.uid);
                 if(state.isAdmin) loadAdminQueue();
-            } else {
-                if(unsubscribeUserQueue) unsubscribeUserQueue();
             }
             state.loading = false; 
             renderApp();
         });
 
-        // --- LOGIN ---
-        document.getElementById('btn-login-google').addEventListener('click', async () => {
-            try { await signInWithPopup(auth, provider); } 
-            catch (error) { document.getElementById('login-error').innerText = error.message; }
-        });
-        document.getElementById('btn-login-email').addEventListener('click', async () => {
-            try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value); }
-            catch (err) { document.getElementById('login-error').innerText = err.message; }
-        });
-        document.getElementById('btn-signup-email').addEventListener('click', async () => {
-            try { await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value); }
-            catch (err) { document.getElementById('login-error').innerText = err.message; }
-        });
-        window.doLogout = () => { 
-            if(unsubscribeUserQueue) unsubscribeUserQueue(); 
-            signOut(auth); 
-            window.location.reload(); 
-        };
-
-        // --- UI LOGIC ---
-        window.setDur = (val, btn) => {
-            state.soraDur = val;
-            btn.parentNode.querySelectorAll('button').forEach(b => b.style.opacity = '0.5');
-            btn.style.opacity = '1';
-        };
-
-        window.setModel = async (m) => {
-            state.model = m;
-            document.querySelectorAll('.model-card').forEach(el => el.classList.remove('active'));
-            document.getElementById(`m-${m}`).classList.add('active');
-            
-            // HIDE ALL INITIALLY
-            document.getElementById('opt-sora').classList.add('hidden');
-            document.getElementById('opt-upload').classList.add('hidden'); // Default hide upload
-            
-            if(m === 'sora') {
-                document.getElementById('opt-sora').classList.remove('hidden'); // Show Duration
-                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload (Added for Image2Video)
-                document.documentElement.style.setProperty('--primary', '#00f2ff');
-            } else if (m === 'banana') {
-                document.getElementById('opt-upload').classList.remove('hidden'); // Show Upload
-                document.documentElement.style.setProperty('--primary', '#ffe135');
-            }
-        };
-
-        // --- USER REF UPLOAD (CHUNKING) ---
-        document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const barContainer = document.getElementById('ref-progress-bar');
-                const barFill = document.getElementById('ref-progress-fill');
-                const statusText = document.getElementById('ref-status');
-
-                barContainer.style.display = 'block';
-                statusText.innerText = "DB UPLOADING...";
-
-                try {
-                    const groupId = await uploadFileAsChunks(file, (prog) => {
-                        barFill.style.width = `${prog}%`;
-                    });
-                    
-                    state.refImg = "group:" + groupId;
-                    statusText.innerText = "COMPLETED";
-                    barFill.style.background = "#00ff88";
-                    
-                } catch(err) {
-                    console.error(err);
-                    statusText.innerText = "FAILED";
-                    alert("Chunk Upload Failed: " + err.message);
-                }
-            }
-        });
-
-        // --- ADMIN RESULT UPLOAD (CHUNKING) ---
-        window.adminFile = async (input, id) => {
-            const file = input.files[0];
-            if(file) {
-                const label = document.getElementById(`lbl-upload-${id}`);
-                const sendBtn = document.getElementById(`btn-send-${id}`);
-                const urlInput = document.getElementById(`res-${id}`);
-                const progressBar = document.getElementById(`bar-${id}`);
-                const progressFill = document.getElementById(`fill-${id}`);
-
-                label.style.display = "none";
-                progressBar.style.display = "block";
-                
-                sendBtn.disabled = true;
-                sendBtn.innerText = "UPLOADING CHUNKS...";
-                
-                try {
-                    const groupId = await uploadFileAsChunks(file, (progress) => {
-                         progressFill.style.width = `${progress}%`;
-                    });
-
-                    urlInput.value = "group:" + groupId; 
-                    
-                    progressBar.style.display = "none";
-                    label.style.display = "flex";
-                    label.style.background = "#00ff88"; 
-                    label.innerHTML = `<i class="fa-solid fa-check"></i>`;
-                    
-                    sendBtn.disabled = false;
-                    sendBtn.innerText = "SEND SUCCESS";
-
-                } catch(err) {
-                    alert("Upload Error: " + err.message);
-                    label.style.display = "flex";
-                    progressBar.style.display = "none";
-                    label.style.background = "var(--danger)";
-                    sendBtn.innerText = "FAILED";
-                    sendBtn.disabled = false;
-                }
-            }
-        };
-
         window.submitRequest = async () => {
-            if(state.isOffline) return showToast("SYSTEM OFFLINE");
-            const btn = document.getElementById('btn-submit');
+            if(state.isOffline) return;
             const prompt = document.getElementById('inp-prompt').value;
             if(!prompt) return showToast("Enter a prompt!");
 
-            btn.disabled = true;
-            btn.innerText = "Sending...";
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = true; btn.innerText = "Sending...";
 
             try {
-                const pendingQ = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("status", "==", "pending"));
-                const pendingSnap = await getDocs(pendingQ);
-                if(pendingSnap.size >= 2) return showToast("Limit reached! Wait for one to finish.");
-
-                let modelName = "Nano Banana Pro";
-                if(state.model === 'sora') modelName = "Sora 2";
-
-                const userName = state.user.displayName || state.user.email.split('@')[0];
+                const q = query(collection(db, "ai_studio_requests"), where("userId", "==", state.user.uid), where("status", "==", "pending"));
+                if((await getDocs(q)).size >= 3) return showToast("Queue full (Max 3)");
 
                 await addDoc(collection(db, "ai_studio_requests"), {
                     userId: state.user.uid,
-                    userName: userName,
+                    userName: state.user.displayName || state.user.email.split('@')[0],
                     prompt: prompt,
-                    model: modelName,
+                    model: state.model === 'sora' ? "Sora 2" : "Nano Banana Pro",
                     status: 'pending',
                     timestamp: serverTimestamp(),
-                    refImage: state.refImg, 
-                    duration: (state.model === 'sora') ? state.soraDur : null
+                    refImage: state.refImg,
+                    duration: state.model === 'sora' ? state.soraDur : null
                 });
 
                 document.getElementById('inp-prompt').value = "";
                 state.refImg = null;
                 document.getElementById('ref-status').innerText = "";
-                document.getElementById('inp-ref-img').value = ""; 
-                showToast("Added to Queue");
-            } catch(e) {
-                console.error(e);
-                alert("Error: " + e.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Generate Content";
-            }
+                showToast("Locked In! Wait for result.");
+            } catch(e) { alert(e.message); }
+            btn.disabled = false; btn.innerText = "Generate Content";
         };
 
         function loadUserQueue(uid) {
             if(unsubscribeUserQueue) unsubscribeUserQueue();
-            const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), limit(50));
-            
+            const q = query(collection(db, "ai_studio_requests"), where("userId", "==", uid), limit(40));
             unsubscribeUserQueue = onSnapshot(q, (snap) => {
                 const grid = document.getElementById('gallery');
                 grid.innerHTML = "";
-                const docs = [];
-                snap.forEach(d => docs.push({id: d.id, ...d.data()}));
-                docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                const docs = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 docs.forEach(async (d) => {
-                    const isVideo = d.model.includes('Sora');
-                    let mediaHtml = '';
-                    let displayUrl = d.resultUrl;
-                    let isChunked = displayUrl && displayUrl.startsWith("group:");
-
-                    if (isChunked) {
-                        mediaHtml = `<div class="state-box state-pending" id="load-${d.id}"><div class="loader" style="width:20px; height:20px;"></div><span>LOADING MEDIA</span></div>`;
-                    } else if (d.status === 'completed' && isValidUrl(d.resultUrl)) {
-                         mediaHtml = isVideo ? `<video src="${d.resultUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${d.resultUrl}" class="creation-media">`;
-                    } else if (d.status === 'error') {
-                        mediaHtml = `<div class="state-box state-error"><i class="fa-solid fa-triangle-exclamation fa-2x"></i><span>FAILED</span></div>`;
-                    } else {
-                        mediaHtml = `<div class="state-box state-pending"><div class="loader" style="width:30px; height:30px;"></div><span>PROCESSING</span></div>`;
-                    }
-
+                    const isVid = d.model.includes('Sora');
                     const div = document.createElement('div');
                     div.className = 'creation-card';
                     div.innerHTML = `
-                        <button class="delete-btn" id="del-${d.id}"><i class="fa-solid fa-trash"></i></button>
+                        <button class="delete-btn" onclick="deleteCreation('${d.id}')"><i class="fa-solid fa-trash"></i></button>
                         <div class="status-tag status-${d.status}">${d.status}</div>
-                        <div id="media-box-${d.id}" style="height:220px; width:100%; position:relative;">${mediaHtml}</div>
-                        <div style="padding:15px; border-top:1px solid #222;"><div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:5px;">${escapeHtml(d.prompt)}</div></div>
+                        <div id="media-box-${d.id}" class="state-box state-pending"><div class="loader" style="width:25px;height:25px;"></div><span>${d.status.toUpperCase()}</span></div>
+                        <div style="padding:15px; border-top:1px solid #222;"><div style="font-size:0.85rem; color:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${d.prompt}</div></div>
                     `;
                     grid.appendChild(div);
 
-                    document.getElementById(`del-${d.id}`).addEventListener('click', (e) => {
-                        e.stopPropagation(); 
-                        deleteCreation(d.id);
-                    });
-
-                    if (isChunked) {
-                        const groupId = displayUrl.split(":")[1];
-                        downloadFileFromChunks(groupId).then(blobUrl => {
-                             const container = document.getElementById(`media-box-${d.id}`);
-                             if(container) {
-                                 const tag = isVideo ? `<video src="${blobUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${blobUrl}" class="creation-media">`;
-                                 container.innerHTML = tag;
-                                 div.addEventListener('click', () => viewMedia(blobUrl, isVideo ? 'video' : 'image'));
-                             }
-                        }).catch(err => {
-                             console.error(err);
-                             const container = document.getElementById(`media-box-${d.id}`);
-                             if(container) container.innerHTML = `<div class="state-box state-error"><span>LOAD ERROR</span></div>`;
-                        });
-                    } else if (d.status === 'completed') {
-                        div.addEventListener('click', () => viewMedia(d.resultUrl, isVideo ? 'video' : 'image'));
-                    }
-                });
-            });
-        }
-
-        async function deleteCreation(id) {
-            if (confirm("Delete this?")) {
-                try { await deleteDoc(doc(db, "ai_studio_requests", id)); showToast("Deleted"); } 
-                catch (error) { showToast("Error deleting: " + error.message); }
-            }
-        };
-
-        window.viewMedia = (url, type) => {
-            const modal = document.getElementById('media-modal');
-            const container = document.getElementById('modal-media-container');
-            const downloadBtn = document.getElementById('download-btn');
-            container.innerHTML = '';
-            if (type === 'video') container.innerHTML = `<video id="modal-content" src="${url}" controls autoplay style="max-width: 100%; max-height: 80vh;"></video>`;
-            else container.innerHTML = `<img id="modal-content" src="${url}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">`;
-            downloadBtn.href = url;
-            modal.classList.add('active');
-        }
-
-        window.closeModal = () => {
-            document.getElementById('media-modal').classList.remove('active');
-            document.getElementById('modal-media-container').innerHTML = '';
-        }
-
-        window.toggleAdmin = (show) => {
-            const el = document.getElementById('screen-admin');
-            if(show) el.classList.add('active');
-            else el.classList.remove('active');
-        };
-
-        function loadAdminQueue() {
-            const q = query(collection(db, "ai_studio_requests"), where("status", "==", "pending"));
-            onSnapshot(q, (snap) => {
-                const list = document.getElementById('admin-list');
-                list.innerHTML = "";
-                if(snap.empty) { list.innerHTML = "<div style='text-align:center; color:#555;'>No pending requests.</div>"; return; }
-                const docs = [];
-                snap.forEach(d => docs.push({ id: d.id, ...d.data() }));
-                docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-                docs.forEach(async (d) => {
-                    const durationTag = d.duration ? `<span style="background:#333; padding:2px 8px; border-radius:4px; font-size:0.8rem; margin-left:10px;">⏱ ${d.duration}s</span>` : '';
-                    
-                    // Logic to handle reference image retrieval
-                    let refImgHtml = '';
-                    if (d.refImage) {
-                         if (d.refImage.startsWith('group:')) {
-                             refImgHtml = `<div id="adm-img-${d.id}" style="margin-bottom:10px; height:60px; display:flex; align-items:center; gap:10px;"><div class="loader" style="width:20px; height:20px;"></div> <span style="font-size:0.8rem; color:#666;">LOADING REF...</span></div>`;
-                         } else {
-                             refImgHtml = `<div style="margin-bottom:10px;"><img src="${d.refImage}" style="height:60px; border-radius:5px; border:1px solid #555;"></div>`;
-                         }
-                    }
-
-                    const el = document.createElement('div');
-                    el.className = 'req-card';
-                    el.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.9rem; margin-bottom:10px;">
-                            <span style="color:white; font-weight:bold;">${escapeHtml(d.userName)}</span>
-                            <span style="color:var(--primary)">${d.model} ${durationTag}</span>
-                        </div>
-                        <div style="margin-bottom:15px; padding:10px; background:#000; border-radius:8px; cursor:pointer; font-family:monospace; color:#ccc;" onclick="navigator.clipboard.writeText(this.innerText)">
-                            ${escapeHtml(d.prompt)} <i class="fa-solid fa-copy" style="float:right;"></i>
-                        </div>
-                        ${refImgHtml}
-                        
-                        <div class="admin-input-row">
-                            <input type="text" id="res-${d.id}" placeholder="Paste URL result here..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
-                            
-                            <div style="position:relative;">
-                                <label id="lbl-upload-${d.id}" style="cursor:pointer; background:#333; padding:10px; color:white; border-radius:5px; width:45px; display:flex; align-items:center; justify-content:center; white-space:nowrap; overflow:hidden;">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
-                                    <input type="file" style="display:none;" onchange="adminFile(this, '${d.id}')">
-                                </label>
-                                <div id="bar-${d.id}" style="display:none; width:45px; height:38px; background:#222; border-radius:5px; overflow:hidden;">
-                                    <div id="fill-${d.id}" style="height:100%; width:0%; background:#00ff88;"></div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="admin-input-row">
-                            <button id="btn-send-${d.id}" onclick="finishReq('${d.id}', 'completed')" style="flex:1; background:#00ff88; color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;">SEND SUCCESS</button>
-                            <button onclick="finishReq('${d.id}', 'error')" style="width:50px; background:var(--danger); border:none; padding:10px; cursor:pointer; color:white; border-radius:5px;"><i class="fa-solid fa-xmark fa-lg"></i></button>
-                        </div>
-                    `;
-                    list.appendChild(el);
-
-                    // If chunked, fetch it now
-                    if (d.refImage && d.refImage.startsWith('group:')) {
-                        const groupId = d.refImage.split(":")[1];
-                        try {
-                            const blobUrl = await downloadFileFromChunks(groupId);
-                            const container = document.getElementById(`adm-img-${d.id}`);
-                            if(container) {
-                                container.innerHTML = `<img src="${blobUrl}" style="height:60px; border-radius:5px; border:1px solid #555;">`;
-                            }
-                        } catch(e) {
-                             console.error("Failed to load admin ref image", e);
-                             const container = document.getElementById(`adm-img-${d.id}`);
-                             if(container) container.innerHTML = `<span style="color:var(--danger); font-size:0.8rem;">IMG ERROR</span>`;
+                    if (d.status === 'completed' && d.resultUrl) {
+                        const box = document.getElementById(`media-box-${d.id}`);
+                        if (d.resultUrl.startsWith('group:')) {
+                            downloadFileFromChunks(d.resultUrl.split(':')[1]).then(url => {
+                                box.innerHTML = isVid ? `<video src="${url}" class="creation-media" autoplay muted loop></video>` : `<img src="${url}" class="creation-media">`;
+                                div.onclick = () => viewMedia(url, isVid ? 'video' : 'image');
+                            });
+                        } else {
+                            box.innerHTML = isVid ? `<video src="${d.resultUrl}" class="creation-media" autoplay muted loop></video>` : `<img src="${d.resultUrl}" class="creation-media">`;
+                            div.onclick = () => viewMedia(d.resultUrl, isVid ? 'video' : 'image');
                         }
+                    } else if (d.status === 'error') {
+                        document.getElementById(`media-box-${d.id}`).innerHTML = `<div class="state-box state-error">FAILED</div>`;
                     }
                 });
             });
         }
+
+        // --- ADMIN SIDE ---
+        window.adminFile = async (input, id) => {
+            const file = input.files[0];
+            if(!file) return;
+            const btn = document.getElementById(`btn-send-${id}`);
+            const fill = document.getElementById(`fill-${id}`);
+            const bar = document.getElementById(`bar-${id}`);
+            const lbl = document.getElementById(`lbl-upload-${id}`);
+
+            btn.disabled = true; lbl.style.display = 'none'; bar.style.display = 'block';
+            try {
+                const gid = await uploadFileAsChunks(file, p => fill.style.width = p+'%');
+                document.getElementById(`res-${id}`).value = "group:" + gid;
+                btn.disabled = false; btn.innerText = "FILE READY";
+            } catch(e) { alert("Upload error: "+e.message); btn.disabled = false; }
+        };
 
         window.finishReq = async (id, status) => {
             const url = document.getElementById(`res-${id}`)?.value;
-            if(status === 'completed' && !url) return alert("Missing URL/File. Did the upload finish?");
+            if(status === 'completed' && !url) return alert("Paste URL or Upload File first!");
             await updateDoc(doc(db, "ai_studio_requests", id), { status: status, resultUrl: url || "" });
         };
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.display = 'block';
-            setTimeout(()=>t.style.display='none', 3000);
+        function loadAdminQueue() {
+            onSnapshot(query(collection(db, "ai_studio_requests"), where("status", "==", "pending")), (snap) => {
+                const list = document.getElementById('admin-list');
+                list.innerHTML = snap.empty ? "<p style='text-align:center;color:#555;'>No requests.</p>" : "";
+                snap.docs.forEach(d => {
+                    const data = d.data();
+                    const el = document.createElement('div');
+                    el.className = 'req-card';
+                    el.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span style="font-weight:bold;">${data.userName}</span>
+                            <span style="color:var(--primary);">${data.model} ${data.duration ? data.duration+'s' : ''}</span>
+                        </div>
+                        <div style="background:#000; padding:10px; border-radius:5px; margin-bottom:10px; font-family:monospace;">${data.prompt}</div>
+                        <div class="admin-input-row">
+                            <input type="text" id="res-${d.id}" placeholder="Result URL..." style="flex:1; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:5px;">
+                            <label id="lbl-upload-${d.id}" style="cursor:pointer; background:#333; padding:10px; border-radius:5px;"><i class="fa-solid fa-file-arrow-up"></i>
+                                <input type="file" style="display:none;" onchange="adminFile(this, '${d.id}')">
+                            </label>
+                            <div id="bar-${d.id}" style="display:none; width:40px; height:35px; background:#222;"><div id="fill-${d.id}" style="height:100%; width:0; background:#00ff88;"></div></div>
+                        </div>
+                        <div class="admin-input-row">
+                            <button id="btn-send-${d.id}" onclick="finishReq('${d.id}', 'completed')" style="flex:1; background:#00ff88; font-weight:bold; padding:10px; border:none; border-radius:5px; cursor:pointer;">SEND SUCCESS</button>
+                            <button onclick="finishReq('${d.id}', 'error')" style="background:var(--danger); border:none; padding:10px; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            });
         }
+
+        // --- UI HELPERS ---
+        window.setModel = (m) => {
+            state.model = m;
+            document.querySelectorAll('.model-card').forEach(c => c.classList.remove('active'));
+            document.getElementById('m-'+m).classList.add('active');
+            document.getElementById('opt-sora').classList.toggle('hidden', m !== 'sora');
+            document.documentElement.style.setProperty('--primary', m === 'sora' ? 'var(--sora-cyan)' : 'var(--banana-yellow)');
+        };
+
+        document.getElementById('inp-ref-img').addEventListener('change', async (e) => {
+            const f = e.target.files[0]; if(!f) return;
+            const bar = document.getElementById('ref-progress-bar');
+            const fill = document.getElementById('ref-progress-fill');
+            bar.style.display = 'block';
+            try {
+                const gid = await uploadFileAsChunks(f, p => fill.style.width = p+'%');
+                state.refImg = "group:"+gid;
+                document.getElementById('ref-status').innerText = "READY";
+            } catch(e) { alert("Upload failed"); }
+        });
+
+        window.deleteCreation = async (id) => { if(confirm("Yeet this creation?")) await deleteDoc(doc(db, "ai_studio_requests", id)); };
+        window.viewMedia = (url, type) => {
+            const m = document.getElementById('media-modal');
+            const c = document.getElementById('modal-media-container');
+            c.innerHTML = type === 'video' ? `<video id="modal-content" src="${url}" controls autoplay loop></video>` : `<img id="modal-content" src="${url}">`;
+            document.getElementById('download-btn').href = url;
+            m.classList.add('active');
+        };
+        window.closeModal = () => { document.getElementById('media-modal').classList.remove('active'); document.getElementById('modal-media-container').innerHTML = ''; };
+        window.toggleAdmin = (s) => document.getElementById('screen-admin').classList.toggle('active', s);
+        window.showToast = (msg) => { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 3000); };
+        window.doLogout = () => { signOut(auth).then(()=>window.location.reload()); };
+        function renderApp() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            if(state.loading) return document.getElementById('screen-loading').classList.add('active');
+            document.getElementById(state.user ? 'screen-app' : 'screen-login').classList.add('active');
+        }
+        
+        // Login listeners
+        document.getElementById('btn-login-google').onclick = () => signInWithPopup(auth, provider).catch(e=>document.getElementById('login-error').innerText = e.message);
+        document.getElementById('btn-login-email').onclick = () => signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value).catch(e=>document.getElementById('login-error').innerText = e.message);
+        document.getElementById('btn-signup-email').onclick = () => createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value).catch(e=>document.getElementById('login-error').innerText = e.message);
     </script>
 </body>
 </html>
