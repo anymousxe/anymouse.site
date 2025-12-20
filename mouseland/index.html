@@ -148,6 +148,18 @@
         
         .news-image { width: 100%; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
 
+        /* --- EMBED STYLES --- */
+        .embed-container { margin-top: 1rem; border-radius: 8px; overflow: hidden; border: 1px solid #333; background: #000; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        .link-card { display: flex; align-items: center; gap: 15px; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; text-decoration: none; transition: 0.2s; margin-top: 10px; }
+        .link-card:hover { border-color: var(--mouseland-accent); background: #16161a; }
+        .link-card i { font-size: 1.5rem; color: var(--mouseland-accent); }
+        .link-card-info { overflow: hidden; }
+        .link-card-title { color: #fff; font-weight: bold; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .link-card-url { color: #666; font-size: 0.75rem; }
+
         /* Cities */
         .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
         .city-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
@@ -209,11 +221,12 @@
                 <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
                 <form id="post-form">
                     <input type="text" id="post-title" class="admin-input" placeholder="Update Title" required>
-                    <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business..." required></textarea>
+                    <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business (Links will embed automatically)..." required></textarea>
                     <select id="post-type" class="admin-input">
                         <option value="standard">Standard News</option>
                         <option value="urgent">🚨 Urgent / Breaking</option>
                         <option value="decree">📜 Official Decree</option>
+                        <option value="war">⚔️ War Update</option>
                     </select>
                     <button type="submit" class="btn btn-mouseland">Publish Update</button>
                 </form>
@@ -232,94 +245,23 @@
                 </div>
             </section>
 
-            <section style="margin: 4rem 0;">
-                <h2 style="border-left: 5px solid var(--mouseland-accent); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Active Directives</h2>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                    <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                        <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> MSP: Mission Postponed</h3>
-                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 20, 2025</p>
-                        <p>
-                            Today's <strong>Test Launch</strong> has been officially scrubbed. 
-                            <br><br>
-                            The priority is currently the defense of Mouseland. The mission to land a test module on the lunar surface is on hold until the frontline stabilizes. 
-                            <br><br>
-                            <em>Phase 2 (Moon-Drilling) remains scheduled for post-landing operations.</em>
-                        </p>
-                    </div>
-
-                    <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
-                        <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-biohazard"></i> Operation: Quad-Front</h3>
-                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 20, 2025</p>
-                        <p>
-                            Mouseland is officially engaged in a four-way conflict.
-                            <br><br>
-                            <strong>Status:</strong> Active War between <strong>Fryland, Nuggetland, Mouseland, and Frogland.</strong>
-                            <br><br>
-                            All citizens are ordered to report to their nearest bunker. This is not a drill.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
             <section class="news-section">
                 <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Feed</h2>
                 
                 <div style="margin-bottom: 3rem;">
-                    <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Live Wire</h4>
+                    <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Live Transmissions</h4>
                     <div id="news-feed">
                         <div style="text-align: center; color: #666;">Connecting to MIC secure frequency...</div>
                     </div>
                 </div>
 
                 <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Archive</h4>
-
                 <div class="news-archive-container">
-
                     <article class="news-item urgent">
-                        <h3>☢️ BREAKING: Is this WW3?</h3>
-                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 20, 2025 - 08:00 AM</p>
-                        <p>
-                            The question on everyone's mind: <strong>Is this the Third World War?</strong> 
-                            With Frogland entering the fray alongside the existing Fryland-Nuggetland-Mouseland clash, global tensions have reached a breaking point. 
-                            <br><br>
-                            The MIC has not yet officially labeled this a "World War," but mobilization is at 100%.
-                        </p>
+                        <h3>☢️ Is this WW3?</h3>
+                        <p>Citizens are panicking. Frogland and Fryland are moving heavy units. We might be in the endgame.</p>
                     </article>
-
-                    <article class="news-item urgent">
-                        <h3>🚀 MSP UPDATE: Launch Scrapped</h3>
-                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 20, 2025 - 07:15 AM</p>
-                        <p>
-                            The <strong>Mouse Space Program</strong> test rocket, which was supposed to lift off today, has been grounded. 
-                            <br><br>
-                            Engineers were prepping for a moon landing test—a vital precursor to the "Moon-Cheese" drilling theory—but resources have been diverted to the war effort. 
-                            "Space can wait; survival can't," said one high-ranking MIC official.
-                        </p>
-                    </article>
-
-                    <article class="news-item war">
-                        <h3>⚔️ THE FOUR-WAY WAR: Frogland Joins</h3>
-                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 19, 2025 - 11:30 PM</p>
-                        <p>
-                            It's a complete mess. <strong>Frogland</strong> has officially declared war on all neighboring territories, creating a massive four-way conflict between Fryland, Nuggetland, Mouseland, and the Frogs. 
-                            <br><br>
-                            Alliances are shifting daily. Stay vigilant.
-                        </p>
-                    </article>
-
                 </div> 
-                </section>
-
-            <section style="margin-top: 4rem;">
-                <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem;">The 5 Great Cities</h2>
-                <div class="cities-grid">
-                    <div class="city-card"><img src="./boxborough.png" alt="Box"><div class="city-name">Boxborough</div></div>
-                    <div class="city-card"><img src="./corrugatecrossing.png" alt="Corrugate"><div class="city-name">Corrugate Crossing</div></div>
-                    <div class="city-card"><img src="./rodentiamajor.png" alt="Major"><div class="city-name">Rodentia Major</div></div>
-                    <div class="city-card"><img src="./rubbishheights.png" alt="Rubbish"><div class="city-name">Rubbish Heights</div></div>
-                    <div class="city-card"><img src="./mec.png" alt="Mec"><div class="city-name">Mec</div></div>
-                </div>
             </section>
 
             <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">&copy; 2025 Mouseland Gov.</footer>
@@ -351,18 +293,11 @@
             const enterBtn = document.getElementById('enter-btn');
             const overlay = document.getElementById('intro-overlay');
             const bgMusic = document.getElementById('bg-music');
-            const clickSfx = document.getElementById('sfx-click');
-            const hoverSfx = document.getElementById('sfx-hover');
-            
             if(bgMusic) bgMusic.volume = 0.3;
-            
-            if(enterBtn) {
-                enterBtn.addEventListener('click', () => {
-                    if(clickSfx) clickSfx.play();
-                    if(bgMusic) bgMusic.play().catch(e => console.log("Audio prevented"));
-                    overlay.style.transform = 'translateY(-100%)';
-                });
-            }
+            if(enterBtn) enterBtn.addEventListener('click', () => {
+                if(bgMusic) bgMusic.play().catch(e => console.log("Audio prevented"));
+                overlay.style.transform = 'translateY(-100%)';
+            });
 
             // Particles
             const canvas = document.getElementById('bg-canvas');
@@ -371,7 +306,6 @@
                 let particles = [];
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
-
                 class Particle {
                     constructor() {
                         this.x = Math.random() * canvas.width;
@@ -381,16 +315,13 @@
                         this.speedY = (Math.random() * 1) - 0.5;
                     }
                     update() {
-                        this.x += this.speedX;
-                        this.y += this.speedY;
+                        this.x += this.speedX; this.y += this.speedY;
                         if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
                         if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
                     }
                     draw() {
-                        ctx.fillStyle = 'rgba(16, 185, 129, 0.4)'; 
-                        ctx.beginPath();
-                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        ctx.fill();
+                        ctx.fillStyle = 'rgba(16, 185, 129, 0.4)';
+                        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
                     }
                 }
                 function init() { for(let i=0; i<80; i++) particles.push(new Particle()); }
@@ -399,21 +330,8 @@
                     particles.forEach(p => { p.update(); p.draw(); });
                     requestAnimationFrame(animate);
                 }
-                init();
-                animate();
+                init(); animate();
             }
-
-            // Tilt Cards
-            document.querySelectorAll('.tilt-card').forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left - rect.width/2;
-                    const y = e.clientY - rect.top - rect.height/2;
-                    card.style.transform = `perspective(1000px) rotateX(${-y/10}deg) rotateY(${x/10}deg) scale(1.02)`;
-                });
-                card.addEventListener('mouseleave', () => card.style.transform = 'none');
-                card.addEventListener('mouseenter', () => { if(hoverSfx) { hoverSfx.currentTime=0; hoverSfx.play().catch(()=>{}); } });
-            });
         });
 
         // --- FIREBASE LOGIC ---
@@ -437,32 +355,43 @@
         const postForm = document.getElementById('post-form');
         const newsFeed = document.getElementById('news-feed');
         const modal = document.getElementById('login-modal');
-        const authError = document.getElementById('auth-error');
 
-        document.body.addEventListener('click', e => {
-            if(e.target.id === 'login-trigger-btn') modal.style.display = 'flex';
-            if(e.target.id === 'logout-btn') signOut(auth);
-            if(e.target.classList.contains('close-modal') || e.target === modal) modal.style.display = 'none';
-        });
+        // Helper: Extract YouTube ID
+        function getYTId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
 
-        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(()=>modal.style.display='none').catch(e=>alert(e.message));
-        
-        document.getElementById('email-auth-form').onsubmit = (e) => {
-            e.preventDefault();
-            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
-            .then(() => modal.style.display='none')
-            .catch(err => { authError.style.display='block'; authError.textContent=err.message; });
-        };
+        // Helper: Create Embed Content
+        function parseEmbeds(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, (url) => {
+                const ytId = getYTId(url);
+                if (ytId) {
+                    return `
+                        <div class="embed-container">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe>
+                            </div>
+                        </div>`;
+                } else {
+                    return `
+                        <a href="${url}" target="_blank" class="link-card">
+                            <i class="fas fa-link"></i>
+                            <div class="link-card-info">
+                                <div class="link-card-title">${url.split('//')[1].split('/')[0]}</div>
+                                <div class="link-card-url">${url}</div>
+                            </div>
+                        </a>`;
+                }
+            });
+        }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const email = user.email.toLowerCase();
-                const isAdmin = WHITELIST.includes(email);
-                authContainer.innerHTML = `
-                    <div style="text-align:right; font-size:0.8rem;">
-                        <span style="color:#888;">Logged in:</span> <b>${user.displayName || 'Citizen'}</b>
-                    </div>
-                    <button id="logout-btn" class="btn btn-sm btn-danger" style="margin-left:10px;">Log Out</button>`;
+                const isAdmin = WHITELIST.includes(user.email.toLowerCase());
+                authContainer.innerHTML = `<button id="logout-btn" class="btn btn-sm btn-danger">Log Out</button>`;
                 adminPanel.style.display = isAdmin ? "block" : "none";
             } else {
                 authContainer.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>`;
@@ -470,25 +399,29 @@
             }
         });
 
+        document.body.addEventListener('click', e => {
+            if(e.target.id === 'login-trigger-btn') modal.style.display = 'flex';
+            if(e.target.id === 'logout-btn') signOut(auth);
+            if(e.target.classList.contains('close-modal') || e.target === modal) modal.style.display = 'none';
+        });
+
+        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(()=>modal.style.display='none');
+
         postForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
-            if(!user || !WHITELIST.includes(user.email.toLowerCase())) return alert("ACCESS DENIED.");
+            if(!user || !WHITELIST.includes(user.email.toLowerCase())) return;
 
-            let name = user.email.includes("anymousxe") ? "Anymousxe" : "Color";
-            let role = user.email.includes("anymousxe") ? "MIC" : "VMIC";
-            let pfp = user.email.includes("anymousxe") ? "anymousxe.png" : "color.png";
-
-            try {
-                await addDoc(collection(db, "updates"), {
-                    title: document.getElementById('post-title').value,
-                    content: document.getElementById('post-content').value,
-                    type: document.getElementById('post-type').value,
-                    author: name, role: role, pfp: pfp,
-                    createdAt: serverTimestamp()
-                });
-                postForm.reset();
-            } catch(err) { alert(err.message); }
+            await addDoc(collection(db, "updates"), {
+                title: document.getElementById('post-title').value,
+                content: document.getElementById('post-content').value,
+                type: document.getElementById('post-type').value,
+                author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
+                role: user.email.includes("anymousxe") ? "MIC" : "VMIC",
+                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
+                createdAt: serverTimestamp()
+            });
+            postForm.reset();
         });
 
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
@@ -498,9 +431,11 @@
 
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
-                const time = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "...";
                 const deleteBtn = isAdmin ? `<span class="news-actions delete-btn" data-id="${docSnap.id}">[DELETE]</span>` : "";
+                
+                // Parse for YouTube and Links
+                const formattedContent = parseEmbeds(data.content);
 
                 const div = document.createElement('article');
                 div.className = `news-item ${data.type}`;
@@ -509,19 +444,18 @@
                     <div class="post-header">
                         <img src="${data.pfp || './anymousxe.png'}" class="post-pfp">
                         <div>
-                            <div style="font-weight:bold; font-size:0.9rem;">${data.author} <span class="author-badge ${data.role === 'MIC' ? 'role-mic' : 'role-vmic'}">${data.role}</span></div>
-                            <div style="font-size:0.7rem; color:#666;">${date} - ${time}</div>
+                            <div style="font-weight:bold; font-size:0.8rem;">${data.author} <span class="author-badge ${data.role === 'MIC' ? 'role-mic' : 'role-vmic'}">${data.role}</span></div>
+                            <div style="font-size:0.6rem; color:#666;">${date}</div>
                         </div>
                     </div>
                     <h3>${data.type === 'urgent' ? '🚨 ' : ''}${data.title}</h3>
-                    <p>${data.content}</p>`;
+                    <div class="post-body-text">${formattedContent}</div>
+                `;
                 newsFeed.appendChild(div);
             });
 
             document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.onclick = async () => {
-                    if(confirm("Confirm deletion?")) await deleteDoc(doc(db, "updates", btn.dataset.id));
-                }
+                btn.onclick = async () => { if(confirm("Delete record?")) await deleteDoc(doc(db, "updates", btn.dataset.id)); }
             });
         });
     </script>
