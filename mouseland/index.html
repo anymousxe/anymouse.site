@@ -22,6 +22,7 @@
             --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
             --mouseland-accent: #10b981; 
+            --link-color: #3b82f6;
             --danger: #ef4444;            
             --warning: #f59e0b;           
             --border: #27272a;            
@@ -133,7 +134,6 @@
             background: rgba(0,0,0,0.3);
         }
 
-        /* Custom Scrollbar Logic */
         .news-archive-container::-webkit-scrollbar { width: 8px; }
         .news-archive-container::-webkit-scrollbar-track { background: #111; border-radius: 4px; }
         .news-archive-container::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
@@ -142,23 +142,25 @@
         .news-item { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid #555; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; position: relative; }
         .news-item.urgent { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent); }
         .news-item.decree { border-left-color: var(--warning); }
-        .news-item.war { border-left-color: #ef4444; } 
+        .news-item.war { border-left-color: #ef4444; }
         
         .news-actions { position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; cursor: pointer; color: var(--danger); }
-        
         .news-image { width: 100%; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
 
-        /* --- EMBED STYLES --- */
-        .embed-container { margin-top: 1rem; border-radius: 8px; overflow: hidden; border: 1px solid #333; background: #000; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        /* Embed Logic Styles */
+        .post-content a { color: var(--link-color); text-decoration: none; font-weight: 500; }
+        .post-content a:hover { text-decoration: underline; }
         
-        .link-card { display: flex; align-items: center; gap: 15px; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; text-decoration: none; transition: 0.2s; margin-top: 10px; }
-        .link-card:hover { border-color: var(--mouseland-accent); background: #16161a; }
-        .link-card i { font-size: 1.5rem; color: var(--mouseland-accent); }
-        .link-card-info { overflow: hidden; }
-        .link-card-title { color: #fff; font-weight: bold; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .link-card-url { color: #666; font-size: 0.75rem; }
+        .embed-wrapper { margin-top: 15px; border-radius: 8px; overflow: hidden; border: 1px solid #333; background: #000; }
+        .yt-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .yt-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        .link-preview-card { display: flex; align-items: center; gap: 15px; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; text-decoration: none !important; transition: 0.2s; margin-top: 10px; }
+        .link-preview-card:hover { border-color: var(--mouseland-accent); background: #16161a; }
+        .link-preview-card i { font-size: 1.2rem; color: var(--mouseland-accent); }
+        .link-info { overflow: hidden; }
+        .link-title { color: #fff; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .link-url { color: #666; font-size: 0.7rem; }
 
         /* Cities */
         .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
@@ -221,7 +223,7 @@
                 <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
                 <form id="post-form">
                     <input type="text" id="post-title" class="admin-input" placeholder="Update Title" required>
-                    <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business (Links will embed automatically)..." required></textarea>
+                    <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business... URLs will be linked & embedded automatically." required></textarea>
                     <select id="post-type" class="admin-input">
                         <option value="standard">Standard News</option>
                         <option value="urgent">🚨 Urgent / Breaking</option>
@@ -245,11 +247,37 @@
                 </div>
             </section>
 
-            <section class="news-section">
-                <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News Feed</h2>
+            <section style="margin: 4rem 0;">
+                <h2 style="border-left: 5px solid var(--mouseland-accent); padding-left: 1rem; margin-bottom: 1.5rem;">📜 Decrees & War Efforts</h2>
                 
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
+                        <h3 style="color: #60a5fa; margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> MSP: Status Postponed</h3>
+                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 20, 2025</p>
+                        <p>
+                            Today's <strong>Test Launch</strong> has been scrubbed. The rocket was designed to test landing procedures before we attempt the <strong>Moon-Cheese</strong> drilling mission.
+                            <br><br>
+                            Due to the ongoing war, resources are being diverted. We go again once the skies are clear.
+                        </p>
+                    </div>
+
+                    <div class="tilt-card" style="background: linear-gradient(135deg, #1e1e24, #111); padding: 2rem; border-radius: 12px; border: 1px solid #444;">
+                        <h3 style="color: #f87171; margin-bottom: 0.5rem;"><i class="fas fa-biohazard"></i> The Four-Way War</h3>
+                        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1rem;">Updated: Dec 20, 2025</p>
+                        <p>
+                            <strong>Status: Active Hostilities.</strong><br><br>
+                            Conflict is currently raging between <strong>Fryland, Nuggetland, Mouseland, and Frogland.</strong> 
+                            <br><br>
+                            Citizens are reporting heavy movement on the Frogland borders. Defend the cheese at all costs.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="news-section">
+                <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News</h2>
                 <div style="margin-bottom: 3rem;">
-                    <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Live Transmissions</h4>
+                    <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Live Wire</h4>
                     <div id="news-feed">
                         <div style="text-align: center; color: #666;">Connecting to MIC secure frequency...</div>
                     </div>
@@ -259,9 +287,25 @@
                 <div class="news-archive-container">
                     <article class="news-item urgent">
                         <h3>☢️ Is this WW3?</h3>
-                        <p>Citizens are panicking. Frogland and Fryland are moving heavy units. We might be in the endgame.</p>
+                        <p class="date" style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">Dec 20, 2025 - 08:00 AM</p>
+                        <p>With Frogland officially mobilizing, global analysts are asking if we have entered the Third World War. The MIC has yet to issue a formal declaration, but mobilization is at 100%.</p>
+                    </article>
+                    <article class="news-item">
+                        <h3>🚀 MSP Update: Scrapped</h3>
+                        <p>The test rocket intended for moon landing practice was grounded today due to airspace risks. The Moon-Cheese theory will have to wait.</p>
                     </article>
                 </div> 
+            </section>
+
+            <section style="margin-top: 4rem;">
+                <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem;">The 5 Great Cities</h2>
+                <div class="cities-grid">
+                    <div class="city-card"><img src="./boxborough.png" alt="Box"><div class="city-name">Boxborough</div></div>
+                    <div class="city-card"><img src="./corrugatecrossing.png" alt="Corrugate"><div class="city-name">Corrugate Crossing</div></div>
+                    <div class="city-card"><img src="./rodentiamajor.png" alt="Major"><div class="city-name">Rodentia Major</div></div>
+                    <div class="city-card"><img src="./rubbishheights.png" alt="Rubbish"><div class="city-name">Rubbish Heights</div></div>
+                    <div class="city-card"><img src="./mec.png" alt="Mec"><div class="city-name">Mec</div></div>
+                </div>
             </section>
 
             <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">&copy; 2025 Mouseland Gov.</footer>
@@ -293,11 +337,18 @@
             const enterBtn = document.getElementById('enter-btn');
             const overlay = document.getElementById('intro-overlay');
             const bgMusic = document.getElementById('bg-music');
+            const clickSfx = document.getElementById('sfx-click');
+            const hoverSfx = document.getElementById('sfx-hover');
+            
             if(bgMusic) bgMusic.volume = 0.3;
-            if(enterBtn) enterBtn.addEventListener('click', () => {
-                if(bgMusic) bgMusic.play().catch(e => console.log("Audio prevented"));
-                overlay.style.transform = 'translateY(-100%)';
-            });
+            
+            if(enterBtn) {
+                enterBtn.addEventListener('click', () => {
+                    if(clickSfx) clickSfx.play();
+                    if(bgMusic) bgMusic.play().catch(e => console.log("Audio prevented"));
+                    overlay.style.transform = 'translateY(-100%)';
+                });
+            }
 
             // Particles
             const canvas = document.getElementById('bg-canvas');
@@ -306,6 +357,7 @@
                 let particles = [];
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+
                 class Particle {
                     constructor() {
                         this.x = Math.random() * canvas.width;
@@ -315,13 +367,16 @@
                         this.speedY = (Math.random() * 1) - 0.5;
                     }
                     update() {
-                        this.x += this.speedX; this.y += this.speedY;
+                        this.x += this.speedX;
+                        this.y += this.speedY;
                         if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
                         if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
                     }
                     draw() {
                         ctx.fillStyle = 'rgba(16, 185, 129, 0.4)';
-                        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
                     }
                 }
                 function init() { for(let i=0; i<80; i++) particles.push(new Particle()); }
@@ -330,11 +385,27 @@
                     particles.forEach(p => { p.update(); p.draw(); });
                     requestAnimationFrame(animate);
                 }
-                init(); animate();
+                init();
+                animate();
             }
+
+            // Tilt Cards
+            function applyTilt() {
+                document.querySelectorAll('.tilt-card').forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width/2;
+                        const y = e.clientY - rect.top - rect.height/2;
+                        card.style.transform = `perspective(1000px) rotateX(${-y/10}deg) rotateY(${x/10}deg) scale(1.02)`;
+                    });
+                    card.addEventListener('mouseleave', () => card.style.transform = 'none');
+                    card.addEventListener('mouseenter', () => { if(hoverSfx) { hoverSfx.currentTime=0; hoverSfx.play().catch(()=>{}); } });
+                });
+            }
+            applyTilt();
         });
 
-        // --- FIREBASE LOGIC ---
+        // --- FIREBASE & EMBED LOGIC ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
             authDomain: "mouseland-istuff.firebaseapp.com",
@@ -350,43 +421,62 @@
         const provider = new GoogleAuthProvider();
 
         const WHITELIST = ["anymousxe.info@gmail.com", "colorvicemouseincharge@proton.me"];
+
         const authContainer = document.getElementById('auth-container');
         const adminPanel = document.getElementById('admin-panel');
         const postForm = document.getElementById('post-form');
         const newsFeed = document.getElementById('news-feed');
         const modal = document.getElementById('login-modal');
+        const authError = document.getElementById('auth-error');
 
-        // Helper: Extract YouTube ID
-        function getYTId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        // Helper: Create Embed Content
-        function parseEmbeds(text) {
+        // Helper: Format links and detect YouTube
+        function formatContent(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, (url) => {
-                const ytId = getYTId(url);
-                if (ytId) {
-                    return `
-                        <div class="embed-container">
-                            <div class="video-wrapper">
-                                <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe>
+            let embeds = "";
+            
+            const formattedText = text.replace(urlRegex, (url) => {
+                // Check for YouTube
+                const ytMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                
+                if (ytMatch) {
+                    const videoId = ytMatch[1];
+                    embeds += `
+                        <div class="embed-wrapper">
+                            <div class="yt-container">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
                             </div>
                         </div>`;
                 } else {
-                    return `
-                        <a href="${url}" target="_blank" class="link-card">
-                            <i class="fas fa-link"></i>
-                            <div class="link-card-info">
-                                <div class="link-card-title">${url.split('//')[1].split('/')[0]}</div>
-                                <div class="link-card-url">${url}</div>
+                    // Regular Link Card
+                    embeds += `
+                        <a href="${url}" target="_blank" class="link-preview-card">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div class="link-info">
+                                <div class="link-title">${url.split('//')[1].split('/')[0]}</div>
+                                <div class="link-url">${url}</div>
                             </div>
                         </a>`;
                 }
+                return `<a href="${url}" target="_blank">${url}</a>`;
             });
+
+            return `<div>${formattedText}</div>${embeds}`;
         }
+
+        // Auth Logic
+        document.body.addEventListener('click', e => {
+            if(e.target.id === 'login-trigger-btn') modal.style.display = 'flex';
+            if(e.target.id === 'logout-btn') signOut(auth);
+            if(e.target.classList.contains('close-modal') || e.target === modal) modal.style.display = 'none';
+        });
+
+        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(()=>modal.style.display='none');
+        document.getElementById('email-auth-form').onsubmit = (e) => {
+            e.preventDefault();
+            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
+            .then(() => modal.style.display='none')
+            .catch(err => { authError.style.display='block'; authError.textContent=err.message; });
+        };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -399,29 +489,23 @@
             }
         });
 
-        document.body.addEventListener('click', e => {
-            if(e.target.id === 'login-trigger-btn') modal.style.display = 'flex';
-            if(e.target.id === 'logout-btn') signOut(auth);
-            if(e.target.classList.contains('close-modal') || e.target === modal) modal.style.display = 'none';
-        });
-
-        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(()=>modal.style.display='none');
-
         postForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
             if(!user || !WHITELIST.includes(user.email.toLowerCase())) return;
 
-            await addDoc(collection(db, "updates"), {
-                title: document.getElementById('post-title').value,
-                content: document.getElementById('post-content').value,
-                type: document.getElementById('post-type').value,
-                author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
-                role: user.email.includes("anymousxe") ? "MIC" : "VMIC",
-                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
-                createdAt: serverTimestamp()
-            });
-            postForm.reset();
+            try {
+                await addDoc(collection(db, "updates"), {
+                    title: document.getElementById('post-title').value,
+                    content: document.getElementById('post-content').value,
+                    type: document.getElementById('post-type').value,
+                    author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
+                    role: user.email.includes("anymousxe") ? "MIC" : "VMIC",
+                    pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
+                    createdAt: serverTimestamp()
+                });
+                postForm.reset();
+            } catch(err) { alert(err.message); }
         });
 
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
@@ -431,11 +515,9 @@
 
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "...";
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
+                const time = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
                 const deleteBtn = isAdmin ? `<span class="news-actions delete-btn" data-id="${docSnap.id}">[DELETE]</span>` : "";
-                
-                // Parse for YouTube and Links
-                const formattedContent = parseEmbeds(data.content);
 
                 const div = document.createElement('article');
                 div.className = `news-item ${data.type}`;
@@ -444,18 +526,18 @@
                     <div class="post-header">
                         <img src="${data.pfp || './anymousxe.png'}" class="post-pfp">
                         <div>
-                            <div style="font-weight:bold; font-size:0.8rem;">${data.author} <span class="author-badge ${data.role === 'MIC' ? 'role-mic' : 'role-vmic'}">${data.role}</span></div>
-                            <div style="font-size:0.6rem; color:#666;">${date}</div>
+                            <div style="font-weight:bold; font-size:0.9rem;">${data.author} <span class="author-badge ${data.role === 'MIC' ? 'role-mic' : 'role-vmic'}">${data.role}</span></div>
+                            <div style="font-size:0.7rem; color:#666;">${date} - ${time}</div>
                         </div>
                     </div>
                     <h3>${data.type === 'urgent' ? '🚨 ' : ''}${data.title}</h3>
-                    <div class="post-body-text">${formattedContent}</div>
+                    <div class="post-content">${formatContent(data.content)}</div>
                 `;
                 newsFeed.appendChild(div);
             });
 
             document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.onclick = async () => { if(confirm("Delete record?")) await deleteDoc(doc(db, "updates", btn.dataset.id)); }
+                btn.onclick = async () => { if(confirm("Confirm deletion?")) await deleteDoc(doc(db, "updates", btn.dataset.id)); }
             });
         });
     </script>
