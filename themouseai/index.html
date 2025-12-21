@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solstice | AI Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Dark Mode & Animations */
+        body { background-color: #0f0f11; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(30, 30, 35, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .message-user { background: #3b82f6; color: white; border-radius: 18px 18px 4px 18px; }
+        .message-bot { background: #27272a; color: #e2e8f0; border-radius: 18px 18px 18px 4px; }
+        
+        /* Canvas Slide-in */
+        #canvas-panel { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform: translateX(100%); }
+        #canvas-panel.open { transform: translateX(0); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Loader */
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <div id="auth-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+        <div class="text-center p-8 glass rounded-2xl max-w-sm w-full">
+            <h1 class="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Solstice</h1>
+            <p class="text-gray-400 mb-6">Log in to access your chats.</p>
+            <button id="login-btn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-medium transition flex items-center justify-center gap-2">
+                <i class="fab fa-google"></i> Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <div class="w-64 bg-black border-r border-gray-800 flex flex-col hidden md:flex">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+            <span class="font-bold text-lg tracking-wide">Solstice</span>
+            <button id="new-chat-btn" class="p-2 hover:bg-gray-800 rounded-lg text-gray-400 hover:text-white transition"><i class="fas fa-plus"></i></button>
+        </div>
+        <div id="chat-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+            </div>
+        <div class="p-4 border-t border-gray-800">
+            <button id="settings-btn" class="flex items-center gap-3 w-full p-2 hover:bg-gray-800 rounded-lg text-gray-400 hover:text-white transition">
+                <i class="fas fa-cog"></i> <span>Settings & Keys</span>
+            </button>
+            <div id="user-profile" class="mt-3 flex items-center gap-3 text-sm text-gray-400">
+                </div>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col relative">
+        <div class="h-14 border-b border-gray-800 flex items-center justify-between px-6 bg-black/50 backdrop-blur-md z-10">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-400">Model:</span>
+                <span class="text-blue-400 font-medium text-sm px-2 py-0.5 bg-blue-500/10 rounded border border-blue-500/20">Solstice 1 (Devstral 2)</span>
+            </div>
+            <button id="toggle-canvas" class="text-gray-400 hover:text-white transition hidden"><i class="fas fa-code"></i> Canvas</button>
+        </div>
+
+        <div id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth pb-32">
+            <div class="flex justify-center mt-10">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-700">Welcome to Solstice</h2>
+                    <p class="text-gray-600 text-sm mt-2">Ready to create.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black to-transparent pt-10 pb-6 px-4 md:px-20">
+            <div class="glass rounded-2xl p-2 flex flex-col gap-2 relative">
+                <div id="tool-menu" class="hidden absolute bottom-full left-0 mb-2 w-48 bg-[#1e1e23] border border-gray-700 rounded-xl shadow-xl overflow-hidden">
+                    <button class="tool-option w-full text-left px-4 py-3 hover:bg-gray-700 text-sm flex items-center gap-2" data-tool="image">
+                        <i class="fas fa-image text-purple-400"></i> Generate Image
+                    </button>
+                    <button class="tool-option w-full text-left px-4 py-3 hover:bg-gray-700 text-sm flex items-center gap-2" data-tool="memory">
+                        <i class="fas fa-save text-green-400"></i> Save to Memory
+                    </button>
+                </div>
+
+                <div class="flex items-end gap-2">
+                    <button id="tools-btn" class="p-3 text-gray-400 hover:text-white hover:bg-gray-700 rounded-xl transition">
+                        <i class="fas fa-bolt"></i>
+                    </button>
+                    <textarea id="user-input" rows="1" class="flex-1 bg-transparent border-0 focus:ring-0 text-white resize-none py-3 max-h-32 placeholder-gray-500" placeholder="Message Solstice..."></textarea>
+                    <button id="send-btn" class="p-3 bg-white text-black rounded-xl hover:bg-gray-200 transition disabled:opacity-50">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="text-center text-xs text-gray-600 mt-2">Solstice 1 can make mistakes. Check code.</p>
+        </div>
+    </div>
+
+    <div id="canvas-panel" class="fixed top-0 right-0 w-[500px] h-full bg-[#1e1e23] border-l border-gray-700 shadow-2xl z-20 flex flex-col">
+        <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-[#18181b]">
+            <h3 class="font-bold flex items-center gap-2"><i class="fas fa-code text-blue-400"></i> Canvas Preview</h3>
+            <button id="close-canvas" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="canvas-content" class="flex-1 p-4 overflow-auto font-mono text-sm text-gray-300">
+            <div class="flex items-center justify-center h-full text-gray-600">No code generated yet.</div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-[#18181b] border border-gray-700 p-6 rounded-2xl w-96">
+            <h2 class="text-xl font-bold mb-4">Settings</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">OpenRouter API Key (Primary)</label>
+                    <input type="password" id="api-key-1" class="w-full bg-black border border-gray-700 rounded-lg p-2 text-sm text-white focus:border-blue-500 outline-none" placeholder="sk-or-...">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">OpenRouter API Key (Backup)</label>
+                    <input type="password" id="api-key-2" class="w-full bg-black border border-gray-700 rounded-lg p-2 text-sm text-white focus:border-blue-500 outline-none" placeholder="sk-or-...">
+                </div>
+                <div class="p-3 bg-blue-900/20 border border-blue-900/50 rounded-lg">
+                    <p class="text-xs text-blue-300">Keys are saved to your browser's Local Storage. They are never sent to a server other than OpenRouter.</p>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button id="close-settings" class="px-4 py-2 text-gray-400 hover:text-white">Close</button>
+                <button id="save-settings" class="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 text-white">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+        // --- Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8dbdkl9XrQqNwWQX8dZHz9jagkHtIQng",
+            authDomain: "themouseai.firebaseapp.com",
+            projectId: "themouseai",
+            storageBucket: "themouseai.firebasestorage.app",
+            messagingSenderId: "797579380344",
+            appId: "1:797579380344:web:7dfa79ad7ac551d53ecf8d",
+            measurementId: "G-ZC6SXZE2TR"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // State
+        let currentUser = null;
+        let currentChatId = null;
+        let activeTool = null; // 'image' or null
+        const MODEL_NAME = "mistralai/mistral-nemo"; // Placeholder for Devstral 2 (Using a solid Mistral model)
+        
+        // --- Auth Logic ---
+        const loginBtn = document.getElementById('login-btn');
+        const authOverlay = document.getElementById('auth-overlay');
+        const userProfile = document.getElementById('user-profile');
+
+        loginBtn.addEventListener('click', () => signInWithPopup(auth, provider));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                authOverlay.classList.add('hidden');
+                userProfile.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full"> <span>${user.displayName}</span>`;
+                loadChats();
+                ensureMemoryDoc();
+            } else {
+                authOverlay.classList.remove('hidden');
+            }
+        });
+
+        // --- Chat Management ---
+        const chatList = document.getElementById('chat-list');
+        const newChatBtn = document.getElementById('new-chat-btn');
+
+        newChatBtn.addEventListener('click', createNewChat);
+
+        async function createNewChat() {
+            if (!currentUser) return;
+            const docRef = await addDoc(collection(db, "chats"), {
+                userId: currentUser.uid,
+                title: "New Chat",
+                createdAt: new Date(),
+                messages: []
+            });
+            selectChat(docRef.id);
+        }
+
+        function loadChats() {
+            const q = query(collection(db, "chats"), where("userId", "==", currentUser.uid), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                chatList.innerHTML = '';
+                snapshot.forEach((docSnap) => {
+                    const chat = docSnap.data();
+                    const div = document.createElement('div');
+                    div.className = `p-3 rounded-lg cursor-pointer hover:bg-gray-800 text-sm flex justify-between items-center group ${currentChatId === docSnap.id ? 'bg-gray-800 text-white' : 'text-gray-400'}`;
+                    div.innerHTML = `
+                        <span class="truncate max-w-[140px]">${chat.title}</span>
+                        <div class="hidden group-hover:flex gap-2">
+                            <i class="fas fa-trash hover:text-red-400" onclick="deleteChat('${docSnap.id}', event)"></i>
+                        </div>
+                    `;
+                    div.onclick = (e) => {
+                        if(!e.target.classList.contains('fa-trash')) selectChat(docSnap.id);
+                    };
+                    chatList.appendChild(div);
+                });
+            });
+        }
+
+        window.deleteChat = async (id, e) => {
+            e.stopPropagation();
+            if(confirm('Delete this chat?')) {
+                await deleteDoc(doc(db, "chats", id));
+                if(currentChatId === id) {
+                    document.getElementById('chat-container').innerHTML = '';
+                    currentChatId = null;
+                }
+            }
+        };
+
+        async function selectChat(id) {
+            currentChatId = id;
+            const chatDoc = await getDoc(doc(db, "chats", id));
+            const data = chatDoc.data();
+            const container = document.getElementById('chat-container');
+            container.innerHTML = '';
+            
+            // Re-render messages
+            if (data.messages) {
+                data.messages.forEach(msg => appendMessage(msg.role, msg.content));
+            }
+        }
+
+        // --- "Fake" Memory Logic ---
+        async function ensureMemoryDoc() {
+            // Check if user has a memory doc, if not create one
+            const memRef = doc(db, "user_memory", currentUser.uid);
+            const snap = await getDoc(memRef);
+            if (!snap.exists()) {
+                await setDoc(memRef, { content: "User prefers Gen-Z slang but no 'bestie' or 'slay'." });
+            }
+        }
+
+        async function getMemory() {
+            const snap = await getDoc(doc(db, "user_memory", currentUser.uid));
+            return snap.exists() ? snap.data().content : "";
+        }
+
+        async function updateMemory(newInfo) {
+            const memRef = doc(db, "user_memory", currentUser.uid);
+            const current = await getMemory();
+            await setDoc(memRef, { content: current + "\n- " + newInfo });
+            return "Memory updated.";
+        }
+
+        // --- AI & Messaging ---
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatContainer = document.getElementById('chat-container');
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }});
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text || !currentChatId) return;
+
+            // UI Updates
+            userInput.value = '';
+            appendMessage('user', text);
+            
+            // Tool Handling
+            if (activeTool === 'image') {
+                activeTool = null;
+                document.getElementById('tools-btn').classList.remove('text-blue-400');
+                appendMessage('bot', '🎨 Generating image with Nano Banana... (This is a simulation as no image API key is set yet)');
+                return;
+            }
+
+            // Save to Firestore
+            const chatRef = doc(db, "chats", currentChatId);
+            const chatSnap = await getDoc(chatRef);
+            const currentMsgs = chatSnap.data().messages || [];
+            const newMsgs = [...currentMsgs, { role: 'user', content: text }];
+            await updateDoc(chatRef, { messages: newMsgs });
+
+            // Generate Response
+            const loader = showLoader();
+            try {
+                const response = await generateAIResponse(newMsgs);
+                removeLoader(loader);
+                appendMessage('bot', response);
+                
+                // Save Bot Reply
+                await updateDoc(chatRef, { 
+                    messages: [...newMsgs, { role: 'assistant', content: response }],
+                    title: newMsgs.length === 1 ? text.substring(0, 30) : chatSnap.data().title // Auto-title
+                });
+
+                // Check for Code (Canvas)
+                checkForCode(response);
+
+            } catch (error) {
+                removeLoader(loader);
+                appendMessage('bot', `⚠️ Error: ${error.message}`);
+            }
+        }
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} fade-in`;
+            div.innerHTML = `
+                <div class="${role === 'user' ? 'message-user' : 'message-bot'} p-4 max-w-[85%] text-sm leading-relaxed whitespace-pre-wrap">
+                    ${text}
+                </div>
+            `;
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showLoader() {
+            const div = document.createElement('div');
+            div.className = 'flex justify-start fade-in';
+            div.innerHTML = `<div class="message-bot p-4"><div class="flex gap-1"><div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div></div></div>`;
+            chatContainer.appendChild(div);
+            return div;
+        }
+
+        function removeLoader(el) { el.remove(); }
+
+        // --- OpenRouter API Logic (Failover) ---
+        async function generateAIResponse(messages) {
+            const k1 = localStorage.getItem('solstice_key_1');
+            const k2 = localStorage.getItem('solstice_key_2');
+            const memory = await getMemory();
+
+            const systemPrompt = {
+                role: "system",
+                content: `You are Solstice 1, a helpful AI assistant. 
+                Tone: Gen-Z slang, chill, casual. NEVER use 'bestie', 'slay', or 'queen'. Use words like 'bet', 'valid', 'bruh' if it fits. 
+                Memory Context: ${memory}
+                If the user asks to remember something, confirm you saved it.`
+            };
+
+            const payload = {
+                model: MODEL_NAME,
+                messages: [systemPrompt, ...messages]
+            };
+
+            // Try Key 1
+            try {
+                return await fetchOpenRouter(k1, payload);
+            } catch (err) {
+                console.warn("Key 1 failed, trying Key 2...", err);
+                // Try Key 2
+                if (k2) {
+                    return await fetchOpenRouter(k2, payload);
+                } else {
+                    throw new Error("Primary API limit reached and no secondary key found.");
+                }
+            }
+        }
+
+        async function fetchOpenRouter(key, payload) {
+            if (!key) throw new Error("No API Key set. Check Settings.");
+            
+            const req = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${key}`,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": window.location.href, // OpenRouter Requirement
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!req.ok) throw new Error(`API Error: ${req.status}`);
+            const data = await req.json();
+            return data.choices[0].message.content;
+        }
+
+        // --- Tools & UI Logic ---
+        const toolsBtn = document.getElementById('tools-btn');
+        const toolMenu = document.getElementById('tool-menu');
+        
+        toolsBtn.addEventListener('click', () => toolMenu.classList.toggle('hidden'));
+
+        document.querySelectorAll('.tool-option').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const tool = btn.dataset.tool;
+                toolMenu.classList.add('hidden');
+                
+                if (tool === 'image') {
+                    activeTool = 'image';
+                    toolsBtn.classList.add('text-blue-400');
+                    userInput.placeholder = "Describe the image...";
+                } else if (tool === 'memory') {
+                    const mem = prompt("What should I remember?");
+                    if(mem) {
+                        await updateMemory(mem);
+                        alert("Saved to Solstice memory.");
+                    }
+                }
+            });
+        });
+
+        // --- Canvas Logic ---
+        const canvasPanel = document.getElementById('canvas-panel');
+        const closeCanvas = document.getElementById('close-canvas');
+        const canvasContent = document.getElementById('canvas-content');
+        const toggleCanvas = document.getElementById('toggle-canvas');
+
+        closeCanvas.addEventListener('click', () => canvasPanel.classList.remove('open'));
+        toggleCanvas.addEventListener('click', () => canvasPanel.classList.add('open'));
+
+        function checkForCode(text) {
+            // Regex to find ```code``` blocks
+            const codeMatch = text.match(/```([\s\S]*?)```/);
+            if (codeMatch) {
+                const code = codeMatch[1].replace(/^[a-z]+\n/, ''); // remove language identifier
+                canvasContent.innerText = code;
+                canvasPanel.classList.add('open');
+                toggleCanvas.classList.remove('hidden');
+            }
+        }
+
+        // --- Settings Logic ---
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettings = document.getElementById('close-settings');
+        const saveSettings = document.getElementById('save-settings');
+        const k1Input = document.getElementById('api-key-1');
+        const k2Input = document.getElementById('api-key-2');
+
+        settingsBtn.addEventListener('click', () => {
+            k1Input.value = localStorage.getItem('solstice_key_1') || '';
+            k2Input.value = localStorage.getItem('solstice_key_2') || '';
+            settingsModal.classList.remove('hidden');
+        });
+
+        closeSettings.addEventListener('click', () => settingsModal.classList.add('hidden'));
+
+        saveSettings.addEventListener('click', () => {
+            localStorage.setItem('solstice_key_1', k1Input.value);
+            localStorage.setItem('solstice_key_2', k2Input.value);
+            settingsModal.classList.add('hidden');
+            alert('Keys saved safely to Local Storage.');
+        });
+
+    </script>
+</body>
+</html>
