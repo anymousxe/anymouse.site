@@ -58,8 +58,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
-
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -73,13 +71,13 @@
         @keyframes typing { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
 
         /* Canvas Panel */
-        #canvas-panel { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateX(100%); }
+        #canvas-panel { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateX(100%); right: 0; top: 0; bottom: 0; }
         #canvas-panel.open { transform: translateX(0); }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white">
 
-    <div id="auth-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-xl transition-opacity duration-500">
+    <div id="auth-overlay" class="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 backdrop-blur-xl transition-opacity duration-500">
         <div class="relative group">
             <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
             <div class="relative p-10 bg-[#18181b] ring-1 ring-white/10 rounded-2xl text-center max-w-sm w-full">
@@ -92,7 +90,7 @@
         </div>
     </div>
 
-    <div class="w-[280px] bg-[#0c0c0e] border-r border-white/5 flex flex-col hidden md:flex shrink-0">
+    <div class="w-[280px] bg-[#0c0c0e] border-r border-white/5 flex flex-col hidden md:flex shrink-0 z-20">
         <div class="p-5 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <div class="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
@@ -119,7 +117,7 @@
         </div>
     </div>
 
-    <div class="flex-1 flex flex-col relative h-full">
+    <div class="flex-1 flex flex-col relative h-full bg-[#09090b]">
         <header class="h-16 glass-heavy absolute top-0 w-full z-10 flex items-center justify-between px-6">
             <div class="flex items-center gap-3">
                 <span class="text-gray-400 text-sm">Model</span>
@@ -128,8 +126,8 @@
                     <span class="text-xs font-semibold text-indigo-300">Solstice 1</span>
                 </div>
             </div>
-            <button id="toggle-canvas" class="hidden px-4 py-1.5 text-sm text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition">
-                <i class="fas fa-code mr-2"></i> Canvas
+            <button id="toggle-canvas" class="px-4 py-1.5 text-sm text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition flex items-center gap-2">
+                <i class="fas fa-code"></i> Canvas
             </button>
         </header>
 
@@ -143,7 +141,7 @@
             </div>
         </div>
 
-        <div class="absolute bottom-0 w-full bg-gradient-to-t from-[#09090b] via-[#09090b] to-transparent pb-6 px-4 md:px-20 pt-10">
+        <div class="absolute bottom-0 w-full bg-gradient-to-t from-[#09090b] via-[#09090b] to-transparent pb-6 px-4 md:px-20 pt-10 z-20">
             <div class="max-w-4xl mx-auto relative group">
                 <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/30 to-purple-500/30 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
                 
@@ -168,26 +166,21 @@
                         <i class="fas fa-arrow-up"></i>
                     </button>
                 </div>
-                <div class="text-center mt-3 flex justify-center gap-4 text-[10px] text-gray-600 uppercase tracking-widest font-semibold">
-                    <span>Solstice 1 (v2.0)</span>
-                    <span>•</span>
-                    <span>Private Instance</span>
-                </div>
             </div>
         </div>
     </div>
 
-    <div id="canvas-panel" class="fixed top-0 right-0 w-[600px] h-full bg-[#131316] border-l border-white/10 shadow-2xl z-30 flex flex-col">
+    <div id="canvas-panel" class="fixed top-0 right-0 w-[600px] h-full bg-[#131316] border-l border-white/10 shadow-2xl z-[50] flex flex-col translate-x-full">
         <div class="h-16 border-b border-white/5 flex justify-between items-center px-6 bg-[#18181b]">
             <span class="font-medium text-gray-200"><i class="fas fa-terminal text-indigo-500 mr-2"></i> Canvas</span>
             <button id="close-canvas" class="text-gray-500 hover:text-white transition"><i class="fas fa-times"></i></button>
         </div>
         <div class="flex-1 overflow-auto p-0">
-            <pre id="canvas-content" class="p-6 text-sm font-mono text-gray-300 leading-loose"></pre>
+            <pre id="canvas-content" class="p-6 text-sm font-mono text-gray-300 leading-loose">No code generated yet.</pre>
         </div>
     </div>
 
-    <div id="admin-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div id="admin-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div class="bg-[#18181b] border border-red-500/30 p-8 rounded-2xl w-[500px] shadow-2xl shadow-red-900/20">
             <h2 class="text-2xl font-bold mb-1 text-white">Admin Configuration</h2>
             <p class="text-gray-500 text-sm mb-6">Global API Keys (Affects all users)</p>
@@ -226,12 +219,12 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const ADMIN_EMAIL = "anymousxe.info@gmail.com";
-        const MODEL_ID = "mistralai/mistral-nemo"; // Real model ID disguised as Solstice
+        const MODEL_ID = "mistralai/mistral-nemo"; 
 
         // --- State ---
         let currentUser = null;
         let currentChatId = null;
-        let globalApiKey = null; // Fetched from DB
+        let globalApiKey = null; 
 
         // --- Auth ---
         const loginBtn = document.getElementById('login-btn');
@@ -246,7 +239,6 @@
                 currentUser = user;
                 authOverlay.classList.add('opacity-0', 'pointer-events-none');
                 
-                // Profile
                 userProfile.innerHTML = `
                     <img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-white/10"> 
                     <div class="flex flex-col">
@@ -254,26 +246,27 @@
                         <span class="text-[10px] text-gray-500">Online</span>
                     </div>`;
 
-                // Admin Check
                 if (user.email === ADMIN_EMAIL) {
                     adminBtn.classList.remove('hidden');
                 }
 
                 loadChats();
-                fetchGlobalKey(); // Get the key so we can chat
+                fetchGlobalKey();
             } else {
                 authOverlay.classList.remove('opacity-0', 'pointer-events-none');
             }
         });
 
-        // --- Key Management (Admin Only) ---
+        // --- Key Management ---
         async function fetchGlobalKey() {
             try {
                 const docSnap = await getDoc(doc(db, "config", "global"));
                 if (docSnap.exists()) {
                     globalApiKey = docSnap.data().key;
+                } else {
+                    console.warn("No Global Key Found in Database");
                 }
-            } catch(e) { console.log("Key fetch error (normal if not admin/first run):", e); }
+            } catch(e) { console.log("Key fetch error:", e); }
         }
 
         const adminModal = document.getElementById('admin-modal');
@@ -339,24 +332,22 @@
             currentChatId = id;
             const d = await getDoc(doc(db, "chats", id));
             const container = document.getElementById('chat-container');
-            container.innerHTML = '<div class="h-20"></div>'; // Spacer
+            container.innerHTML = '<div class="h-20"></div>'; 
             const msgs = d.data().messages || [];
             msgs.forEach(m => renderMessage(m.role, m.content));
             container.scrollTop = container.scrollHeight;
         }
 
-        // --- Messaging UI & Input ---
+        // --- Messaging ---
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
 
-        // Auto-resize textarea
         userInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
             if(this.value === '') this.style.height = 'auto';
         });
 
-        // Enter to send, Shift+Enter for new line
         userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -386,7 +377,11 @@
             // Bot Response
             const loader = showLoader();
             try {
-                if(!globalApiKey) throw new Error("System Offline (No API Key Configured by Admin)");
+                if(!globalApiKey) {
+                    // Try to fetch one last time in case it just updated
+                    await fetchGlobalKey();
+                    if(!globalApiKey) throw new Error("System Offline. Admin must configure API Key.");
+                }
                 
                 const response = await callOpenRouter(msgs);
                 loader.remove();
@@ -399,17 +394,19 @@
                     title: msgs.length <= 2 ? text.substring(0, 30) : chatSnap.data().title
                 });
 
-                // Check for code to show in Canvas
+                // Canvas Auto-Open
                 if(response.includes('```')) {
-                    const codeBlock = response.match(/```([\s\S]*?)```/)[1];
-                    document.getElementById('canvas-content').innerText = codeBlock;
-                    document.getElementById('toggle-canvas').classList.remove('hidden');
-                    document.getElementById('canvas-panel').classList.add('open');
+                    const codeMatch = response.match(/```([\s\S]*?)```/);
+                    if(codeMatch && codeMatch[1]) {
+                        document.getElementById('canvas-content').innerText = codeMatch[1];
+                        document.getElementById('canvas-panel').classList.add('open');
+                    }
                 }
 
             } catch (err) {
                 loader.remove();
-                renderMessage('assistant', `⚠️ Error: ${err.message}`);
+                renderMessage('assistant', `⚠️ ${err.message}`);
+                console.error(err);
             }
         }
 
@@ -418,10 +415,9 @@
             const div = document.createElement('div');
             div.className = `flex w-full mb-6 fade-in ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             
-            // Formatted content (Basic markdown replacement)
             let formatted = content
                 .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-                .replace(/```([\s\S]*?)```/g, '<div class="bg-black/30 p-2 rounded my-2 text-xs font-mono overflow-x-auto border border-white/10">Code Viewable in Canvas</div>');
+                .replace(/```([\s\S]*?)```/g, '<div class="bg-black/30 p-2 rounded my-2 text-xs font-mono overflow-x-auto border border-white/10 text-indigo-300">Code (View in Canvas)</div>');
 
             div.innerHTML = `
                 <div class="${role === 'user' ? 'msg-user' : 'msg-bot'} max-w-[85%] md:max-w-[70%] px-5 py-4 text-sm md:text-base leading-7 shadow-sm">
@@ -449,7 +445,6 @@
 
         // --- API & Prompt Engineering ---
         async function callOpenRouter(messages) {
-            // Memory Injection
             let memory = "No saved memory.";
             try {
                const mSnap = await getDoc(doc(db, "user_memory", currentUser.uid));
@@ -471,7 +466,7 @@
                 headers: {
                     "Authorization": `Bearer ${globalApiKey}`,
                     "Content-Type": "application/json",
-                    "HTTP-Referer": window.location.href,
+                    "HTTP-Referer": window.location.href, // Required by OpenRouter
                     "X-Title": "Solstice Studio"
                 },
                 body: JSON.stringify({
@@ -480,12 +475,23 @@
                 })
             });
 
-            const json = await response.json();
-            if(json.error) throw new Error(json.error.message);
-            return json.choices[0].message.content;
+            if (!response.ok) {
+                // If API fails, get the text error to debug
+                const errText = await response.text();
+                throw new Error(`API Error ${response.status}: ${errText.substring(0, 100)}...`);
+            }
+
+            // Safe JSON parse
+            const text = await response.text();
+            try {
+                const json = JSON.parse(text);
+                return json.choices[0].message.content;
+            } catch (e) {
+                throw new Error("Invalid JSON received from API.");
+            }
         }
 
-        // --- Tools ---
+        // --- Tools & Canvas Toggles ---
         const toolsBtn = document.getElementById('tools-btn');
         const toolMenu = document.getElementById('tool-menu');
         const memBtn = document.getElementById('mem-btn');
@@ -504,9 +510,13 @@
             }
         });
 
-        // --- Canvas Toggles ---
-        document.getElementById('close-canvas').addEventListener('click', () => document.getElementById('canvas-panel').classList.remove('open'));
-        document.getElementById('toggle-canvas').addEventListener('click', () => document.getElementById('canvas-panel').classList.add('open'));
+        // Manual Canvas Toggle
+        document.getElementById('close-canvas').addEventListener('click', () => {
+            document.getElementById('canvas-panel').classList.remove('open');
+        });
+        document.getElementById('toggle-canvas').addEventListener('click', () => {
+            document.getElementById('canvas-panel').classList.add('open');
+        });
 
     </script>
 </body>
