@@ -6,60 +6,63 @@
     <title>Anymouse AI Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        body { background: #050505; color: #e5e5e5; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6">
+<body class="min-h-screen p-4 md:p-10 flex flex-col items-center">
 
-    <div class="glass w-full max-w-2xl p-8 rounded-2xl shadow-2xl">
-        <h1 class="text-3xl font-bold mb-2 text-blue-500">Anymouse AI Studio</h1>
-        <p class="text-gray-400 mb-6">Sora 2 & NB Pro Access</p>
-
-        <div id="auth-section" class="mb-6">
-            <button id="login-btn" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-medium transition">Login with Google</button>
-            <p id="user-info" class="hidden text-sm text-gray-300"></p>
+    <div class="glass w-full max-w-4xl p-8 rounded-3xl shadow-2xl">
+        <div class="flex justify-between items-start mb-8">
+            <div>
+                <h1 class="text-4xl font-black text-blue-500 tracking-tighter">ANYMOUSE AI</h1>
+                <p class="text-gray-500 font-medium">Sora 2 & NB Pro Dashboard</p>
+            </div>
+            <div id="auth-status" class="text-right">
+                <button id="login-btn" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-gray-200 transition">Login</button>
+                <div id="user-pill" class="hidden glass px-4 py-2 rounded-full border border-white/10 text-sm">
+                    <span id="user-email" class="font-mono text-blue-400"></span>
+                </div>
+            </div>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <button onclick="setModel('nbpro')" id="btn-nbpro" class="flex-1 p-4 rounded-xl border-2 border-blue-500 bg-blue-500/10 text-center transition">
-                <span class="block text-lg font-bold">NB Pro</span>
-                <span class="text-xs text-gray-400">Gemini 3 Pro Images</span>
-            </button>
-            <button onclick="setModel('sora')" id="btn-sora" class="flex-1 p-4 rounded-xl border-2 border-transparent bg-white/5 text-center transition">
-                <span class="block text-lg font-bold">Sora 2</span>
-                <span class="text-xs text-gray-400">AI Video Generation</span>
-            </button>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="glass p-4 rounded-2xl">
+                <p class="text-xs text-gray-500 uppercase font-bold">NB Pro Daily</p>
+                <p id="limit-nb" class="text-2xl font-black">-- / --</p>
+            </div>
+            <div class="glass p-4 rounded-2xl">
+                <p class="text-xs text-gray-500 uppercase font-bold">Sora 2 Daily</p>
+                <p id="limit-sora" class="text-2xl font-black">-- / --</p>
+            </div>
         </div>
 
-        <textarea id="prompt-input" placeholder="Enter your prompt here..." 
-            class="w-full h-32 bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:ring-2 focus:ring-blue-500 outline-none transition mb-4"></textarea>
+        <div class="flex gap-2 mb-6 p-1 bg-white/5 rounded-2xl">
+            <button onclick="setModel('nbpro')" id="btn-nbpro" class="flex-1 py-3 rounded-xl font-bold transition bg-blue-600 text-white">NB PRO</button>
+            <button onclick="setModel('sora')" id="btn-sora" class="flex-1 py-3 rounded-xl font-bold transition text-gray-400">SORA 2</button>
+        </div>
+
+        <textarea id="prompt-input" placeholder="What should I generate?..." 
+            class="w-full h-40 bg-black/50 border border-white/10 rounded-2xl p-6 text-xl outline-none focus:border-blue-500 transition mb-6 resize-none"></textarea>
         
-        <button id="gen-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg">
-            GENERATE
+        <button id="gen-btn" class="w-full bg-blue-600 hover:bg-blue-500 py-5 rounded-2xl font-black text-xl transition transform active:scale-95 shadow-xl shadow-blue-900/20">
+            GENERATE NOW
         </button>
 
-        <div id="status" class="mt-6 hidden p-4 rounded-lg bg-white/5 border border-white/10 italic text-gray-400">
-            Working on it... this takes about 60 seconds.
+        <div id="status-box" class="hidden mt-8 p-6 rounded-2xl border border-blue-500/20 bg-blue-500/5 flex items-center gap-4">
+            <div class="loader w-6 h-6 border-4 border-white/10 rounded-full"></div>
+            <p id="status-msg" class="text-blue-400 font-medium italic">Waking up the models...</p>
         </div>
-        
-        <div id="result-container" class="mt-6 hidden">
-            <p class="text-sm mb-2 text-gray-400">Result:</p>
-            <div id="output" class="rounded-xl overflow-hidden border border-white/20"></div>
-        </div>
-    </div>
 
-    <div id="admin-panel" class="hidden mt-8 glass w-full max-w-2xl p-6 rounded-2xl border-yellow-500/30">
-        <h2 class="text-yellow-500 font-bold mb-4 uppercase tracking-widest text-sm">Admin Panel: anymousexe.info@gmail.com</h2>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="text-xs text-gray-500 block mb-1">NB PRO LIMIT (Daily)</label>
-                <input type="number" id="limit-nb" class="bg-black border border-white/10 p-2 rounded w-full" value="5">
+        <div id="output-screen" class="hidden mt-10 space-y-6">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-gray-400">GENERATION RESULT</h3>
+                <button id="download-btn" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg font-bold">Download</button>
             </div>
-            <div>
-                <label class="text-xs text-gray-500 block mb-1">SORA 2 LIMIT (Daily)</label>
-                <input type="number" id="limit-sora" class="bg-black border border-white/10 p-2 rounded w-full" value="2">
-            </div>
+            <div id="result-viewer" class="rounded-3xl overflow-hidden bg-black border border-white/10 aspect-video flex items-center justify-center">
+                </div>
         </div>
     </div>
 
@@ -78,54 +81,81 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        let currentModel = 'nbpro';
+        let activeModel = 'nbpro';
+        let currentResultBlob = null;
 
         window.setModel = (m) => {
-            currentModel = m;
-            document.getElementById('btn-nbpro').className = m === 'nbpro' ? 'flex-1 p-4 rounded-xl border-2 border-blue-500 bg-blue-500/10 text-center transition' : 'flex-1 p-4 rounded-xl border-2 border-transparent bg-white/5 text-center transition';
-            document.getElementById('btn-sora').className = m === 'sora' ? 'flex-1 p-4 rounded-xl border-2 border-blue-500 bg-blue-500/10 text-center transition' : 'flex-1 p-4 rounded-xl border-2 border-transparent bg-white/5 text-center transition';
-        }
+            activeModel = m;
+            document.getElementById('btn-nbpro').className = m === 'nbpro' ? 'flex-1 py-3 rounded-xl font-bold transition bg-blue-600 text-white' : 'flex-1 py-3 rounded-xl font-bold transition text-gray-400 hover:text-white';
+            document.getElementById('btn-sora').className = m === 'sora' ? 'flex-1 py-3 rounded-xl font-bold transition bg-blue-600 text-white' : 'flex-1 py-3 rounded-xl font-bold transition text-gray-400 hover:text-white';
+        };
 
         document.getElementById('login-btn').onclick = () => signInWithPopup(auth, new GoogleAuthProvider());
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-btn').classList.add('hidden');
-                document.getElementById('user-info').innerText = `Logged in as: ${user.email}`;
-                document.getElementById('user-info').classList.remove('hidden');
-                if (user.email === 'anymousexe.info@gmail.com') {
-                    document.getElementById('admin-panel').classList.remove('hidden');
-                }
+                document.getElementById('user-pill').classList.remove('hidden');
+                document.getElementById('user-email').innerText = user.email;
+                updateLimits(user.email);
             }
         });
 
+        async function updateLimits(email) {
+            // Placeholder for the real logic you requested for admin/user limits
+            const isBoss = email === 'anymousexe.info@gmail.com';
+            document.getElementById('limit-nb').innerText = isBoss ? "∞ / ∞" : "0 / 5";
+            document.getElementById('limit-sora').innerText = isBoss ? "∞ / ∞" : "0 / 2";
+        }
+
         document.getElementById('gen-btn').onclick = async () => {
             const prompt = document.getElementById('prompt-input').value;
-            if(!prompt) return alert("Type something first!");
+            if (!prompt) return alert("You gotta type a prompt first!");
 
-            document.getElementById('status').classList.remove('hidden');
-            
+            const statusBox = document.getElementById('status-box');
+            const statusMsg = document.getElementById('status-msg');
+            statusBox.classList.remove('hidden');
+            statusMsg.innerText = "Launching virtual browser (this takes ~45s)...";
+
             try {
-                const response = await fetch(`/api/${currentModel}`, {
+                const response = await fetch(`/api/${activeModel}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt })
                 });
+
                 const data = await response.json();
-                
-                if(data.success) {
-                    document.getElementById('result-container').classList.remove('hidden');
-                    document.getElementById('output').innerHTML = currentModel === 'nbpro' ? 
-                        `<img src="${data.url}" class="w-full">` : 
-                        `<video src="${data.url}" controls class="w-full"></video>`;
+                if (data.success) {
+                    displayResult(data.mediaData, activeModel);
                 } else {
-                    alert("Error: " + data.error);
+                    alert("Model Error: " + data.error);
                 }
             } catch (e) {
-                alert("Request failed. Vercel might have timed out.");
+                alert("Vercel timed out! The generation is likely still running on the provider's end, but Vercel cut the connection.");
             } finally {
-                document.getElementById('status').classList.add('hidden');
+                statusBox.classList.add('hidden');
             }
+        };
+
+        function displayResult(base64, model) {
+            const viewer = document.getElementById('result-viewer');
+            const screen = document.getElementById('output-screen');
+            screen.classList.remove('hidden');
+            
+            if (model === 'nbpro') {
+                viewer.innerHTML = `<img src="${base64}" class="w-full h-full object-contain">`;
+            } else {
+                viewer.innerHTML = `<video src="${base64}" controls autoplay class="w-full h-full object-contain"></video>`;
+            }
+            currentResultBlob = base64;
+        }
+
+        document.getElementById('download-btn').onclick = () => {
+            if (!currentResultBlob) return;
+            const link = document.createElement('a');
+            link.href = currentResultBlob;
+            link.download = `anymouse-gen-${Date.now()}.${activeModel === 'nbpro' ? 'png' : 'mp4'}`;
+            link.click();
         };
     </script>
 </body>
