@@ -17,7 +17,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
-    <meta name="twitter:description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
+    <meta name="twitter:description" content="Official Mice In Charge Archive. Strength and Honor.">
     <meta name="twitter:image" content="mouselandcard.png">
 
     <style>
@@ -37,10 +37,10 @@
             --war-red: #8b0000;
         }
 
-        /* --- DARK SCROLLBAR FIX (NO MORE WHITE) --- */
+        /* --- DARK SCROLLBAR (NO WHITE) --- */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #1a1a1e; border-radius: 5px; border: 2px solid #333; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1e; border-radius: 5px; border: 2px solid #000; }
         ::-webkit-scrollbar-thumb:hover { background: var(--mouseland-accent); }
 
         /* --- CORE RESET --- */
@@ -55,41 +55,20 @@
         
         /* --- VISUAL EFFECTS --- */
         #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; 
-            opacity: 0.4;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4;
         }
 
         #intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
         }
         .intro-content { text-align: center; }
         .intro-title { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; color: var(--mouseland-accent); margin-bottom: 1rem; letter-spacing: 5px; }
         
         #enter-btn {
-            background: transparent;
-            border: 1px solid var(--mouseland-accent);
-            color: var(--mouseland-accent);
-            padding: 1.2rem 2.5rem;
-            font-family: var(--font-mono);
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.4s;
-            text-transform: uppercase;
+            background: transparent; border: 1px solid var(--mouseland-accent); color: var(--mouseland-accent);
+            padding: 1.2rem 2.5rem; font-family: var(--font-mono); cursor: pointer; font-weight: bold;
+            transition: 0.4s; text-transform: uppercase;
         }
         #enter-btn:hover { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 30px var(--mouseland-accent); }
 
@@ -97,11 +76,8 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 10; }
         
         .ml-header {
-            padding: 5rem 0;
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border);
-            background: radial-gradient(circle at top, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
-            text-align: center;
+            padding: 5rem 0; margin-bottom: 3rem; border-bottom: 1px solid var(--border);
+            background: radial-gradient(circle at top, rgba(16, 185, 129, 0.05) 0%, transparent 70%); text-align: center;
         }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
         .flag-img { width: 160px; border-radius: 4px; box-shadow: 0 0 25px rgba(0,0,0,0.9); margin-bottom: 2rem; border: 1px solid #444; }
@@ -111,31 +87,21 @@
         .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .btn-ghost:hover { color: #fff; border-color: #fff; }
         .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: #fff; }
 
-        /* --- ADMIN CONTROLS --- */
+        /* --- TERMINAL (STRICTLY HIDDEN) --- */
         .admin-panel {
-            background: #0a0a0c;
-            border: 1px solid var(--border);
-            border-left: 5px solid var(--mouseland-accent);
-            padding: 3rem;
-            border-radius: 8px;
-            margin-bottom: 5rem;
-            display: none; 
+            background: #0a0a0c; border: 1px solid var(--border); border-left: 5px solid var(--mouseland-accent);
+            padding: 3rem; border-radius: 8px; margin-bottom: 5rem; display: none; 
         }
         .admin-input, .admin-textarea {
             background: #000; border: 1px solid #333; padding: 1.2rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 15px; font-family: var(--font-mono);
         }
 
-        /* --- WAR ROOM --- */
+        /* --- WAR ROOM ARCHIVES --- */
         .war-room-container {
             background: linear-gradient(180deg, rgba(15, 15, 15, 0.9), rgba(5, 5, 5, 1));
-            border: 1px solid #1f1f23;
-            border-top: 6px solid var(--danger);
-            padding: 4rem;
-            border-radius: 12px;
-            margin: 6rem 0;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border: 1px solid #1f1f23; border-top: 6px solid var(--danger); padding: 4rem;
+            border-radius: 12px; margin: 6rem 0; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
         .war-stage { margin-bottom: 5rem; padding-bottom: 2rem; border-bottom: 1px solid #1a1a1a; }
         .war-stage h3 { color: var(--danger); text-transform: uppercase; font-size: 1.8rem; margin-bottom: 1.5rem; font-family: var(--font-mono); }
@@ -148,18 +114,17 @@
         .map-card { background: #000; padding: 20px; border: 1px solid #222; border-radius: 12px; text-align: center; }
         .map-card img { width: 100%; border-radius: 6px; border: 1px solid #111; margin-bottom: 15px; }
 
-        /* --- BROADCAST ENGINE (BIG FEED FIX) --- */
+        /* --- BROADCAST ENGINE --- */
         .news-section { margin-top: 8rem; }
         .news-archive-container {
-            min-height: 500px; /* Bigger layout */
-            border: 1px solid #1a1a1a;
-            padding: 3rem;
-            border-radius: 12px;
-            background: rgba(0,0,0,0.4);
-            width: 100%;
+            min-height: 600px; border: 1px solid #1a1a1a; padding: 3rem; border-radius: 12px;
+            background: rgba(0,0,0,0.4); width: 100%;
         }
         .news-item { background: #0c0c0e; border: 1px solid var(--border); padding: 3rem; border-radius: 8px; margin-bottom: 3rem; position: relative; }
-        .news-actions { display: flex; gap: 20px; }
+        .news-item.urgent { border-left: 5px solid var(--danger); }
+        .news-item.war { border-left: 5px solid var(--warning); }
+        
+        .news-actions { display: none; gap: 20px; } /* Managed by script */
         .action-icon { cursor: pointer; font-size: 1.3rem; transition: 0.2s; opacity: 0.6; }
         .action-icon:hover { opacity: 1; transform: scale(1.1); }
 
@@ -168,11 +133,9 @@
         .yt-container { position: relative; padding-bottom: 56.25%; height: 0; }
         .yt-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .link-preview-card { display: flex; align-items: center; gap: 20px; padding: 20px; background: #050505; border: 1px solid #222; border-radius: 12px; text-decoration: none !important; margin-top: 15px; transition: 0.2s; }
-        .link-preview-card:hover { border-color: var(--mouseland-accent); background: #0a0a0a; }
 
         .leadership-section { display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; margin: 8rem 0; }
         .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 4rem; border-radius: 20px; text-align: center; width: 360px; transition: 0.3s; }
-        .leader-card:hover { border-color: var(--mouseland-accent); transform: translateY(-5px); }
         .leader-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 2rem; }
 
         .cities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3rem; margin-top: 5rem; }
@@ -262,22 +225,22 @@
 
                 <div class="war-stage">
                     <h3>II: The Coalition Surge</h3>
-                    <p>The powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated assault against Mouseland territory.</p>
+                    <p>The powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated assault.</p>
                 </div>
 
                 <div class="war-stage">
                     <h3>III: The Salted Betrayal</h3>
-                    <p>In a shock move, <span class="faction-highlight">Fryland</span> backstabbed Mouseland mid-battle, leaving our defenses exposed to the coalition.</p>
+                    <p>In a shock move, <span class="faction-highlight">Fryland</span> backstabbed Mouseland mid-battle, leaving our defenses exposed.</p>
                 </div>
 
                 <div class="war-stage">
                     <h3>IV: Union & Websim Protocol</h3>
-                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) intervened to flank the enemy. MIC then initiated the <strong>Websim Protocol</strong>, calling in <span class="ally-highlight">United Websim</span>.</p>
+                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) intervened. Mice In Charge then initiated the <strong>Websim Protocol</strong>.</p>
                 </div>
 
                 <div class="war-stage" style="border-bottom: none;">
                     <h3>V: Current Status (ONGOING)</h3>
-                    <p>The war is NOT over. Thousands of <span class="ally-highlight">Websim AI Combat Bots</span> have been deployed as emergency backup to reinforce our battalions. We are currently holding the grease-line.</p>
+                    <p>The war is NOT over. Thousands of <span class="ally-highlight">Websim AI Combat Bots</span> have been deployed. We are holding the grease-line.</p>
                 </div>
 
                 <div class="map-grid">
@@ -339,7 +302,7 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // --- VISUAL ENGINE ---
+        // --- VISUALS ---
         document.addEventListener('DOMContentLoaded', () => {
             const enterBtn = document.getElementById('enter-btn');
             const overlay = document.getElementById('intro-overlay');
@@ -355,8 +318,7 @@
             const canvas = document.getElementById('bg-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
             class Particle {
                 constructor() {
@@ -367,16 +329,13 @@
                     this.speedY = (Math.random() - 0.5) * 0.4;
                 }
                 update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
+                    this.x += this.speedX; this.y += this.speedY;
                     if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
                     if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
                 }
                 draw() {
-                    ctx.fillStyle = '#10b981';
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.fillStyle = '#10b981'; ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
                 }
             }
             for(let i=0; i<120; i++) particles.push(new Particle());
@@ -388,7 +347,7 @@
             animate();
         });
 
-        // --- FIREBASE LOGIC ---
+        // --- FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
             authDomain: "mouseland-istuff.firebaseapp.com",
@@ -412,6 +371,7 @@
         const newsFeed = document.getElementById('news-feed');
         const postForm = document.getElementById('post-form');
 
+        // --- EMBED ENGINE RESTORED ---
         function formatContent(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             let embeds = "";
@@ -428,22 +388,22 @@
             return `<div>${formattedText}</div>${embeds}`;
         }
 
-        // --- AUTH SYSTEM ---
+        // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
             const container = document.getElementById('auth-container');
             const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
+            adminPanel.style.display = isAdmin ? "block" : "none";
+            
             if (user) {
                 container.innerHTML = `<button id="logout-btn" class="btn btn-ghost">DISCONNECT</button>`;
                 document.getElementById('logout-btn').onclick = () => signOut(auth);
-                adminPanel.style.display = isAdmin ? "block" : "none";
             } else {
                 container.innerHTML = `<button id="login-trigger-btn" class="btn btn-mouseland">AUTH LOGIN</button>`;
                 document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
-                adminPanel.style.display = "none";
             }
         });
 
-        // --- POSTING ENGINE ---
+        // --- POSTING ---
         postForm.onsubmit = async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
@@ -459,16 +419,14 @@
                 updatedAt: serverTimestamp()
             };
 
-            try {
-                if(isEditing) {
-                    await updateDoc(doc(db, "updates", editDocId), payload);
-                    resetForm();
-                } else {
-                    payload.createdAt = serverTimestamp();
-                    await addDoc(collection(db, "updates"), payload);
-                    postForm.reset();
-                }
-            } catch(err) { alert("FAIL: " + err.message); }
+            if(isEditing) {
+                await updateDoc(doc(db, "updates", editDocId), payload);
+                resetForm();
+            } else {
+                payload.createdAt = serverTimestamp();
+                await addDoc(collection(db, "updates"), payload);
+                postForm.reset();
+            }
         };
 
         function resetForm() {
@@ -479,7 +437,7 @@
         }
         document.getElementById('cancel-edit-btn').onclick = resetForm;
 
-        // --- REALTIME FEED (FIXED: ORDERED AT TOP) ---
+        // --- SNAPSHOT FEED (FIXED: ORDER & SECURITY & URGENCY) ---
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
             const user = auth.currentUser;
@@ -488,61 +446,62 @@
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
                 const item = document.createElement('div');
-                item.className = `news-item ${data.type}`;
                 
+                // URGENCY EMOJI LOGIC
+                let emoji = "📝";
+                if(data.type === "urgent") emoji = "🚨";
+                if(data.type === "war") emoji = "⚔️";
+                if(data.type === "decree") emoji = "📜";
+
+                item.className = `news-item ${data.type}`;
                 item.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div style="display:flex; gap:15px; align-items:center;">
                             <img src="${data.pfp}" style="width:45px; height:45px; border-radius:50%; border:2px solid #222;">
                             <div>
-                                <div style="font-weight:900; font-size:1rem;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px; margin-left:10px;">${data.role}</span></div>
-                                <div style="font-size:0.7rem; color:#444; font-family:var(--font-mono);">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
+                                <div style="font-weight:900;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px;">${data.role}</span></div>
+                                <div style="font-size:0.7rem; color:#444;">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
                             </div>
                         </div>
                         ${isAdmin ? `
-                            <div class="news-actions">
-                                <i class="fa-solid fa-pen-to-square action-icon" style="color:var(--link-color);" onclick="window.editPost('${docSnap.id}', '${data.title.replace(/'/g, "\\'")}', '${data.content.replace(/'/g, "\\'")}', '${data.type}')"></i>
-                                <i class="fa-solid fa-trash-can action-icon" style="color:var(--danger);" onclick="window.deletePost('${docSnap.id}')"></i>
+                            <div class="news-actions" style="display:flex;">
+                                <i class="fa-solid fa-pen-to-square action-icon" style="color:var(--link-color);" data-id="${docSnap.id}"></i>
+                                <i class="fa-solid fa-trash-can action-icon" style="color:var(--danger);" data-id="${docSnap.id}"></i>
                             </div>
                         ` : ''}
                     </div>
-                    <h3 style="margin:2.5rem 0 1rem 0; font-size:1.8rem; color:${data.type === 'war' ? 'var(--danger)' : '#fff'};">${data.title}</h3>
+                    <h3 style="margin:2.5rem 0 1rem 0; font-size:1.8rem; color:${data.type === 'war' ? 'var(--danger)' : '#fff'};">${emoji} ${data.title}</h3>
                     <div style="color:#aaa; font-size:1.05rem;">${formatContent(data.content)}</div>
                 `;
                 newsFeed.appendChild(item);
             });
+
+            // Re-attach listeners for Admin
+            document.querySelectorAll('.fa-trash-can').forEach(b => {
+                b.onclick = async () => { if(confirm("ERASE LOG?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
+            });
+            document.querySelectorAll('.fa-pen-to-square').forEach(b => {
+                b.onclick = () => {
+                    const id = b.dataset.id;
+                    const d = snapshot.docs.find(s => s.id === id).data();
+                    document.getElementById('post-title').value = d.title;
+                    document.getElementById('post-content').value = d.content;
+                    document.getElementById('post-type').value = d.type;
+                    isEditing = true; editDocId = id;
+                    document.getElementById('submit-btn').textContent = "SAVE LOG EDIT";
+                    document.getElementById('cancel-edit-btn').style.display = "block";
+                    document.getElementById('edit-indicator').style.display = "block";
+                    adminPanel.scrollIntoView({behavior:'smooth'});
+                };
+            });
         });
 
-        // GLOBAL ACTIONS
-        window.deletePost = async (id) => { if(confirm("ERASE LOG?")) await deleteDoc(doc(db, "updates", id)); };
-        window.editPost = (id, title, content, type) => {
-            isEditing = true; editDocId = id;
-            document.getElementById('post-title').value = title;
-            document.getElementById('post-content').value = content;
-            document.getElementById('post-type').value = type;
-            document.getElementById('submit-btn').textContent = "SAVE LOG EDIT";
-            document.getElementById('cancel-edit-btn').style.display = "block";
-            document.getElementById('edit-indicator').style.display = "block";
-            adminPanel.style.display = "block";
-            adminPanel.scrollIntoView({behavior:'smooth'});
-        };
-
-        // Tilt Card SFX
+        // GLOBAL UI
         document.querySelectorAll('.tilt-card').forEach(c => {
             c.onmouseenter = () => document.getElementById('sfx-hover').play();
         });
-
         window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
         document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
-        document.getElementById('email-auth-form').onsubmit = (e) => {
-            e.preventDefault();
-            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
-                .then(() => modal.style.display='none')
-                .catch(err => {
-                    const errorBox = document.getElementById('auth-error');
-                    errorBox.style.display = 'block'; errorBox.textContent = "DENIED: " + err.message;
-                });
-        };
     </script>
 </body>
 </html>
