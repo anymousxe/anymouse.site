@@ -27,10 +27,11 @@
             --warning: #f59e0b;            
             --border: #27272a;            
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
             --war-red: #8b0000;
         }
 
-        /* --- RESET --- */
+        /* --- CORE RESET --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-color);
@@ -40,7 +41,7 @@
             overflow-x: hidden;
         }
         
-        /* --- VISUAL FX LAYERS --- */
+        /* --- VISUAL EFFECTS --- */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -65,14 +66,14 @@
             transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
         }
         .intro-content { text-align: center; }
-        .intro-title { font-size: 4rem; font-weight: 900; color: var(--mouseland-accent); margin-bottom: 1rem; letter-spacing: 5px; }
+        .intro-title { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; color: var(--mouseland-accent); margin-bottom: 1rem; letter-spacing: 5px; }
         
         #enter-btn {
             background: transparent;
             border: 1px solid var(--mouseland-accent);
             color: var(--mouseland-accent);
             padding: 1.2rem 2.5rem;
-            font-family: 'Courier New', monospace;
+            font-family: var(--font-mono);
             cursor: pointer;
             font-weight: bold;
             transition: 0.4s;
@@ -81,115 +82,98 @@
         #enter-btn:hover { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 30px var(--mouseland-accent); }
 
         /* --- LAYOUT --- */
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 10; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 10; }
         
         .ml-header {
-            padding: 4rem 0;
-            margin-bottom: 2rem;
+            padding: 5rem 0;
+            margin-bottom: 3rem;
             border-bottom: 1px solid var(--border);
             background: radial-gradient(circle at top, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
             text-align: center;
         }
-        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .flag-img { width: 140px; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.8); margin-bottom: 1.5rem; border: 1px solid #444; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        .flag-img { width: 160px; border-radius: 4px; box-shadow: 0 0 25px rgba(0,0,0,0.9); margin-bottom: 2rem; border: 1px solid #444; }
 
-        /* Buttons */
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.7rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s ease; }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.8rem 1.6rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-mouseland { background: var(--mouseland-accent); color: #000; }
         .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .btn-ghost:hover { color: #fff; border-color: #fff; }
-        .btn-primary { background: #fff; color: #000; }
-        .btn-mouseland { background: var(--mouseland-accent); color: #000; }
-        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
 
-        /* Admin */
+        /* --- ADMIN CONTROLS --- */
         .admin-panel {
-            background: #0a0a0a;
+            background: #0a0a0c;
             border: 1px solid var(--border);
-            border-left: 4px solid var(--mouseland-accent);
-            padding: 2rem;
+            border-left: 5px solid var(--mouseland-accent);
+            padding: 3rem;
             border-radius: 8px;
-            margin-bottom: 3rem;
+            margin-bottom: 5rem;
             display: none; 
         }
         .admin-input, .admin-textarea {
-            background: #000; border: 1px solid #333; padding: 1rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 15px;
+            background: #000; border: 1px solid #333; padding: 1.2rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 15px; font-family: var(--font-mono);
         }
 
-        /* --- WAR ROOM (EXPANDED LORE SECTION) --- */
+        /* --- WAR ROOM --- */
         .war-room-container {
-            background: linear-gradient(180deg, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.9));
-            border: 1px solid #333;
-            border-top: 5px solid var(--danger);
-            padding: 3rem;
+            background: linear-gradient(180deg, rgba(15, 15, 15, 0.9), rgba(5, 5, 5, 1));
+            border: 1px solid #1f1f23;
+            border-top: 6px solid var(--danger);
+            padding: 4rem;
             border-radius: 12px;
-            margin: 5rem 0;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            margin: 6rem 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
-        .war-stage {
-            margin-bottom: 4rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #222;
-        }
-        .war-stage h3 {
-            color: var(--danger);
-            text-transform: uppercase;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-family: 'Courier New', monospace;
-        }
-        .war-stage p {
-            font-size: 1.05rem;
-            color: #ccc;
-            margin-bottom: 1.5rem;
-            max-width: 850px;
-        }
+        .war-stage { margin-bottom: 5rem; padding-bottom: 2rem; border-bottom: 1px solid #1a1a1a; }
+        .war-stage h3 { color: var(--danger); text-transform: uppercase; font-size: 1.8rem; margin-bottom: 1.5rem; font-family: var(--font-mono); }
+        .war-stage p { font-size: 1.1rem; color: #a1a1aa; margin-bottom: 1.5rem; max-width: 950px; }
         .faction-highlight { font-weight: bold; color: var(--mouseland-accent); }
         .enemy-highlight { font-weight: bold; color: var(--danger); }
         .ally-highlight { font-weight: bold; color: var(--link-color); }
 
-        .map-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        .map-card {
-            background: #000;
-            padding: 15px;
-            border: 1px solid #333;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .map-card img { width: 100%; height: auto; border-radius: 6px; border: 1px solid #222; margin-bottom: 10px; }
+        .map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-top: 4rem; }
+        .map-card { background: #000; padding: 20px; border: 1px solid #222; border-radius: 12px; text-align: center; }
+        .map-card img { width: 100%; border-radius: 6px; border: 1px solid #111; margin-bottom: 15px; }
 
-        /* Leadership Cards */
-        .leadership-section { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-bottom: 5rem; }
-        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 2.5rem; border-radius: 15px; text-align: center; width: 300px; }
-        .leader-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 1.5rem; }
-
-        /* News Section */
+        /* --- BROADCAST ENGINE --- */
+        .news-section { margin-top: 8rem; }
         .news-archive-container {
-            max-height: 800px; 
+            max-height: 900px; 
             overflow-y: auto;  
-            border: 1px solid #222;
-            padding: 2rem;
+            border: 1px solid #1a1a1a;
+            padding: 3rem;
             border-radius: 12px;
             background: rgba(0,0,0,0.4);
+            width: 100%;
         }
-        .news-item { background: #121214; border: 1px solid var(--border); padding: 2rem; border-radius: 8px; margin-bottom: 2rem; }
-        
-        /* Cities Grid */
-        .cities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
-        .city-card { background: #111; border-radius: 12px; overflow: hidden; border: 1px solid #222; text-align: center; }
-        .city-card img { width: 100%; height: 140px; object-fit: cover; }
-        .city-name { padding: 1rem; font-weight: bold; }
+        .news-item { background: #0c0c0e; border: 1px solid var(--border); padding: 3rem; border-radius: 8px; margin-bottom: 3rem; position: relative; }
+        .news-actions { position: absolute; top: 2rem; right: 2rem; display: flex; gap: 20px; }
+        .action-icon { cursor: pointer; font-size: 1.2rem; opacity: 0.5; transition: 0.2s; }
+        .action-icon:hover { opacity: 1; }
 
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal-content { background: #18181b; padding: 3rem; border-radius: 16px; border: 1px solid var(--mouseland-accent); width: 100%; max-width: 450px; text-align: center; }
+        /* --- EMBED SYSTEM --- */
+        .embed-wrapper { margin-top: 25px; border-radius: 12px; overflow: hidden; border: 1px solid #222; background: #000; }
+        .yt-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .yt-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .link-preview-card { display: flex; align-items: center; gap: 20px; padding: 20px; background: #050505; border: 1px solid #222; border-radius: 12px; text-decoration: none !important; margin-top: 15px; transition: 0.2s; }
+        .link-preview-card:hover { border-color: var(--mouseland-accent); background: #0a0a0a; }
+
+        .leadership-section { display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; margin: 8rem 0; }
+        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 4rem; border-radius: 20px; text-align: center; width: 360px; transition: 0.3s; }
+        .leader-card:hover { border-color: var(--mouseland-accent); transform: translateY(-5px); }
+        .leader-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 2rem; }
+
+        .cities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3rem; margin-top: 5rem; }
+        .city-card { background: #050505; border-radius: 15px; overflow: hidden; border: 1px solid #1a1a1a; text-align: center; }
+        .city-card img { width: 100%; height: 160px; object-fit: cover; opacity: 0.6; transition: 0.3s; }
+        .city-card:hover img { opacity: 1; }
+        .city-name { padding: 1.5rem; font-weight: 800; font-family: var(--font-mono); letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; }
+
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .modal-content { background: #0a0a0c; padding: 4rem; border-radius: 20px; border: 1px solid var(--mouseland-accent); width: 100%; max-width: 500px; text-align: center; }
         
-        footer { padding: 5rem 0; border-top: 1px solid #222; text-align: center; color: #444; margin-top: 5rem; font-size: 0.8rem; }
+        footer { padding: 8rem 0; border-top: 1px solid #1a1a1a; text-align: center; color: #333; margin-top: 10rem; font-size: 0.9rem; font-family: var(--font-mono); letter-spacing: 4px; }
     </style>
 </head>
 <body>
@@ -203,46 +187,42 @@
     <div id="intro-overlay">
         <div class="intro-content">
             <div class="intro-title">MOUSELAND</div>
-            <p style="color: #666; font-family: monospace; letter-spacing: 3px; margin-bottom: 3rem;">ENCRYPTED GOV PROTOCOL // ANYMOUSXE_AUTH</p>
-            <button id="enter-btn">DECRYPT SYSTEMS</button>
+            <p style="color: #444; font-family: var(--font-mono); letter-spacing: 10px; margin-bottom: 4rem;">DECRYPTING ACCESS PROTOCOL // MIC_PRIVATE</p>
+            <button id="enter-btn">INITIALIZE SYSTEMS</button>
         </div>
     </div>
 
     <div id="main-content">
-        
         <header class="ml-header">
             <div class="container">
                 <nav class="nav-bar">
-                    <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← BACK TO ANYMOUSE.SITE</a>
-                    <div id="auth-container">
-                        <button id="login-trigger-btn" class="btn btn-sm btn-primary">LOG IN</button>
-                    </div>
+                    <a href="https://anymouse.site" class="btn btn-ghost">← RETURN TO ANYMOUSE.SITE</a>
+                    <div id="auth-container"><button id="login-trigger-btn" class="btn btn-mouseland">AUTH LOGIN</button></div>
                 </nav>
                 <div>
                     <img src="mouselandflag.png" alt="State Flag" class="flag-img tilt-card">
-                    <h1 class="tilt-card" style="font-size: 3.5rem;">The Mouseland Archive</h1>
-                    <p style="color: var(--mouseland-accent); letter-spacing: 5px;">UNITY • CHEESE • STRENGTH</p>
+                    <h1 class="tilt-card" style="font-size: 5rem; letter-spacing: -3px; font-weight: 900;">Mouseland Gov</h1>
+                    <p style="color: var(--mouseland-accent); letter-spacing: 10px; font-weight: 900; text-transform: uppercase;">Unity • Strength • Honor</p>
                 </div>
             </div>
         </header>
 
         <div class="container">
-
             <section id="admin-panel" class="admin-panel">
-                <h3 style="color: var(--mouseland-accent); margin-bottom: 1.5rem;"><i class="fas fa-crown"></i> MIC COMMAND CENTER</h3>
-                <div id="edit-indicator" style="display:none; color: var(--warning); font-weight:bold; margin-bottom: 1rem;">[ EDITING PREVIOUS LOG ]</div>
+                <h3 style="color: var(--mouseland-accent); margin-bottom: 2rem; font-family: var(--font-mono);"><i class="fas fa-terminal"></i> MIC BROADCAST TERMINAL</h3>
+                <div id="edit-indicator" style="display:none; color: var(--warning); font-weight:900; margin-bottom: 1.5rem; text-transform: uppercase;">[ WARN: Editing Active Log ]</div>
                 <form id="post-form">
-                    <input type="text" id="post-title" class="admin-input" placeholder="Transmission Title" required>
-                    <textarea id="post-content" class="admin-textarea" rows="4" placeholder="Type transmission... Links will auto-embed." required></textarea>
+                    <input type="text" id="post-title" class="admin-input" placeholder="TRANS_TITLE" required>
+                    <textarea id="post-content" class="admin-textarea" rows="5" placeholder="ENTER TRANSMISSION DATA... YouTube/Web links will embed." required></textarea>
                     <select id="post-type" class="admin-input">
-                        <option value="standard">Standard Transmission</option>
+                        <option value="standard">Standard Log</option>
                         <option value="urgent">🚨 HIGH PRIORITY</option>
                         <option value="decree">📜 STATE DECREE</option>
-                        <option value="war">⚔️ WAR UPDATE</option>
+                        <option value="war">⚔️ COMBAT UPDATE</option>
                     </select>
-                    <div style="display: flex; gap: 15px;">
-                        <button type="submit" id="submit-btn" class="btn btn-mouseland" style="flex: 2;">BROADCAST</button>
-                        <button type="button" id="cancel-edit-btn" class="btn btn-danger" style="display: none; flex: 1;">ABORT</button>
+                    <div style="display: flex; gap: 20px;">
+                        <button type="submit" id="submit-btn" class="btn btn-mouseland" style="flex: 2; height: 60px;">EXECUTE BROADCAST</button>
+                        <button type="button" id="cancel-edit-btn" class="btn btn-danger" style="display: none; flex: 1; height: 60px;">ABORT EDIT</button>
                     </div>
                 </form>
             </section>
@@ -250,113 +230,96 @@
             <section class="leadership-section">
                 <div class="leader-card tilt-card">
                     <img src="anymousxe.png" class="leader-img">
-                    <h2>Anymousxe</h2>
-                    <p style="color: var(--mouseland-accent); font-weight: bold; text-transform: uppercase;">MIC (Mice In Charge)</p>
+                    <h2 style="font-size: 2.5rem;">Anymousxe</h2>
+                    <p style="color: var(--mouseland-accent); font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">MIC [CHIEF]</p>
                 </div>
                 <div class="leader-card tilt-card">
                     <img src="color.png" class="leader-img">
-                    <h2>Color</h2>
-                    <p style="color: #a855f7; font-weight: bold; text-transform: uppercase;">VMIC (Vice Mice In Charge)</p>
+                    <h2 style="font-size: 2.5rem;">Color</h2>
+                    <p style="color: #a855f7; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">VMIC [VICE]</p>
                 </div>
             </section>
 
             <section id="war-room" class="war-room-container">
-                <h2 style="color: var(--danger); font-size: 2.5rem; text-transform: uppercase; margin-bottom: 2rem;">
-                    <i class="fas fa-skull-crossbones"></i> The Great Resource War Archive
-                </h2>
-                <p style="color: var(--warning); font-weight: bold; margin-bottom: 20px;">[ STATUS: ACTIVE CONFLICT ]</p>
+                <h2 style="color: var(--danger); font-size: 4rem; text-transform: uppercase; margin-bottom: 3rem; font-weight: 900; letter-spacing: -2px;">The War Archives</h2>
+                <p style="color: #666; font-family: var(--font-mono); margin-bottom: 3rem;">Status: Active Conflict // AI Reinforcement Phase</p>
                 
                 <div class="war-stage">
-                    <h3>Stage I: The Fry-Nugget Schism</h3>
-                    <p>
-                        The conflict ignited when trade relations collapsed between <span class="faction-highlight">Nuggetland</span> and <span class="faction-highlight">Fryland</span>. Mouseland held alliances with both, but the Council made the strategic choice to side with <span class="faction-highlight">Fryland</span>. We officially mobilized our infantry to secure the borders.
-                    </p>
+                    <h3>I: The Dipping Schism</h3>
+                    <p>Conflict sparked between <span class="faction-highlight">Nuggetland</span> and <span class="faction-highlight">Fryland</span> over dipping sauce trade routes. Mouseland officially sided with <span class="faction-highlight">Fryland</span>.</p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage II: The Coalition Entry</h3>
-                    <p>
-                        The war spiraled as the powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> entered the fray. They formed a hostile coalition against Mouseland territory, Stretching our defenses to the breaking point.
-                    </p>
+                    <h3>II: The Coalition Surge</h3>
+                    <p>The powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated assault against Mouseland territory.</p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage III: The Great Betrayal</h3>
-                    <p>
-                        In the darkest turn of the war, our "allies" in <span class="faction-highlight">Fryland</span> backstabbed us. They turned their heavy weaponry on Mouseland forces mid-battle, leaving us isolated and surrounded by enemies on all fronts.
-                    </p>
+                    <h3>III: The Salted Betrayal</h3>
+                    <p>In a shock move, <span class="faction-highlight">Fryland</span> backstabbed Mouseland mid-battle, leaving our defenses exposed to the coalition.</p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage IV: Whisker Union Intervention</h3>
-                    <p>
-                        Just as the capital walls were breached, the <span class="ally-highlight">United Whisker Union</span> (UWU) answered our emergency broadcast. Their flanking maneuvers provided our remaining troops with vital breathing room to regroup.
-                    </p>
+                    <h3>IV: Union & Websim Protocol</h3>
+                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) intervened to flank the enemy. MIC then initiated the <strong>Websim Protocol</strong>, calling in <span class="ally-highlight">United Websim</span>.</p>
                 </div>
 
-                <div class="war-stage">
-                    <h3>Stage V: The Websim Protocol (CURRENT)</h3>
-                    <p>
-                        To prevent total collapse, Anymousxe initiated the <strong>Websim Protocol</strong>. We have called in <span class="ally-highlight">United Websim</span> for emergency backup. They have deployed thousands of <strong>AI Combat Bots</strong> to the warzone. The war is <strong>not over</strong>—we are currently holding the line with AI reinforcements.
-                    </p>
+                <div class="war-stage" style="border-bottom: none;">
+                    <h3>V: Current Status (ONGOING)</h3>
+                    <p>The war is NOT over. Thousands of <span class="ally-highlight">Websim AI Combat Bots</span> have been deployed as emergency backup to reinforce our battalions. We are currently holding the grease-line.</p>
                 </div>
 
                 <div class="map-grid">
                     <div class="map-card tilt-card">
-                        <img src="mouselandmap.png" alt="General Map">
-                        <div style="color: #888; font-size: 0.8rem; text-transform: uppercase;">National Survey v2.6</div>
+                        <img src="mouselandmap.png" alt="National Map">
+                        <p style="font-size: 0.7rem; color: #444; margin-top: 10px;">Territorial Grid v2.1</p>
                     </div>
                     <div class="map-card tilt-card">
-                        <img src="mouseland%20war%20map.png" alt="Strategic Map">
-                        <div style="color: var(--danger); font-size: 0.8rem; text-transform: uppercase;">Strategic Frontlines (Ongoing)</div>
+                        <img src="mouseland%20war%20map.png" alt="Combat Map">
+                        <p style="font-size: 0.7rem; color: var(--danger); margin-top: 10px;">Active Frontlines // DEFCON 1</p>
                     </div>
                 </div>
             </section>
 
             <section class="news-section">
-                <h2 style="margin-bottom: 2rem; border-left: 5px solid var(--mouseland-accent); padding-left: 1rem;">STATE BROADCASTS</h2>
+                <h2 style="margin-bottom: 4rem; font-size: 3rem; font-weight: 900; letter-spacing: -1px;">State Broadcasts</h2>
                 <div id="news-feed" class="news-archive-container">
-                    <div style="text-align: center; padding: 3rem; color: #555;">SYNCING WITH FIREBASE...</div>
+                    <div style="text-align: center; padding: 5rem; color: #333; font-family: var(--font-mono);">SYNCING SECURE FREQUENCY...</div>
                 </div>
             </section>
 
-            <section style="margin-top: 8rem;">
-                <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 5px;">The Five Great Cities</h2>
+            <section style="margin-top: 12rem;">
+                <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 15px; font-weight: 200; font-size: 1.2rem; margin-bottom: 6rem; color: #333;">The 5 Great Settlements</h2>
                 <div class="cities-grid">
-                    <div class="city-card"><img src="boxborough.png"><div class="city-name">Boxborough</div></div>
-                    <div class="city-card"><img src="corrugatecrossing.png"><div class="city-name">Corrugate Crossing</div></div>
-                    <div class="city-card"><img src="rodentiamajor.png"><div class="city-name">Rodentia Major</div></div>
-                    <div class="city-card"><img src="rubbishheights.png"><div class="city-name">Rubbish Heights</div></div>
-                    <div class="city-card"><img src="mec.png"><div class="city-name">MEC</div></div>
+                    <div class="city-card"><img src="boxborough.png"><div class="city-name">BOXBOROUGH</div></div>
+                    <div class="city-card"><img src="corrugatecrossing.png"><div class="city-name">CORRUGATE_CROSSING</div></div>
+                    <div class="city-card"><img src="rodentiamajor.png"><div class="city-name">RODENTIA_MAJOR</div></div>
+                    <div class="city-card"><img src="rubbishheights.png"><div class="city-name">RUBBISH_HEIGHTS</div></div>
+                    <div class="city-card"><img src="mec.png"><div class="city-name">MEC_CITY</div></div>
                 </div>
             </section>
 
-            <section style="margin-top: 8rem; text-align: center;">
-                <h2 style="margin-bottom: 2rem;">Authorized Citizen Identification</h2>
-                <img src="mouselandcard.png" style="width: 100%; max-width: 500px; border-radius: 20px; border: 1px solid var(--mouseland-accent); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);">
+            <section style="margin-top: 15rem; text-align: center;">
+                <p style="color: #222; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 10px; margin-bottom: 4rem;">Authorized Citizen Identification Only</p>
+                <img src="mouselandcard.png" style="width: 100%; max-width: 650px; border-radius: 8px; border: 1px solid #1a1a1e; box-shadow: 0 40px 100px rgba(0,0,0,0.8);">
             </section>
-
         </div>
 
         <footer>
-            <div class="container">
-                <p>&copy; 2026 MOUSELAND GOVERNMENT | SYSTEM OPERATOR: ANYMOUSXE</p>
-                <p style="margin-top: 10px; opacity: 0.5;">POWERED BY FIREBASE, WEBSIM, AND SHEER DETERMINATION</p>
-            </div>
+            <p>&copy; 2026 MOUSELAND GOV ARCHIVE // OPERATOR: ANYMOUSXE // SECURE_V3</p>
         </footer>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem;">PROTOCOL LOGIN</h2>
-            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; margin-bottom: 1rem;">GOOGLE AUTHENTICATION</button>
-            <div style="margin: 1rem 0; color: #444;">-- OR --</div>
+            <h2 style="font-size: 2.5rem; letter-spacing: -2px; margin-bottom: 3rem;">IDENT_PROTO</h2>
+            <button id="google-auth-btn" class="btn btn-mouseland" style="width:100%; height: 60px; margin-bottom: 2rem;">SYNC GOOGLE ID</button>
             <form id="email-auth-form">
-                <input type="email" id="auth-email" class="admin-input" placeholder="Email Address" required>
-                <input type="password" id="auth-password" class="admin-input" placeholder="Secure Password" required>
-                <button type="submit" class="btn btn-mouseland" style="width:100%;">ACCESS SYSTEM</button>
+                <input type="email" id="auth-email" class="admin-input" placeholder="User@Email" required>
+                <input type="password" id="auth-password" class="admin-input" placeholder="Passcode" required>
+                <button type="submit" class="btn btn-ghost" style="width:100%; height: 60px;">ACCESS TERMINAL</button>
             </form>
-            <p id="auth-error" style="color:var(--danger); display:none; margin-top:1.5rem; font-size: 0.8rem;"></p>
+            <p id="auth-error" style="color:var(--danger); display:none; margin-top:2rem; font-family: var(--font-mono); font-size: 0.75rem;"></p>
         </div>
     </div>
 
@@ -365,13 +328,12 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // --- VISUAL LOGIC ---
+        // --- VISUAL ENGINE ---
         document.addEventListener('DOMContentLoaded', () => {
             const enterBtn = document.getElementById('enter-btn');
             const overlay = document.getElementById('intro-overlay');
             const bgMusic = document.getElementById('bg-music');
-            
-            if(bgMusic) bgMusic.volume = 0.25;
+            if(bgMusic) bgMusic.volume = 0.2;
             
             enterBtn.onclick = () => {
                 document.getElementById('sfx-click').play();
@@ -389,9 +351,9 @@
                 constructor() {
                     this.x = Math.random() * canvas.width;
                     this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 1.5 + 0.5;
-                    this.speedX = (Math.random() - 0.5) * 0.5;
-                    this.speedY = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 1.5;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.speedY = (Math.random() - 0.5) * 0.4;
                 }
                 update() {
                     this.x += this.speedX;
@@ -406,7 +368,7 @@
                     ctx.fill();
                 }
             }
-            for(let i=0; i<100; i++) particles.push(new Particle());
+            for(let i=0; i<120; i++) particles.push(new Particle());
             function animate() {
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 particles.forEach(p => { p.update(); p.draw(); });
@@ -439,35 +401,39 @@
         const newsFeed = document.getElementById('news-feed');
         const postForm = document.getElementById('post-form');
 
-        document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
-        window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
+        // --- EMBED ENGINE RESTORED ---
+        function formatContent(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            let embeds = "";
+            const formattedText = text.replace(urlRegex, (url) => {
+                const ytMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                if (ytMatch) {
+                    const videoId = ytMatch[1];
+                    embeds += `<div class="embed-wrapper"><div class="yt-container"><iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe></div></div>`;
+                } else {
+                    embeds += `<a href="${url}" target="_blank" class="link-preview-card"><i class="fas fa-link"></i><div style="font-size:0.8rem;color:#aaa;">EXTERNAL: ${url}</div></a>`;
+                }
+                return `<a href="${url}" target="_blank" style="color:var(--link-color);">${url}</a>`;
+            });
+            return `<div>${formattedText}</div>${embeds}`;
+        }
 
-        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
-        document.getElementById('email-auth-form').onsubmit = (e) => {
-            e.preventDefault();
-            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
-                .then(() => modal.style.display='none')
-                .catch(err => {
-                    const errEl = document.getElementById('auth-error');
-                    errEl.style.display = 'block';
-                    errEl.textContent = err.message;
-                });
-        };
-
+        // --- AUTH SYSTEM ---
         onAuthStateChanged(auth, (user) => {
             const container = document.getElementById('auth-container');
+            const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
             if (user) {
-                const isAdmin = WHITELIST.includes(user.email.toLowerCase());
-                container.innerHTML = `<button id="logout-btn" class="btn btn-sm btn-danger">DISCONNECT</button>`;
+                container.innerHTML = `<button id="logout-btn" class="btn btn-ghost">DISCONNECT</button>`;
                 document.getElementById('logout-btn').onclick = () => signOut(auth);
-                if(isAdmin) adminPanel.style.display = "block";
+                adminPanel.style.display = isAdmin ? "block" : "none";
             } else {
-                container.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">LOG IN</button>`;
+                container.innerHTML = `<button id="login-trigger-btn" class="btn btn-mouseland">AUTH LOGIN</button>`;
                 document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
                 adminPanel.style.display = "none";
             }
         });
 
+        // --- POSTING ENGINE ---
         postForm.onsubmit = async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
@@ -483,27 +449,29 @@
                 updatedAt: serverTimestamp()
             };
 
-            if(isEditing) {
-                await updateDoc(doc(db, "updates", editDocId), payload);
-                resetForm();
-            } else {
-                payload.createdAt = serverTimestamp();
-                await addDoc(collection(db, "updates"), payload);
-                postForm.reset();
-            }
+            try {
+                if(isEditing) {
+                    await updateDoc(doc(db, "updates", editDocId), payload);
+                    resetForm();
+                } else {
+                    payload.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "updates"), payload);
+                    postForm.reset();
+                }
+            } catch(err) { alert("FAIL: " + err.message); }
         };
 
         function resetForm() {
-            isEditing = false;
-            editDocId = null;
+            isEditing = false; editDocId = null;
             postForm.reset();
-            document.getElementById('submit-btn').textContent = "BROADCAST";
+            document.getElementById('submit-btn').textContent = "EXECUTE BROADCAST";
             document.getElementById('cancel-edit-btn').style.display = "none";
             document.getElementById('edit-indicator').style.display = "none";
         }
 
         document.getElementById('cancel-edit-btn').onclick = resetForm;
 
+        // --- REALTIME FEED ENGINE ---
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
             snapshot.forEach((docSnap) => {
@@ -515,38 +483,38 @@
                 item.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div style="display:flex; gap:15px; align-items:center;">
-                            <img src="${data.pfp}" style="width:40px; height:40px; border-radius:50%; border:1px solid #444;">
+                            <img src="${data.pfp}" style="width:45px; height:45px; border-radius:50%; border:2px solid #222;">
                             <div>
-                                <div style="font-weight:bold; font-size:0.9rem;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 5px; border-radius:3px;">${data.role}</span></div>
-                                <div style="font-size:0.7rem; color:#555;">${data.createdAt?.toDate().toLocaleString() || 'Just now'}</div>
+                                <div style="font-weight:900; font-size:1rem;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px; margin-left:10px;">${data.role}</span></div>
+                                <div style="font-size:0.7rem; color:#444; font-family:var(--font-mono);">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
                             </div>
                         </div>
                         ${isAdmin ? `
-                            <div>
-                                <i class="fas fa-edit edit-post" style="cursor:pointer; color:var(--link-color); margin-right:15px;" data-id="${docSnap.id}"></i>
-                                <i class="fas fa-trash delete-post" style="cursor:pointer; color:var(--danger);" data-id="${docSnap.id}"></i>
+                            <div class="news-actions">
+                                <i class="fas fa-edit action-icon" style="color:var(--link-color);" data-id="${docSnap.id}"></i>
+                                <i class="fas fa-trash-alt action-icon" style="color:var(--danger);" data-id="${docSnap.id}"></i>
                             </div>
                         ` : ''}
                     </div>
-                    <h3 style="margin:1rem 0 0.5rem 0; color:${data.type === 'urgent' ? 'var(--danger)' : '#fff'};">${data.title}</h3>
-                    <p style="color:#aaa;">${data.content}</p>
+                    <h3 style="margin:2.5rem 0 1rem 0; font-size:1.8rem; color:${data.type === 'war' ? 'var(--danger)' : '#fff'};">${data.title}</h3>
+                    <div style="color:#aaa; font-size:1.05rem;">${formatContent(data.content)}</div>
                 `;
                 newsFeed.appendChild(item);
             });
 
-            document.querySelectorAll('.delete-post').forEach(b => {
-                b.onclick = async () => { if(confirm("Permanently delete log?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
+            // Handlers
+            document.querySelectorAll('.fa-trash-alt').forEach(b => {
+                b.onclick = async () => { if(confirm("PERMANENTLY ERASE LOG?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
             });
-            document.querySelectorAll('.edit-post').forEach(b => {
+            document.querySelectorAll('.fa-edit').forEach(b => {
                 b.onclick = () => {
                     const id = b.dataset.id;
-                    const docData = snapshot.docs.find(d => d.id === id).data();
-                    document.getElementById('post-title').value = docData.title;
-                    document.getElementById('post-content').value = docData.content;
-                    document.getElementById('post-type').value = docData.type;
-                    isEditing = true;
-                    editDocId = id;
-                    document.getElementById('submit-btn').textContent = "SAVE CHANGES";
+                    const d = snapshot.docs.find(s => s.id === id).data();
+                    document.getElementById('post-title').value = d.title;
+                    document.getElementById('post-content').value = d.content;
+                    document.getElementById('post-type').value = d.type;
+                    isEditing = true; editDocId = id;
+                    document.getElementById('submit-btn').textContent = "SAVE LOG EDIT";
                     document.getElementById('cancel-edit-btn').style.display = "block";
                     document.getElementById('edit-indicator').style.display = "block";
                     adminPanel.scrollIntoView({behavior:'smooth'});
@@ -554,9 +522,23 @@
             });
         });
 
+        // Tilt Card SFX
         document.querySelectorAll('.tilt-card').forEach(c => {
             c.onmouseenter = () => document.getElementById('sfx-hover').play();
         });
+
+        // Global Close
+        window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
+        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
+        document.getElementById('email-auth-form').onsubmit = (e) => {
+            e.preventDefault();
+            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
+                .then(() => modal.style.display='none')
+                .catch(err => {
+                    const e = document.getElementById('auth-error');
+                    e.style.display = 'block'; e.textContent = "DENIED: " + err.message;
+                });
+        };
     </script>
 </body>
 </html>
