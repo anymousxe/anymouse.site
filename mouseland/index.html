@@ -9,17 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <meta name="description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
-    
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://anymouse.site/mouseland">
     <meta property="og:title" content="Mouseland | Official Government Site">
     <meta property="og:description" content="Official Archive of the Mice In Charge. Unity, Strength, Honor.">
-    <meta property="og:image" content="mouselandcard.png">
+    <meta property="og:image" content="https://anymouse.site/mouselandcard.png">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
-    <meta name="twitter:description" content="Official Archive of the Mice In Charge. Security Protocol Active.">
-    <meta name="twitter:image" content="mouselandcard.png">
+    <meta name="twitter:description" content="Official Archive of the Mice In Charge. Security Protocol: Active.">
+    <meta name="twitter:image" content="https://anymouse.site/mouselandcard.png">
 
     <style>
         /* --- CONFIG & VARIABLES --- */
@@ -88,7 +87,7 @@
         .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .btn-ghost:hover { color: #fff; border-color: #fff; }
 
-        /* --- TERMINAL (HIDDEN UNLESS ADMIN) --- */
+        /* --- TERMINAL (STRICT SECURITY) --- */
         .admin-panel {
             background: #0a0a0c; border: 1px solid var(--border); border-left: 5px solid var(--mouseland-accent);
             padding: 3rem; border-radius: 8px; margin-bottom: 5rem; display: none; 
@@ -97,7 +96,7 @@
             background: #000; border: 1px solid #333; padding: 1.2rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 15px; font-family: var(--font-mono);
         }
 
-        /* --- WAR ROOM ARCHIVES --- */
+        /* --- WAR ROOM ARCHIVES (DETAILED) --- */
         .war-room-container {
             background: linear-gradient(180deg, rgba(15, 15, 15, 0.9), rgba(5, 5, 5, 1));
             border: 1px solid #1f1f23; border-top: 6px solid var(--danger); padding: 4rem;
@@ -124,7 +123,7 @@
         .news-item.urgent { border-left: 5px solid var(--danger); background: linear-gradient(90deg, rgba(239, 68, 68, 0.05), transparent); }
         .news-item.war { border-left: 5px solid var(--warning); }
         
-        .news-actions { display: none; gap: 20px; } /* Managed by script visibility */
+        .news-actions { display: none; gap: 20px; } 
         .action-icon { cursor: pointer; font-size: 1.3rem; transition: 0.2s; opacity: 0.6; }
         .action-icon:hover { opacity: 1; transform: scale(1.1); }
 
@@ -188,7 +187,7 @@
                 <div id="edit-indicator" style="display:none; color: var(--warning); font-weight:900; margin-bottom: 1.5rem; text-transform: uppercase;">[ WARN: Editing Active Log ]</div>
                 <form id="post-form">
                     <input type="text" id="post-title" class="admin-input" placeholder="TRANS_TITLE" required>
-                    <textarea id="post-content" class="admin-textarea" rows="5" placeholder="ENTER TRANSMISSION DATA... YouTube/Web links will embed." required></textarea>
+                    <textarea id="post-content" class="admin-textarea" rows="5" placeholder="ENTER TRANSMISSION DATA..." required></textarea>
                     <select id="post-type" class="admin-input">
                         <option value="standard">Standard Log</option>
                         <option value="urgent">🚨 HIGH PRIORITY</option>
@@ -220,28 +219,28 @@
                 <p style="color: #666; font-family: var(--font-mono); margin-bottom: 3rem;">Status: Active Conflict // AI Reinforcement Phase</p>
                 
                 <div class="war-stage">
-                    <h3>I: The Dipping Schism</h3>
-                    <p>Conflict sparked between <span class="faction-highlight">Nuggetland</span> and <span class="faction-highlight">Fryland</span> over dipping sauce trade routes. Mouseland officially sided with <span class="faction-highlight">Fryland</span>.</p>
+                    <h3>I: The Great Dipping Schism</h3>
+                    <p>Conflict erupted at the border of <span class="faction-highlight">Rodentia Major</span> over Nuggetland's illegal taxation of dipping sauce trade routes. Mouseland deployed the 1st Battalion to secure the Honey Mustard pipelines, officially siding with <span class="faction-highlight">Fryland</span> to maintain regional stability.</p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>II: The Coalition Surge</h3>
-                    <p>The powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated assault against Mouseland territory.</p>
+                    <h3>II: The Triple Saturated Siege</h3>
+                    <p>The coalition forces of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a massive pincer maneuver. Heavy artillery bombardment leveled 40% of the Boxborough outskirts. Mouseland's defensive perimeter was pushed back to the inner cardboard fortifications.</p>
                 </div>
 
                 <div class="war-stage">
                     <h3>III: The Salted Betrayal</h3>
-                    <p>In a shock move, <span class="faction-highlight">Fryland</span> backstabbed Mouseland mid-battle, leaving our defenses exposed to the coalition.</p>
+                    <p>In a shock intelligence failure, <span class="faction-highlight">Fryland</span> forces initiated the "Salt-Flank" maneuver, backstabbing Mouseland mid-siege. Our supply lines were severed, leaving our forward troops isolated in the Rubbish Heights. <strong>MIC High Command</strong> initiated emergency blackout protocols.</p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>IV: Union & Websim Protocol</h3>
-                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) intervened to flank the enemy. MIC then initiated the <strong>Websim Protocol</strong>, calling in <span class="ally-highlight">United Websim</span>.</p>
+                    <h3>IV: The Whisker-Websim Breach</h3>
+                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) launched a surprise counter-offensive from the attic vents, flanking the coalition tanks. Simultaneously, MIC initiated the <strong>Websim Protocol</strong>, opening a digital bridge to <span class="ally-highlight">United Websim</span> for infinite server-side reinforcement.</p>
                 </div>
 
                 <div class="war-stage" style="border-bottom: none;">
-                    <h3>V: Current Status (ONGOING)</h3>
-                    <p>The war is NOT over. Thousands of <span class="ally-highlight">Websim AI Combat Bots</span> have been deployed as emergency backup to reinforce our battalions. We are holding the grease-line.</p>
+                    <h3>V: Current Status: Trench Warfare at the Grease-Line</h3>
+                    <p>The frontlines have stabilized around <span class="faction-highlight">MEC City</span>. Over 50,000 <span class="ally-highlight">Websim AI Combat Bots</span> are currently engaged in a brutal 24/7 skirmish to prevent a total coalition breakthrough. Defensive status: <strong>DEFCON 1</strong>. Every citizen is a soldier. Victory is the only option.</p>
                 </div>
 
                 <div class="map-grid">
@@ -251,7 +250,7 @@
                     </div>
                     <div class="map-card tilt-card">
                         <img src="mouseland%20war%20map.png" alt="Combat Map">
-                        <p style="font-size: 0.7rem; color: var(--danger); margin-top: 10px;">Active Frontlines // DEFCON 1</p>
+                        <p style="font-size: 0.7rem; color: var(--danger); margin-top: 10px;">Active Frontlines // THE GREASE-LINE SECTOR</p>
                     </div>
                 </div>
             </section>
@@ -343,7 +342,7 @@
             animate();
         });
 
-        // --- FIREBASE LOGIC ---
+        // --- FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
             authDomain: "mouseland-istuff.firebaseapp.com",
@@ -367,7 +366,6 @@
         const newsFeed = document.getElementById('news-feed');
         const postForm = document.getElementById('post-form');
 
-        // --- EMBED ENGINE ---
         function formatContent(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             let embeds = "";
@@ -384,12 +382,11 @@
             return `<div>${formattedText}</div>${embeds}`;
         }
 
-        // --- AUTH SYSTEM (STRICT SECURITY) ---
+        // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
-            const container = document.getElementById('auth-container');
             const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
             adminPanel.style.display = isAdmin ? "block" : "none";
-            
+            const container = document.getElementById('auth-container');
             if (user) {
                 container.innerHTML = `<button id="logout-btn" class="btn btn-ghost">DISCONNECT</button>`;
                 document.getElementById('logout-btn').onclick = () => signOut(auth);
@@ -399,7 +396,7 @@
             }
         });
 
-        // --- POSTING ENGINE ---
+        // --- POSTING ---
         postForm.onsubmit = async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
@@ -433,7 +430,7 @@
         }
         document.getElementById('cancel-edit-btn').onclick = resetForm;
 
-        // --- REALTIME SNAPSHOT (URGENCY & SECURITY) ---
+        // --- FEED ---
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
             const user = auth.currentUser;
@@ -443,7 +440,6 @@
                 const data = docSnap.data();
                 const item = document.createElement('div');
                 
-                // URGENCY EMOJI LOGIC
                 let emoji = "📝";
                 if(data.type === "urgent") emoji = "🚨";
                 if(data.type === "war") emoji = "⚔️";
@@ -455,8 +451,8 @@
                         <div style="display:flex; gap:15px; align-items:center;">
                             <img src="${data.pfp}" style="width:45px; height:45px; border-radius:50%; border:2px solid #222;">
                             <div>
-                                <div style="font-weight:900; font-size:1rem;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px; margin-left:10px;">${data.role}</span></div>
-                                <div style="font-size:0.7rem; color:#444; font-family:var(--font-mono);">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
+                                <div style="font-weight:900;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px;">${data.role}</span></div>
+                                <div style="font-size:0.7rem; color:#444;">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
                             </div>
                         </div>
                         ${isAdmin ? `
@@ -472,7 +468,6 @@
                 newsFeed.appendChild(item);
             });
 
-            // Re-attach listeners for Whitelisted Admin
             document.querySelectorAll('.fa-trash-can').forEach(b => {
                 b.onclick = async () => { if(confirm("ERASE LOG?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
             });
@@ -492,10 +487,7 @@
             });
         });
 
-        // UI ACTIONS
-        document.querySelectorAll('.tilt-card').forEach(c => {
-            c.onmouseenter = () => document.getElementById('sfx-hover').play();
-        });
+        document.querySelectorAll('.tilt-card').forEach(c => { c.onmouseenter = () => document.getElementById('sfx-hover').play(); });
         window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
         document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
     </script>
