@@ -264,39 +264,40 @@
                 <h2 style="color: var(--danger); font-size: 2.5rem; text-transform: uppercase; margin-bottom: 2rem;">
                     <i class="fas fa-skull-crossbones"></i> The Great Resource War Archive
                 </h2>
+                <p style="color: var(--warning); font-weight: bold; margin-bottom: 20px;">[ STATUS: ACTIVE CONFLICT ]</p>
                 
                 <div class="war-stage">
                     <h3>Stage I: The Fry-Nugget Schism</h3>
                     <p>
-                        The conflict began when trade relations dissolved between <span class="faction-highlight">Nuggetland</span> and <span class="faction-highlight">Fryland</span>. As a central power, Mouseland held deep diplomatic ties with both. However, when Nuggetland attempted to seize the dipping sauce pipelines, we were forced to pick a side. Mouseland officially backed <span class="faction-highlight">Fryland</span>, sending three battalions to secure the crispiness borders.
+                        The conflict ignited when trade relations collapsed between <span class="faction-highlight">Nuggetland</span> and <span class="faction-highlight">Fryland</span>. Mouseland held alliances with both, but the Council made the strategic choice to side with <span class="faction-highlight">Fryland</span>. We officially mobilized our infantry to secure the borders.
                     </p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage II: The Feast of Factions</h3>
+                    <h3>Stage II: The Coalition Entry</h3>
                     <p>
-                        The war expanded overnight. Seeing Mouseland committed to the Fry front, external powers smelled blood. <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated "Combo Meal" offensive. We were suddenly fighting a five-front war. Burgerland's heavy armor pushed through our northern fences while Frogland guerillas sabotaged our electronics.
+                        The war spiraled as the powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> entered the fray. They formed a hostile coalition against Mouseland territory, Stretching our defenses to the breaking point.
                     </p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage III: The Salted Betrayal</h3>
+                    <h3>Stage III: The Great Betrayal</h3>
                     <p>
-                        In the darkest turn of the conflict, <span class="faction-highlight">Fryland</span>—our supposed ally—cut a secret non-aggression pact with Burgerland. Without warning, Fryland units turned their grease-cannons on our retreating infantry. We were backstabbed and encircled. Mouseland was reduced to 20% of its territory within 48 hours.
+                        In the darkest turn of the war, our "allies" in <span class="faction-highlight">Fryland</span> backstabbed us. They turned their heavy weaponry on Mouseland forces mid-battle, leaving us isolated and surrounded by enemies on all fronts.
                     </p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage IV: The Whisker Union Arrives</h3>
+                    <h3>Stage IV: Whisker Union Intervention</h3>
                     <p>
-                        Just as the capital walls were breached, the <span class="ally-highlight">United Whisker Union</span> (UWU) answered our emergency broadcast. Their naval fleet intercepted the Burgerland supply ships, providing our troops with much-needed breathing room. The tide was beginning to turn, but the enemy numbers were still overwhelming.
+                        Just as the capital walls were breached, the <span class="ally-highlight">United Whisker Union</span> (UWU) answered our emergency broadcast. Their flanking maneuvers provided our remaining troops with vital breathing room to regroup.
                     </p>
                 </div>
 
                 <div class="war-stage">
-                    <h3>Stage V: The Websim Protocol</h3>
+                    <h3>Stage V: The Websim Protocol (CURRENT)</h3>
                     <p>
-                        To end the war, Anymousxe initiated the <strong>Websim Protocol</strong>. We called in <span class="ally-highlight">United Websim</span>, who deployed legions of <strong>AI Combat Bots</strong>. These autonomous entities ignored the laws of physics, glitching through enemy fortifications and decimating the coalition armies. The war ended in a total surrender of the traitorous Fryland forces.
+                        To prevent total collapse, Anymousxe initiated the <strong>Websim Protocol</strong>. We have called in <span class="ally-highlight">United Websim</span> for emergency backup. They have deployed thousands of <strong>AI Combat Bots</strong> to the warzone. The war is <strong>not over</strong>—we are currently holding the line with AI reinforcements.
                     </p>
                 </div>
 
@@ -306,8 +307,8 @@
                         <div style="color: #888; font-size: 0.8rem; text-transform: uppercase;">National Survey v2.6</div>
                     </div>
                     <div class="map-card tilt-card">
-                        <img src="mouseland war map.png" alt="Strategic Map">
-                        <div style="color: var(--danger); font-size: 0.8rem; text-transform: uppercase;">Strategic Frontlines (Stage III)</div>
+                        <img src="mouseland%20war%20map.png" alt="Strategic Map">
+                        <div style="color: var(--danger); font-size: 0.8rem; text-transform: uppercase;">Strategic Frontlines (Ongoing)</div>
                     </div>
                 </div>
             </section>
@@ -378,7 +379,6 @@
                 overlay.style.transform = 'translateY(-100%)';
             };
 
-            // Particle System
             const canvas = document.getElementById('bg-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
@@ -431,21 +431,17 @@
         const provider = new GoogleAuthProvider();
         const WHITELIST = ["anymousxe.info@gmail.com", "colorvicemouseincharge@proton.me"];
 
-        // State Vars
         let isEditing = false;
         let editDocId = null;
 
-        // UI Binding
         const modal = document.getElementById('login-modal');
         const adminPanel = document.getElementById('admin-panel');
         const newsFeed = document.getElementById('news-feed');
         const postForm = document.getElementById('post-form');
 
-        // Modal Controls
         document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
         window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
 
-        // Auth
         document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
         document.getElementById('email-auth-form').onsubmit = (e) => {
             e.preventDefault();
@@ -472,7 +468,6 @@
             }
         });
 
-        // News Logic
         postForm.onsubmit = async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
@@ -509,7 +504,6 @@
 
         document.getElementById('cancel-edit-btn').onclick = resetForm;
 
-        // Realtime Feed
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
             snapshot.forEach((docSnap) => {
@@ -540,7 +534,6 @@
                 newsFeed.appendChild(item);
             });
 
-            // Re-bind buttons
             document.querySelectorAll('.delete-post').forEach(b => {
                 b.onclick = async () => { if(confirm("Permanently delete log?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
             });
@@ -561,7 +554,6 @@
             });
         });
 
-        // Hover sounds for tilt cards
         document.querySelectorAll('.tilt-card').forEach(c => {
             c.onmouseenter = () => document.getElementById('sfx-hover').play();
         });
