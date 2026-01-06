@@ -9,15 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <meta name="description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
+    
     <meta property="og:type" content="website">
     <meta property="og:title" content="Mouseland | Official Government Site">
-    <meta property="og:description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
+    <meta property="og:description" content="Official Archive of the Mice In Charge. Unity, Strength, Honor.">
     <meta property="og:image" content="mouselandcard.png">
-    
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
-    <meta name="twitter:description" content="Official Mice In Charge Archive. Strength and Honor.">
+    <meta name="twitter:description" content="Official Archive of the Mice In Charge. Security Protocol Active.">
     <meta name="twitter:image" content="mouselandcard.png">
 
     <style>
@@ -37,7 +38,7 @@
             --war-red: #8b0000;
         }
 
-        /* --- DARK SCROLLBAR (NO WHITE) --- */
+        /* --- DARK SCROLLBAR (FIXED) --- */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #1a1a1e; border-radius: 5px; border: 2px solid #000; }
@@ -86,9 +87,8 @@
         .btn-mouseland { background: var(--mouseland-accent); color: #000; }
         .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .btn-ghost:hover { color: #fff; border-color: #fff; }
-        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
 
-        /* --- TERMINAL (STRICTLY HIDDEN) --- */
+        /* --- TERMINAL (HIDDEN UNLESS ADMIN) --- */
         .admin-panel {
             background: #0a0a0c; border: 1px solid var(--border); border-left: 5px solid var(--mouseland-accent);
             padding: 3rem; border-radius: 8px; margin-bottom: 5rem; display: none; 
@@ -114,17 +114,17 @@
         .map-card { background: #000; padding: 20px; border: 1px solid #222; border-radius: 12px; text-align: center; }
         .map-card img { width: 100%; border-radius: 6px; border: 1px solid #111; margin-bottom: 15px; }
 
-        /* --- BROADCAST ENGINE --- */
+        /* --- BROADCAST FEED --- */
         .news-section { margin-top: 8rem; }
         .news-archive-container {
             min-height: 600px; border: 1px solid #1a1a1a; padding: 3rem; border-radius: 12px;
             background: rgba(0,0,0,0.4); width: 100%;
         }
         .news-item { background: #0c0c0e; border: 1px solid var(--border); padding: 3rem; border-radius: 8px; margin-bottom: 3rem; position: relative; }
-        .news-item.urgent { border-left: 5px solid var(--danger); }
+        .news-item.urgent { border-left: 5px solid var(--danger); background: linear-gradient(90deg, rgba(239, 68, 68, 0.05), transparent); }
         .news-item.war { border-left: 5px solid var(--warning); }
         
-        .news-actions { display: none; gap: 20px; } /* Managed by script */
+        .news-actions { display: none; gap: 20px; } /* Managed by script visibility */
         .action-icon { cursor: pointer; font-size: 1.3rem; transition: 0.2s; opacity: 0.6; }
         .action-icon:hover { opacity: 1; transform: scale(1.1); }
 
@@ -138,6 +138,7 @@
         .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 4rem; border-radius: 20px; text-align: center; width: 360px; transition: 0.3s; }
         .leader-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 2rem; }
 
+        /* --- SETTLEMENTS --- */
         .cities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3rem; margin-top: 5rem; }
         .city-card { background: #050505; border-radius: 15px; overflow: hidden; border: 1px solid #1a1a1a; text-align: center; }
         .city-card img { width: 100%; height: 160px; object-fit: cover; opacity: 0.6; transition: 0.3s; }
@@ -225,22 +226,22 @@
 
                 <div class="war-stage">
                     <h3>II: The Coalition Surge</h3>
-                    <p>The powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated assault.</p>
+                    <p>The powers of <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated assault against Mouseland territory.</p>
                 </div>
 
                 <div class="war-stage">
                     <h3>III: The Salted Betrayal</h3>
-                    <p>In a shock move, <span class="faction-highlight">Fryland</span> backstabbed Mouseland mid-battle, leaving our defenses exposed.</p>
+                    <p>In a shock move, <span class="faction-highlight">Fryland</span> backstabbed Mouseland mid-battle, leaving our defenses exposed to the coalition.</p>
                 </div>
 
                 <div class="war-stage">
                     <h3>IV: Union & Websim Protocol</h3>
-                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) intervened. Mice In Charge then initiated the <strong>Websim Protocol</strong>.</p>
+                    <p>The <span class="ally-highlight">United Whisker Union</span> (UWU) intervened to flank the enemy. MIC then initiated the <strong>Websim Protocol</strong>, calling in <span class="ally-highlight">United Websim</span>.</p>
                 </div>
 
                 <div class="war-stage" style="border-bottom: none;">
                     <h3>V: Current Status (ONGOING)</h3>
-                    <p>The war is NOT over. Thousands of <span class="ally-highlight">Websim AI Combat Bots</span> have been deployed. We are holding the grease-line.</p>
+                    <p>The war is NOT over. Thousands of <span class="ally-highlight">Websim AI Combat Bots</span> have been deployed as emergency backup to reinforce our battalions. We are holding the grease-line.</p>
                 </div>
 
                 <div class="map-grid">
@@ -272,11 +273,6 @@
                     <div class="city-card"><img src="mec.png"><div class="city-name">MEC_CITY</div></div>
                 </div>
             </section>
-
-            <section style="margin-top: 15rem; text-align: center;">
-                <p style="color: #222; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 10px; margin-bottom: 4rem;">Authorized Citizen Identification Only</p>
-                <img src="mouselandcard.png" style="width: 100%; max-width: 650px; border-radius: 8px; border: 1px solid #1a1a1e; box-shadow: 0 40px 100px rgba(0,0,0,0.8);">
-            </section>
         </div>
 
         <footer>
@@ -302,7 +298,7 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // --- VISUALS ---
+        // --- VISUAL ENGINE ---
         document.addEventListener('DOMContentLoaded', () => {
             const enterBtn = document.getElementById('enter-btn');
             const overlay = document.getElementById('intro-overlay');
@@ -347,7 +343,7 @@
             animate();
         });
 
-        // --- FIREBASE ---
+        // --- FIREBASE LOGIC ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
             authDomain: "mouseland-istuff.firebaseapp.com",
@@ -371,7 +367,7 @@
         const newsFeed = document.getElementById('news-feed');
         const postForm = document.getElementById('post-form');
 
-        // --- EMBED ENGINE RESTORED ---
+        // --- EMBED ENGINE ---
         function formatContent(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             let embeds = "";
@@ -388,7 +384,7 @@
             return `<div>${formattedText}</div>${embeds}`;
         }
 
-        // --- AUTH ---
+        // --- AUTH SYSTEM (STRICT SECURITY) ---
         onAuthStateChanged(auth, (user) => {
             const container = document.getElementById('auth-container');
             const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
@@ -403,7 +399,7 @@
             }
         });
 
-        // --- POSTING ---
+        // --- POSTING ENGINE ---
         postForm.onsubmit = async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
@@ -437,7 +433,7 @@
         }
         document.getElementById('cancel-edit-btn').onclick = resetForm;
 
-        // --- SNAPSHOT FEED (FIXED: ORDER & SECURITY & URGENCY) ---
+        // --- REALTIME SNAPSHOT (URGENCY & SECURITY) ---
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
             const user = auth.currentUser;
@@ -459,8 +455,8 @@
                         <div style="display:flex; gap:15px; align-items:center;">
                             <img src="${data.pfp}" style="width:45px; height:45px; border-radius:50%; border:2px solid #222;">
                             <div>
-                                <div style="font-weight:900;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px;">${data.role}</span></div>
-                                <div style="font-size:0.7rem; color:#444;">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
+                                <div style="font-weight:900; font-size:1rem;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 8px; border-radius:3px; margin-left:10px;">${data.role}</span></div>
+                                <div style="font-size:0.7rem; color:#444; font-family:var(--font-mono);">${data.createdAt?.toDate().toLocaleString() || 'TRANSMITTING...'}</div>
                             </div>
                         </div>
                         ${isAdmin ? `
@@ -476,7 +472,7 @@
                 newsFeed.appendChild(item);
             });
 
-            // Re-attach listeners for Admin
+            // Re-attach listeners for Whitelisted Admin
             document.querySelectorAll('.fa-trash-can').forEach(b => {
                 b.onclick = async () => { if(confirm("ERASE LOG?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
             });
@@ -496,7 +492,7 @@
             });
         });
 
-        // GLOBAL UI
+        // UI ACTIONS
         document.querySelectorAll('.tilt-card').forEach(c => {
             c.onmouseenter = () => document.getElementById('sfx-hover').play();
         });
