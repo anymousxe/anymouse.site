@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouseland | Official Site</title>
+    <title>Mouseland | Official Government Archive</title>
     
     <link rel="icon" type="image/png" href="mouseicon.png">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -12,21 +12,22 @@
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
     <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, War Room, and National News.">
-    <meta name="twitter:image" content="https://anymouse.site/mouselandcard.png">
+    <meta name="twitter:image" content="mouselandcard.png">
 
     <style>
         /* --- CONFIG & VARIABLES --- */
         :root {
             --bg-color: #09090b; 
-            --card-bg: #18181b;  
+            --card-bg: #111113;  
             --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
             --mouseland-accent: #10b981; 
             --link-color: #3b82f6;
             --danger: #ef4444;            
-            --warning: #f59e0b;           
+            --warning: #f59e0b;            
             --border: #27272a;            
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --war-red: #8b0000;
         }
 
         /* --- RESET --- */
@@ -50,7 +51,6 @@
             opacity: 0.4;
         }
 
-        /* Intro Overlay */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -62,155 +62,134 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.8s ease-in-out;
+            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
         }
         .intro-content { text-align: center; }
-        .intro-title { font-size: 3rem; font-weight: 800; color: var(--mouseland-accent); margin-bottom: 1rem; }
+        .intro-title { font-size: 4rem; font-weight: 900; color: var(--mouseland-accent); margin-bottom: 1rem; letter-spacing: 5px; }
+        
         #enter-btn {
             background: transparent;
             border: 1px solid var(--mouseland-accent);
             color: var(--mouseland-accent);
-            padding: 1rem 2rem;
+            padding: 1.2rem 2.5rem;
             font-family: 'Courier New', monospace;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
+            transition: 0.4s;
+            text-transform: uppercase;
         }
-        #enter-btn:hover { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 20px var(--mouseland-accent); }
+        #enter-btn:hover { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 30px var(--mouseland-accent); }
 
         /* --- LAYOUT --- */
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 10; }
         
-        /* Header */
         .ml-header {
-            padding: 2rem 0;
+            padding: 4rem 0;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border);
-            background: radial-gradient(circle at top, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at top, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
             text-align: center;
         }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .flag-img { width: 120px; border-radius: 4px; box-shadow: 0 0 15px rgba(0,0,0,0.5); margin-bottom: 1rem; border: 1px solid #333; }
+        .flag-img { width: 140px; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.8); margin-bottom: 1.5rem; border: 1px solid #444; }
 
         /* Buttons */
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s ease; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.7rem 1.4rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s ease; }
         .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .btn-ghost:hover { color: #fff; border-color: #fff; }
         .btn-primary { background: #fff; color: #000; }
-        .btn-primary:hover { background: #e4e4e7; transform: translateY(-2px); }
-        .btn-mouseland { background: var(--mouseland-accent); color: #000; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-        .btn-mouseland:hover { background: #34d399; box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
+        .btn-mouseland { background: var(--mouseland-accent); color: #000; }
         .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: #fff; }
 
         /* Admin */
         .admin-panel {
-            background: #111;
+            background: #0a0a0a;
             border: 1px solid var(--border);
             border-left: 4px solid var(--mouseland-accent);
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 8px;
             margin-bottom: 3rem;
             display: none; 
         }
         .admin-input, .admin-textarea {
-            background: #000; border: 1px solid #333; padding: 0.8rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 10px;
+            background: #000; border: 1px solid #333; padding: 1rem; color: #fff; border-radius: 4px; width: 100%; margin-bottom: 15px;
         }
-        .edit-mode-indicator { display: none; color: var(--warning); font-size: 0.8rem; margin-bottom: 0.5rem; font-weight: bold; }
 
-        /* War Room Section */
+        /* --- WAR ROOM (EXPANDED LORE SECTION) --- */
         .war-room-container {
-            background: rgba(20, 20, 20, 0.6);
+            background: linear-gradient(180deg, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.9));
             border: 1px solid #333;
-            border-top: 4px solid var(--danger);
-            padding: 2rem;
+            border-top: 5px solid var(--danger);
+            padding: 3rem;
             border-radius: 12px;
-            margin: 4rem 0;
+            margin: 5rem 0;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
         }
+        .war-stage {
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #222;
+        }
+        .war-stage h3 {
+            color: var(--danger);
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        .war-stage p {
+            font-size: 1.05rem;
+            color: #ccc;
+            margin-bottom: 1.5rem;
+            max-width: 850px;
+        }
+        .faction-highlight { font-weight: bold; color: var(--mouseland-accent); }
+        .enemy-highlight { font-weight: bold; color: var(--danger); }
+        .ally-highlight { font-weight: bold; color: var(--link-color); }
+
         .map-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
         .map-card {
             background: #000;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            text-align: center;
         }
-        .map-card img { width: 100%; height: auto; border-radius: 4px; border: 1px solid #222; }
-        .map-label { color: #888; font-size: 0.8rem; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
+        .map-card img { width: 100%; height: auto; border-radius: 6px; border: 1px solid #222; margin-bottom: 10px; }
 
-        /* Cards & Sections */
-        .leadership-section { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; }
-        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; text-align: center; width: 280px; transition: transform 0.3s ease; }
-        .leader-card:hover { transform: translateY(-5px); border-color: var(--mouseland-accent); }
-        .leader-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); margin-bottom: 1rem; }
+        /* Leadership Cards */
+        .leadership-section { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-bottom: 5rem; }
+        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 2.5rem; border-radius: 15px; text-align: center; width: 300px; }
+        .leader-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 1.5rem; }
 
-        /* News & Scrolling */
+        /* News Section */
         .news-archive-container {
-            max-height: 600px; 
+            max-height: 800px; 
             overflow-y: auto;  
-            padding-right: 10px; 
-            margin-bottom: 2rem;
             border: 1px solid #222;
-            padding: 1rem;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.3);
+            padding: 2rem;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.4);
         }
-        .news-archive-container::-webkit-scrollbar { width: 8px; }
-        .news-archive-container::-webkit-scrollbar-track { background: #111; border-radius: 4px; }
-        .news-archive-container::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        .news-archive-container::-webkit-scrollbar-thumb:hover { background: var(--mouseland-accent); }
+        .news-item { background: #121214; border: 1px solid var(--border); padding: 2rem; border-radius: 8px; margin-bottom: 2rem; }
+        
+        /* Cities Grid */
+        .cities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .city-card { background: #111; border-radius: 12px; overflow: hidden; border: 1px solid #222; text-align: center; }
+        .city-card img { width: 100%; height: 140px; object-fit: cover; }
+        .city-name { padding: 1rem; font-weight: bold; }
 
-        .news-item { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid #555; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem; position: relative; }
-        .news-item.urgent { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.05), transparent); }
-        .news-item.decree { border-left-color: var(--warning); }
-        .news-item.war { border-left-color: #ef4444; }
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #18181b; padding: 3rem; border-radius: 16px; border: 1px solid var(--mouseland-accent); width: 100%; max-width: 450px; text-align: center; }
         
-        .news-actions { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 10px; }
-        .action-btn { cursor: pointer; font-size: 0.75rem; font-weight: bold; opacity: 0.7; transition: 0.2s; }
-        .action-btn:hover { opacity: 1; }
-        .delete-btn { color: var(--danger); }
-        .edit-btn { color: var(--link-color); }
-
-        /* Embed Logic Styles */
-        .post-content a { color: var(--link-color); text-decoration: none; font-weight: 500; }
-        .post-content a:hover { text-decoration: underline; }
-        
-        .embed-wrapper { margin-top: 15px; border-radius: 8px; overflow: hidden; border: 1px solid #333; background: #000; }
-        .yt-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        .yt-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        
-        .link-preview-card { display: flex; align-items: center; gap: 15px; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; text-decoration: none !important; transition: 0.2s; margin-top: 10px; }
-        .link-preview-card:hover { border-color: var(--mouseland-accent); background: #16161a; }
-        .link-preview-card i { font-size: 1.2rem; color: var(--mouseland-accent); }
-        .link-info { overflow: hidden; }
-        .link-title { color: #fff; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .link-url { color: #666; font-size: 0.7rem; }
-
-        /* Cities */
-        .cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .city-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
-        .city-card img { width: 100%; height: 120px; object-fit: cover; filter: grayscale(40%); transition: 0.3s; }
-        .city-card:hover img { filter: grayscale(0%); }
-        .city-name { padding: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; }
-
-        /* Modal */
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal-content { background-color: #1a1a1e; padding: 2rem; border: 1px solid var(--mouseland-accent); width: 90%; max-width: 400px; border-radius: 12px; position: relative; text-align: center; }
-        .auth-input { width: 100%; padding: 0.8rem; margin-bottom: 0.8rem; background: #111; border: 1px solid #333; border-radius: 6px; color: white; }
-        
-        /* Misc */
-        .author-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: bold; text-transform: uppercase; }
-        .role-mic { background-color: var(--mouseland-accent); color: #000; }
-        .role-vmic { background-color: #a855f7; color: #fff; }
-        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
-        .post-pfp { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid #555; }
-        
-        @media (max-width: 600px) { .leadership-section { flex-direction: column; } .nav-bar { flex-direction: column; gap: 1rem; } }
+        footer { padding: 5rem 0; border-top: 1px solid #222; text-align: center; color: #444; margin-top: 5rem; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -224,8 +203,8 @@
     <div id="intro-overlay">
         <div class="intro-content">
             <div class="intro-title">MOUSELAND</div>
-            <p style="color: #888; margin-bottom: 2rem;">GOVERNMENT TERMINAL // SECURE CONNECTION</p>
-            <button id="enter-btn">ENTER SYSTEM</button>
+            <p style="color: #666; font-family: monospace; letter-spacing: 3px; margin-bottom: 3rem;">ENCRYPTED GOV PROTOCOL // ANYMOUSXE_AUTH</p>
+            <button id="enter-btn">DECRYPT SYSTEMS</button>
         </div>
     </div>
 
@@ -234,15 +213,15 @@
         <header class="ml-header">
             <div class="container">
                 <nav class="nav-bar">
-                    <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← anymouse.site</a>
-                    <div id="auth-container" class="user-controls">
-                        <button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>
+                    <a href="https://anymouse.site" class="btn btn-sm btn-ghost">← BACK TO ANYMOUSE.SITE</a>
+                    <div id="auth-container">
+                        <button id="login-trigger-btn" class="btn btn-sm btn-primary">LOG IN</button>
                     </div>
                 </nav>
-                <div style="text-align: center;">
-                    <img src="./mouselandflag.png" alt="Flag of Mouseland" class="flag-img tilt-card">
-                    <h1 class="tilt-card">🐀 Welcome to Mouseland</h1>
-                    <p>Unity. Cheese. Strength.</p>
+                <div>
+                    <img src="mouselandflag.png" alt="State Flag" class="flag-img tilt-card">
+                    <h1 class="tilt-card" style="font-size: 3.5rem;">The Mouseland Archive</h1>
+                    <p style="color: var(--mouseland-accent); letter-spacing: 5px;">UNITY • CHEESE • STRENGTH</p>
                 </div>
             </div>
         </header>
@@ -250,186 +229,193 @@
         <div class="container">
 
             <section id="admin-panel" class="admin-panel">
-                <h3 style="color: var(--mouseland-accent); margin-bottom: 1rem;">👑 MIC Control Panel</h3>
-                <div id="edit-indicator" class="edit-mode-indicator">⚠️ EDITING MODE ACTIVE</div>
+                <h3 style="color: var(--mouseland-accent); margin-bottom: 1.5rem;"><i class="fas fa-crown"></i> MIC COMMAND CENTER</h3>
+                <div id="edit-indicator" style="display:none; color: var(--warning); font-weight:bold; margin-bottom: 1rem;">[ EDITING PREVIOUS LOG ]</div>
                 <form id="post-form">
-                    <input type="text" id="post-title" class="admin-input" placeholder="Update Title" required>
-                    <textarea id="post-content" class="admin-textarea" rows="3" placeholder="State your business... URLs will be linked & embedded automatically." required></textarea>
+                    <input type="text" id="post-title" class="admin-input" placeholder="Transmission Title" required>
+                    <textarea id="post-content" class="admin-textarea" rows="4" placeholder="Type transmission... Links will auto-embed." required></textarea>
                     <select id="post-type" class="admin-input">
-                        <option value="standard">Standard News</option>
-                        <option value="urgent">🚨 Urgent / Breaking</option>
-                        <option value="decree">📜 Official Decree</option>
-                        <option value="war">⚔️ War Update</option>
+                        <option value="standard">Standard Transmission</option>
+                        <option value="urgent">🚨 HIGH PRIORITY</option>
+                        <option value="decree">📜 STATE DECREE</option>
+                        <option value="war">⚔️ WAR UPDATE</option>
                     </select>
-                    <div style="display: flex; gap: 10px;">
-                        <button type="submit" id="submit-btn" class="btn btn-mouseland" style="flex: 1;">Publish Update</button>
-                        <button type="button" id="cancel-edit-btn" class="btn btn-danger" style="display: none;">Cancel Edit</button>
+                    <div style="display: flex; gap: 15px;">
+                        <button type="submit" id="submit-btn" class="btn btn-mouseland" style="flex: 2;">BROADCAST</button>
+                        <button type="button" id="cancel-edit-btn" class="btn btn-danger" style="display: none; flex: 1;">ABORT</button>
                     </div>
                 </form>
             </section>
 
             <section class="leadership-section">
                 <div class="leader-card tilt-card">
-                    <img src="./anymousxe.png" alt="Anymousxe" class="leader-img">
-                    <h3>Anymousxe</h3>
-                    <p style="color: var(--mouseland-accent); font-weight: bold;">MIC (Mice In Charge)</p>
+                    <img src="anymousxe.png" class="leader-img">
+                    <h2>Anymousxe</h2>
+                    <p style="color: var(--mouseland-accent); font-weight: bold; text-transform: uppercase;">MIC (Mice In Charge)</p>
                 </div>
                 <div class="leader-card tilt-card">
-                    <img src="./color.png" alt="Color" class="leader-img">
-                    <h3>Color</h3>
-                    <p style="color: #a855f7; font-weight: bold;">VMIC (Vice Mice In Charge)</p>
+                    <img src="color.png" class="leader-img">
+                    <h2>Color</h2>
+                    <p style="color: #a855f7; font-weight: bold; text-transform: uppercase;">VMIC (Vice Mice In Charge)</p>
                 </div>
             </section>
 
             <section id="war-room" class="war-room-container">
-                <h2 style="color: #ef4444; font-family: 'Courier New', monospace; text-transform: uppercase;">
-                    <i class="fas fa-crosshairs"></i> Global War Room
+                <h2 style="color: var(--danger); font-size: 2.5rem; text-transform: uppercase; margin-bottom: 2rem;">
+                    <i class="fas fa-skull-crossbones"></i> The Great Resource War Archive
                 </h2>
-                <p style="color: #aaa; margin-top: 1rem;">
-                    <strong>Current Status:</strong> DEFCON 2. Active hostilities on the Eastern Front.
-                </p>
                 
-                <div style="margin-top: 2rem; border-left: 2px solid #555; padding-left: 1rem;">
-                    <h4 style="color: #fff;">The Conflict Summary</h4>
-                    <p style="font-size: 0.9rem; color: #ccc; margin-top: 0.5rem;">
-                        The grease-pact was shattered when <strong>Fryland</strong> betrayed us, aligning with the aggressors of <strong>Burgerland</strong>. 
-                        We stand with our allies in <strong>Cheeseland</strong> and the automated defense units from <strong>United Websim</strong>.
-                        We are currently holding the line at the Grease River, but enemy movements suggest a push toward Corrugate Crossing.
+                <div class="war-stage">
+                    <h3>Stage I: The Fry-Nugget Schism</h3>
+                    <p>
+                        The conflict began when trade relations dissolved between <span class="faction-highlight">Nuggetland</span> and <span class="faction-highlight">Fryland</span>. As a central power, Mouseland held deep diplomatic ties with both. However, when Nuggetland attempted to seize the dipping sauce pipelines, we were forced to pick a side. Mouseland officially backed <span class="faction-highlight">Fryland</span>, sending three battalions to secure the crispiness borders.
+                    </p>
+                </div>
+
+                <div class="war-stage">
+                    <h3>Stage II: The Feast of Factions</h3>
+                    <p>
+                        The war expanded overnight. Seeing Mouseland committed to the Fry front, external powers smelled blood. <span class="enemy-highlight">Burgerland</span>, <span class="enemy-highlight">Frogland</span>, and <span class="enemy-highlight">Cheeseland</span> launched a coordinated "Combo Meal" offensive. We were suddenly fighting a five-front war. Burgerland's heavy armor pushed through our northern fences while Frogland guerillas sabotaged our electronics.
+                    </p>
+                </div>
+
+                <div class="war-stage">
+                    <h3>Stage III: The Salted Betrayal</h3>
+                    <p>
+                        In the darkest turn of the conflict, <span class="faction-highlight">Fryland</span>—our supposed ally—cut a secret non-aggression pact with Burgerland. Without warning, Fryland units turned their grease-cannons on our retreating infantry. We were backstabbed and encircled. Mouseland was reduced to 20% of its territory within 48 hours.
+                    </p>
+                </div>
+
+                <div class="war-stage">
+                    <h3>Stage IV: The Whisker Union Arrives</h3>
+                    <p>
+                        Just as the capital walls were breached, the <span class="ally-highlight">United Whisker Union</span> (UWU) answered our emergency broadcast. Their naval fleet intercepted the Burgerland supply ships, providing our troops with much-needed breathing room. The tide was beginning to turn, but the enemy numbers were still overwhelming.
+                    </p>
+                </div>
+
+                <div class="war-stage">
+                    <h3>Stage V: The Websim Protocol</h3>
+                    <p>
+                        To end the war, Anymousxe initiated the <strong>Websim Protocol</strong>. We called in <span class="ally-highlight">United Websim</span>, who deployed legions of <strong>AI Combat Bots</strong>. These autonomous entities ignored the laws of physics, glitching through enemy fortifications and decimating the coalition armies. The war ended in a total surrender of the traitorous Fryland forces.
                     </p>
                 </div>
 
                 <div class="map-grid">
                     <div class="map-card tilt-card">
-                        <img src="./mouselandmap.png" alt="General Map">
-                        <div class="map-label">Overview: National Borders</div>
+                        <img src="mouselandmap.png" alt="General Map">
+                        <div style="color: #888; font-size: 0.8rem; text-transform: uppercase;">National Survey v2.6</div>
                     </div>
                     <div class="map-card tilt-card">
-                        <img src="./mouseland war map.png" alt="War Map">
-                        <div class="map-label" style="color: #ef4444;">Tactical View: Frontlines</div>
+                        <img src="mouseland war map.png" alt="Strategic Map">
+                        <div style="color: var(--danger); font-size: 0.8rem; text-transform: uppercase;">Strategic Frontlines (Stage III)</div>
                     </div>
                 </div>
             </section>
 
             <section class="news-section">
-                <h2 style="color: #fff; margin-bottom: 2rem;">📰 Mouseland News</h2>
-                <div style="margin-bottom: 3rem;">
-                    <h4 style="color: #888; text-transform: uppercase; margin-bottom: 1rem;">Live Wire</h4>
-                    <div id="news-feed">
-                        <div style="text-align: center; color: #666;">Connecting to MIC secure frequency...</div>
-                    </div>
+                <h2 style="margin-bottom: 2rem; border-left: 5px solid var(--mouseland-accent); padding-left: 1rem;">STATE BROADCASTS</h2>
+                <div id="news-feed" class="news-archive-container">
+                    <div style="text-align: center; padding: 3rem; color: #555;">SYNCING WITH FIREBASE...</div>
                 </div>
             </section>
 
-            <section style="margin-top: 4rem;">
-                <h2 style="border-bottom: 2px solid #333; padding-bottom: 0.5rem;">The 5 Great Cities</h2>
+            <section style="margin-top: 8rem;">
+                <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 5px;">The Five Great Cities</h2>
                 <div class="cities-grid">
-                    <div class="city-card"><img src="./boxborough.png" alt="Box"><div class="city-name">Boxborough</div></div>
-                    <div class="city-card"><img src="./corrugatecrossing.png" alt="Corrugate"><div class="city-name">Corrugate Crossing</div></div>
-                    <div class="city-card"><img src="./rodentiamajor.png" alt="Major"><div class="city-name">Rodentia Major</div></div>
-                    <div class="city-card"><img src="./rubbishheights.png" alt="Rubbish"><div class="city-name">Rubbish Heights</div></div>
-                    <div class="city-card"><img src="./mec.png" alt="Mec"><div class="city-name">Mec</div></div>
+                    <div class="city-card"><img src="boxborough.png"><div class="city-name">Boxborough</div></div>
+                    <div class="city-card"><img src="corrugatecrossing.png"><div class="city-name">Corrugate Crossing</div></div>
+                    <div class="city-card"><img src="rodentiamajor.png"><div class="city-name">Rodentia Major</div></div>
+                    <div class="city-card"><img src="rubbishheights.png"><div class="city-name">Rubbish Heights</div></div>
+                    <div class="city-card"><img src="mec.png"><div class="city-name">MEC</div></div>
                 </div>
             </section>
 
-            <footer style="text-align: center; margin-top: 4rem; color: #555; padding-bottom: 2rem;">&copy; 2026 Mouseland Gov.</footer>
+            <section style="margin-top: 8rem; text-align: center;">
+                <h2 style="margin-bottom: 2rem;">Authorized Citizen Identification</h2>
+                <img src="mouselandcard.png" style="width: 100%; max-width: 500px; border-radius: 20px; border: 1px solid var(--mouseland-accent); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);">
+            </section>
+
         </div>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2026 MOUSELAND GOVERNMENT | SYSTEM OPERATOR: ANYMOUSXE</p>
+                <p style="margin-top: 10px; opacity: 0.5;">POWERED BY FIREBASE, WEBSIM, AND SHEER DETERMINATION</p>
+            </div>
+        </footer>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" style="position: absolute; top: 10px; right: 20px; font-size: 28px; cursor: pointer;">&times;</span>
-            <h2>Identify Yourself</h2>
-            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; margin: 1rem 0;">Continue with Google</button>
-            <div style="margin: 1rem 0; color: #666;">OR</div>
+            <h2 style="margin-bottom: 1.5rem;">PROTOCOL LOGIN</h2>
+            <button id="google-auth-btn" class="btn btn-primary" style="width:100%; margin-bottom: 1rem;">GOOGLE AUTHENTICATION</button>
+            <div style="margin: 1rem 0; color: #444;">-- OR --</div>
             <form id="email-auth-form">
-                <input type="email" id="auth-email" class="auth-input" placeholder="Email" required>
-                <input type="password" id="auth-password" class="auth-input" placeholder="Password" required>
-                <button type="submit" class="btn btn-mouseland" style="width:100%;">Login</button>
+                <input type="email" id="auth-email" class="admin-input" placeholder="Email Address" required>
+                <input type="password" id="auth-password" class="admin-input" placeholder="Secure Password" required>
+                <button type="submit" class="btn btn-mouseland" style="width:100%;">ACCESS SYSTEM</button>
             </form>
-            <p id="auth-error" style="color:var(--danger); display:none; margin-top:10px;"></p>
+            <p id="auth-error" style="color:var(--danger); display:none; margin-top:1.5rem; font-size: 0.8rem;"></p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        // ADDED updateDoc here
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // --- VISUAL FX ---
+        // --- VISUAL LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
             const enterBtn = document.getElementById('enter-btn');
             const overlay = document.getElementById('intro-overlay');
             const bgMusic = document.getElementById('bg-music');
-            const clickSfx = document.getElementById('sfx-click');
-            const hoverSfx = document.getElementById('sfx-hover');
             
-            if(bgMusic) bgMusic.volume = 0.3;
+            if(bgMusic) bgMusic.volume = 0.25;
             
-            if(enterBtn) {
-                enterBtn.addEventListener('click', () => {
-                    if(clickSfx) clickSfx.play();
-                    if(bgMusic) bgMusic.play().catch(e => console.log("Audio prevented"));
-                    overlay.style.transform = 'translateY(-100%)';
-                });
-            }
+            enterBtn.onclick = () => {
+                document.getElementById('sfx-click').play();
+                bgMusic.play().catch(() => {});
+                overlay.style.transform = 'translateY(-100%)';
+            };
 
-            // Particles
+            // Particle System
             const canvas = document.getElementById('bg-canvas');
-            if(canvas) {
-                const ctx = canvas.getContext('2d');
-                let particles = [];
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-                class Particle {
-                    constructor() {
-                        this.x = Math.random() * canvas.width;
-                        this.y = Math.random() * canvas.height;
-                        this.size = Math.random() * 2;
-                        this.speedX = (Math.random() * 1) - 0.5;
-                        this.speedY = (Math.random() * 1) - 0.5;
-                    }
-                    update() {
-                        this.x += this.speedX;
-                        this.y += this.speedY;
-                        if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
-                        if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
-                    }
-                    draw() {
-                        ctx.fillStyle = 'rgba(16, 185, 129, 0.4)';
-                        ctx.beginPath();
-                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 1.5 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
                 }
-                function init() { for(let i=0; i<80; i++) particles.push(new Particle()); }
-                function animate() {
-                    ctx.clearRect(0,0,canvas.width, canvas.height);
-                    particles.forEach(p => { p.update(); p.draw(); });
-                    requestAnimationFrame(animate);
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
                 }
-                init();
-                animate();
+                draw() {
+                    ctx.fillStyle = '#10b981';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
-
-            // Tilt Cards
-            function applyTilt() {
-                document.querySelectorAll('.tilt-card').forEach(card => {
-                    card.addEventListener('mousemove', (e) => {
-                        const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left - rect.width/2;
-                        const y = e.clientY - rect.top - rect.height/2;
-                        card.style.transform = `perspective(1000px) rotateX(${-y/10}deg) rotateY(${x/10}deg) scale(1.02)`;
-                    });
-                    card.addEventListener('mouseleave', () => card.style.transform = 'none');
-                    card.addEventListener('mouseenter', () => { if(hoverSfx) { hoverSfx.currentTime=0; hoverSfx.play().catch(()=>{}); } });
-                });
+            for(let i=0; i<100; i++) particles.push(new Particle());
+            function animate() {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animate);
             }
-            applyTilt();
+            animate();
         });
 
-        // --- FIREBASE & EMBED LOGIC ---
+        // --- FIREBASE LOGIC ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsoQrx2jyRQzwJ3XhB3biznqQLdmJtEKY",
             authDomain: "mouseland-istuff.firebaseapp.com",
@@ -443,198 +429,141 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
-
         const WHITELIST = ["anymousxe.info@gmail.com", "colorvicemouseincharge@proton.me"];
 
-        const authContainer = document.getElementById('auth-container');
-        const adminPanel = document.getElementById('admin-panel');
-        const postForm = document.getElementById('post-form');
-        const newsFeed = document.getElementById('news-feed');
-        const modal = document.getElementById('login-modal');
-        const authError = document.getElementById('auth-error');
-        
-        // EDIT LOGIC VARS
+        // State Vars
         let isEditing = false;
         let editDocId = null;
-        const submitBtn = document.getElementById('submit-btn');
-        const cancelEditBtn = document.getElementById('cancel-edit-btn');
-        const editIndicator = document.getElementById('edit-indicator');
 
-        // Helper: Format links and detect YouTube
-        function formatContent(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            let embeds = "";
-            
-            const formattedText = text.replace(urlRegex, (url) => {
-                // Check for YouTube
-                const ytMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-                
-                if (ytMatch) {
-                    const videoId = ytMatch[1];
-                    embeds += `
-                        <div class="embed-wrapper">
-                            <div class="yt-container">
-                                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-                            </div>
-                        </div>`;
-                } else {
-                    // Regular Link Card
-                    embeds += `
-                        <a href="${url}" target="_blank" class="link-preview-card">
-                            <i class="fas fa-external-link-alt"></i>
-                            <div class="link-info">
-                                <div class="link-title">${url.split('//')[1].split('/')[0]}</div>
-                                <div class="link-url">${url}</div>
-                            </div>
-                        </a>`;
-                }
-                return `<a href="${url}" target="_blank">${url}</a>`;
-            });
+        // UI Binding
+        const modal = document.getElementById('login-modal');
+        const adminPanel = document.getElementById('admin-panel');
+        const newsFeed = document.getElementById('news-feed');
+        const postForm = document.getElementById('post-form');
 
-            return `<div>${formattedText}</div>${embeds}`;
-        }
+        // Modal Controls
+        document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
+        window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
 
-        // Auth Logic
-        document.body.addEventListener('click', e => {
-            if(e.target.id === 'login-trigger-btn') modal.style.display = 'flex';
-            if(e.target.id === 'logout-btn') signOut(auth);
-            if(e.target.classList.contains('close-modal') || e.target === modal) modal.style.display = 'none';
-        });
-
-        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(()=>modal.style.display='none');
+        // Auth
+        document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
         document.getElementById('email-auth-form').onsubmit = (e) => {
             e.preventDefault();
             signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
-            .then(() => modal.style.display='none')
-            .catch(err => { authError.style.display='block'; authError.textContent=err.message; });
+                .then(() => modal.style.display='none')
+                .catch(err => {
+                    const errEl = document.getElementById('auth-error');
+                    errEl.style.display = 'block';
+                    errEl.textContent = err.message;
+                });
         };
 
         onAuthStateChanged(auth, (user) => {
+            const container = document.getElementById('auth-container');
             if (user) {
                 const isAdmin = WHITELIST.includes(user.email.toLowerCase());
-                authContainer.innerHTML = `<button id="logout-btn" class="btn btn-sm btn-danger">Log Out</button>`;
-                adminPanel.style.display = isAdmin ? "block" : "none";
+                container.innerHTML = `<button id="logout-btn" class="btn btn-sm btn-danger">DISCONNECT</button>`;
+                document.getElementById('logout-btn').onclick = () => signOut(auth);
+                if(isAdmin) adminPanel.style.display = "block";
             } else {
-                authContainer.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">Log In</button>`;
+                container.innerHTML = `<button id="login-trigger-btn" class="btn btn-sm btn-primary">LOG IN</button>`;
+                document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
                 adminPanel.style.display = "none";
             }
         });
 
-        // CANCEL EDIT
-        cancelEditBtn.onclick = () => {
-            isEditing = false;
-            editDocId = null;
-            postForm.reset();
-            submitBtn.textContent = "Publish Update";
-            submitBtn.classList.remove("btn-warning");
-            submitBtn.classList.add("btn-mouseland");
-            cancelEditBtn.style.display = "none";
-            editIndicator.style.display = "none";
-        };
-
-        postForm.addEventListener('submit', async (e) => {
+        // News Logic
+        postForm.onsubmit = async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
             if(!user || !WHITELIST.includes(user.email.toLowerCase())) return;
 
-            const titleVal = document.getElementById('post-title').value;
-            const contentVal = document.getElementById('post-content').value;
-            const typeVal = document.getElementById('post-type').value;
+            const payload = {
+                title: document.getElementById('post-title').value,
+                content: document.getElementById('post-content').value,
+                type: document.getElementById('post-type').value,
+                author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
+                role: user.email.includes("anymousxe") ? "MIC" : "VMIC",
+                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
+                updatedAt: serverTimestamp()
+            };
 
-            try {
-                if (isEditing && editDocId) {
-                    // UPDATE EXISTING DOC
-                    const docRef = doc(db, "updates", editDocId);
-                    await updateDoc(docRef, {
-                        title: titleVal,
-                        content: contentVal,
-                        type: typeVal,
-                        // We don't update author/createdAt generally, but we can update editedAt if we wanted
-                    });
-                    // Reset Logic
-                    cancelEditBtn.click();
-                } else {
-                    // CREATE NEW DOC
-                    await addDoc(collection(db, "updates"), {
-                        title: titleVal,
-                        content: contentVal,
-                        type: typeVal,
-                        author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
-                        role: user.email.includes("anymousxe") ? "MIC" : "VMIC",
-                        pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
-                        createdAt: serverTimestamp()
-                    });
-                    postForm.reset();
-                }
-            } catch(err) { alert(err.message); }
-        });
+            if(isEditing) {
+                await updateDoc(doc(db, "updates", editDocId), payload);
+                resetForm();
+            } else {
+                payload.createdAt = serverTimestamp();
+                await addDoc(collection(db, "updates"), payload);
+                postForm.reset();
+            }
+        };
 
+        function resetForm() {
+            isEditing = false;
+            editDocId = null;
+            postForm.reset();
+            document.getElementById('submit-btn').textContent = "BROADCAST";
+            document.getElementById('cancel-edit-btn').style.display = "none";
+            document.getElementById('edit-indicator').style.display = "none";
+        }
+
+        document.getElementById('cancel-edit-btn').onclick = resetForm;
+
+        // Realtime Feed
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
-            const user = auth.currentUser;
-            const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
-
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : "";
-                const time = data.createdAt ? data.createdAt.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
+                const isAdmin = auth.currentUser && WHITELIST.includes(auth.currentUser.email.toLowerCase());
                 
-                // Admin Actions: Edit and Delete
-                let adminActions = "";
-                if(isAdmin) {
-                    adminActions = `
-                        <div class="news-actions">
-                            <span class="action-btn edit-btn" data-id="${docSnap.id}" data-title="${data.title}" data-content="${data.content}" data-type="${data.type}">[EDIT]</span>
-                            <span class="action-btn delete-btn" data-id="${docSnap.id}">[DELETE]</span>
+                const item = document.createElement('div');
+                item.className = `news-item ${data.type}`;
+                item.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <img src="${data.pfp}" style="width:40px; height:40px; border-radius:50%; border:1px solid #444;">
+                            <div>
+                                <div style="font-weight:bold; font-size:0.9rem;">${data.author} <span style="font-size:0.6rem; background:var(--mouseland-accent); color:#000; padding:2px 5px; border-radius:3px;">${data.role}</span></div>
+                                <div style="font-size:0.7rem; color:#555;">${data.createdAt?.toDate().toLocaleString() || 'Just now'}</div>
+                            </div>
                         </div>
-                    `;
-                }
-
-                const div = document.createElement('article');
-                div.className = `news-item ${data.type}`;
-                div.innerHTML = `
-                    ${adminActions}
-                    <div class="post-header">
-                        <img src="${data.pfp || './anymousxe.png'}" class="post-pfp">
-                        <div>
-                            <div style="font-weight:bold; font-size:0.9rem;">${data.author} <span class="author-badge ${data.role === 'MIC' ? 'role-mic' : 'role-vmic'}">${data.role}</span></div>
-                            <div style="font-size:0.7rem; color:#666;">${date} - ${time}</div>
-                        </div>
+                        ${isAdmin ? `
+                            <div>
+                                <i class="fas fa-edit edit-post" style="cursor:pointer; color:var(--link-color); margin-right:15px;" data-id="${docSnap.id}"></i>
+                                <i class="fas fa-trash delete-post" style="cursor:pointer; color:var(--danger);" data-id="${docSnap.id}"></i>
+                            </div>
+                        ` : ''}
                     </div>
-                    <h3>${data.type === 'urgent' ? '🚨 ' : ''}${data.title}</h3>
-                    <div class="post-content">${formatContent(data.content)}</div>
+                    <h3 style="margin:1rem 0 0.5rem 0; color:${data.type === 'urgent' ? 'var(--danger)' : '#fff'};">${data.title}</h3>
+                    <p style="color:#aaa;">${data.content}</p>
                 `;
-                newsFeed.appendChild(div);
+                newsFeed.appendChild(item);
             });
 
-            // Bind Delete events
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.onclick = async () => { if(confirm("Confirm deletion?")) await deleteDoc(doc(db, "updates", btn.dataset.id)); }
+            // Re-bind buttons
+            document.querySelectorAll('.delete-post').forEach(b => {
+                b.onclick = async () => { if(confirm("Permanently delete log?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
             });
-
-            // Bind Edit events
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.onclick = () => {
-                    // Populate Form
-                    document.getElementById('post-title').value = btn.dataset.title;
-                    document.getElementById('post-content').value = btn.dataset.content;
-                    document.getElementById('post-type').value = btn.dataset.type;
-
-                    // Set Logic State
+            document.querySelectorAll('.edit-post').forEach(b => {
+                b.onclick = () => {
+                    const id = b.dataset.id;
+                    const docData = snapshot.docs.find(d => d.id === id).data();
+                    document.getElementById('post-title').value = docData.title;
+                    document.getElementById('post-content').value = docData.content;
+                    document.getElementById('post-type').value = docData.type;
                     isEditing = true;
-                    editDocId = btn.dataset.id;
-                    
-                    // UI Updates
-                    submitBtn.textContent = "Save Changes";
-                    submitBtn.classList.remove("btn-mouseland");
-                    submitBtn.classList.add("btn-warning"); // Make it orange/yellow to show caution
-                    cancelEditBtn.style.display = "block";
-                    editIndicator.style.display = "block";
-
-                    // Scroll to form
-                    adminPanel.scrollIntoView({behavior: "smooth"});
+                    editDocId = id;
+                    document.getElementById('submit-btn').textContent = "SAVE CHANGES";
+                    document.getElementById('cancel-edit-btn').style.display = "block";
+                    document.getElementById('edit-indicator').style.display = "block";
+                    adminPanel.scrollIntoView({behavior:'smooth'});
                 };
             });
+        });
+
+        // Hover sounds for tilt cards
+        document.querySelectorAll('.tilt-card').forEach(c => {
+            c.onmouseenter = () => document.getElementById('sfx-hover').play();
         });
     </script>
 </body>
