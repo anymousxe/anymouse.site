@@ -6,12 +6,18 @@
     <title>Mouseland | Official Government Archive</title>
     
     <link rel="icon" type="image/png" href="mouseicon.png">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <meta name="description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mouseland | Official Government Site">
+    <meta property="og:description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
+    <meta property="og:image" content="mouselandcard.png">
+    
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@anymousxe">
     <meta name="twitter:title" content="Mouseland | Official Government Site">
-    <meta name="twitter:description" content="The official hub of Mouseland. MIC Updates, War Room, and National News.">
+    <meta name="twitter:description" content="The official hub of Mouseland. Mice In Charge Updates, War Room, and National News.">
     <meta name="twitter:image" content="mouselandcard.png">
 
     <style>
@@ -31,21 +37,11 @@
             --war-red: #8b0000;
         }
 
-        /* --- DARK SCROLLBAR FIX --- */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1a1a1e;
-            border-radius: 5px;
-            border: 2px solid #000;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--mouseland-accent);
-        }
+        /* --- DARK SCROLLBAR FIX (NO MORE WHITE) --- */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1e; border-radius: 5px; border: 2px solid #333; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--mouseland-accent); }
 
         /* --- CORE RESET --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -152,28 +148,19 @@
         .map-card { background: #000; padding: 20px; border: 1px solid #222; border-radius: 12px; text-align: center; }
         .map-card img { width: 100%; border-radius: 6px; border: 1px solid #111; margin-bottom: 15px; }
 
-        /* --- BROADCAST ENGINE (FIXED SIZE) --- */
+        /* --- BROADCAST ENGINE (BIG FEED FIX) --- */
         .news-section { margin-top: 8rem; }
         .news-archive-container {
-            /* No max-height, let it grow naturally like a blog feed */
-            min-height: 400px;
+            min-height: 500px; /* Bigger layout */
             border: 1px solid #1a1a1a;
             padding: 3rem;
             border-radius: 12px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.4);
             width: 100%;
         }
         .news-item { background: #0c0c0e; border: 1px solid var(--border); padding: 3rem; border-radius: 8px; margin-bottom: 3rem; position: relative; }
-        
-        .news-actions { 
-            display: flex; 
-            gap: 15px; 
-            background: #000; 
-            padding: 10px 15px; 
-            border-radius: 8px; 
-            border: 1px solid #222;
-        }
-        .action-icon { cursor: pointer; font-size: 1.1rem; opacity: 0.6; transition: 0.2s; }
+        .news-actions { display: flex; gap: 20px; }
+        .action-icon { cursor: pointer; font-size: 1.3rem; transition: 0.2s; opacity: 0.6; }
         .action-icon:hover { opacity: 1; transform: scale(1.1); }
 
         /* --- EMBED SYSTEM --- */
@@ -233,7 +220,7 @@
 
         <div class="container">
             <section id="admin-panel" class="admin-panel">
-                <h3 style="color: var(--mouseland-accent); margin-bottom: 2rem; font-family: var(--font-mono);"><i class="fas fa-terminal"></i> MIC BROADCAST TERMINAL</h3>
+                <h3 style="color: var(--mouseland-accent); margin-bottom: 2rem; font-family: var(--font-mono);"><i class="fas fa-terminal"></i> Mice In Charge BROADCAST TERMINAL</h3>
                 <div id="edit-indicator" style="display:none; color: var(--warning); font-weight:900; margin-bottom: 1.5rem; text-transform: uppercase;">[ WARN: Editing Active Log ]</div>
                 <form id="post-form">
                     <input type="text" id="post-title" class="admin-input" placeholder="TRANS_TITLE" required>
@@ -255,12 +242,12 @@
                 <div class="leader-card tilt-card">
                     <img src="anymousxe.png" class="leader-img">
                     <h2 style="font-size: 2.5rem;">Anymousxe</h2>
-                    <p style="color: var(--mouseland-accent); font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">MIC [CHIEF]</p>
+                    <p style="color: var(--mouseland-accent); font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Mice In Charge [CHIEF]</p>
                 </div>
                 <div class="leader-card tilt-card">
                     <img src="color.png" class="leader-img">
                     <h2 style="font-size: 2.5rem;">Color</h2>
-                    <p style="color: #a855f7; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">VMIC [VICE]</p>
+                    <p style="color: #a855f7; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Vice Mice In Charge [VICE]</p>
                 </div>
             </section>
 
@@ -451,8 +438,7 @@
                 adminPanel.style.display = isAdmin ? "block" : "none";
             } else {
                 container.innerHTML = `<button id="login-trigger-btn" class="btn btn-mouseland">AUTH LOGIN</button>`;
-                const btn = document.getElementById('login-trigger-btn');
-                if(btn) btn.onclick = () => modal.style.display = 'flex';
+                document.getElementById('login-trigger-btn').onclick = () => modal.style.display = 'flex';
                 adminPanel.style.display = "none";
             }
         });
@@ -468,7 +454,7 @@
                 content: document.getElementById('post-content').value,
                 type: document.getElementById('post-type').value,
                 author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
-                role: user.email.includes("anymousxe") ? "MIC" : "VMIC",
+                role: user.email.includes("anymousxe") ? "Mice In Charge" : "Vice Mice In Charge",
                 pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
                 updatedAt: serverTimestamp()
             };
@@ -486,25 +472,24 @@
         };
 
         function resetForm() {
-            isEditing = false; editDocId = null;
-            postForm.reset();
+            isEditing = false; editDocId = null; postForm.reset();
             document.getElementById('submit-btn').textContent = "EXECUTE BROADCAST";
             document.getElementById('cancel-edit-btn').style.display = "none";
             document.getElementById('edit-indicator').style.display = "none";
         }
-
         document.getElementById('cancel-edit-btn').onclick = resetForm;
 
-        // --- REALTIME FEED ENGINE ---
+        // --- REALTIME FEED (FIXED: ORDERED AT TOP) ---
         onSnapshot(query(collection(db, "updates"), orderBy("createdAt", "desc")), (snapshot) => {
             newsFeed.innerHTML = "";
+            const user = auth.currentUser;
+            const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
+
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const user = auth.currentUser;
-                const isAdmin = user && WHITELIST.includes(user.email.toLowerCase());
-                
                 const item = document.createElement('div');
                 item.className = `news-item ${data.type}`;
+                
                 item.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div style="display:flex; gap:15px; align-items:center;">
@@ -516,8 +501,8 @@
                         </div>
                         ${isAdmin ? `
                             <div class="news-actions">
-                                <i class="fas fa-edit action-icon" style="color:var(--link-color);" data-id="${docSnap.id}"></i>
-                                <i class="fas fa-trash-alt action-icon" style="color:var(--danger);" data-id="${docSnap.id}"></i>
+                                <i class="fa-solid fa-pen-to-square action-icon" style="color:var(--link-color);" onclick="window.editPost('${docSnap.id}', '${data.title.replace(/'/g, "\\'")}', '${data.content.replace(/'/g, "\\'")}', '${data.type}')"></i>
+                                <i class="fa-solid fa-trash-can action-icon" style="color:var(--danger);" onclick="window.deletePost('${docSnap.id}')"></i>
                             </div>
                         ` : ''}
                     </div>
@@ -526,34 +511,27 @@
                 `;
                 newsFeed.appendChild(item);
             });
-
-            // Re-attach listeners after snapshot updates
-            document.querySelectorAll('.fa-trash-alt').forEach(b => {
-                b.onclick = async () => { if(confirm("PERMANENTLY ERASE LOG?")) await deleteDoc(doc(db, "updates", b.dataset.id)); };
-            });
-            document.querySelectorAll('.fa-edit').forEach(b => {
-                b.onclick = () => {
-                    const id = b.dataset.id;
-                    const d = snapshot.docs.find(s => s.id === id).data();
-                    document.getElementById('post-title').value = d.title;
-                    document.getElementById('post-content').value = d.content;
-                    document.getElementById('post-type').value = d.type;
-                    isEditing = true; editDocId = id;
-                    document.getElementById('submit-btn').textContent = "SAVE LOG EDIT";
-                    document.getElementById('cancel-edit-btn').style.display = "block";
-                    document.getElementById('edit-indicator').style.display = "block";
-                    adminPanel.style.display = "block";
-                    adminPanel.scrollIntoView({behavior:'smooth'});
-                };
-            });
         });
+
+        // GLOBAL ACTIONS
+        window.deletePost = async (id) => { if(confirm("ERASE LOG?")) await deleteDoc(doc(db, "updates", id)); };
+        window.editPost = (id, title, content, type) => {
+            isEditing = true; editDocId = id;
+            document.getElementById('post-title').value = title;
+            document.getElementById('post-content').value = content;
+            document.getElementById('post-type').value = type;
+            document.getElementById('submit-btn').textContent = "SAVE LOG EDIT";
+            document.getElementById('cancel-edit-btn').style.display = "block";
+            document.getElementById('edit-indicator').style.display = "block";
+            adminPanel.style.display = "block";
+            adminPanel.scrollIntoView({behavior:'smooth'});
+        };
 
         // Tilt Card SFX
         document.querySelectorAll('.tilt-card').forEach(c => {
             c.onmouseenter = () => document.getElementById('sfx-hover').play();
         });
 
-        // Global Close
         window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
         document.getElementById('google-auth-btn').onclick = () => signInWithPopup(auth, provider).then(() => modal.style.display='none');
         document.getElementById('email-auth-form').onsubmit = (e) => {
@@ -561,8 +539,8 @@
             signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value)
                 .then(() => modal.style.display='none')
                 .catch(err => {
-                    const eMsg = document.getElementById('auth-error');
-                    eMsg.style.display = 'block'; eMsg.textContent = "DENIED: " + err.message;
+                    const errorBox = document.getElementById('auth-error');
+                    errorBox.style.display = 'block'; errorBox.textContent = "DENIED: " + err.message;
                 });
         };
     </script>
