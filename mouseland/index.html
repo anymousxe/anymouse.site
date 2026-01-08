@@ -133,8 +133,8 @@
         .yt-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .link-preview-card { display: flex; align-items: center; gap: 20px; padding: 20px; background: #050505; border: 1px solid #222; border-radius: 12px; text-decoration: none !important; margin-top: 15px; transition: 0.2s; }
 
-        .leadership-section { display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; margin: 8rem 0; }
-        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 4rem; border-radius: 20px; text-align: center; width: 360px; transition: 0.3s; }
+        .leadership-section { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin: 8rem 0; }
+        .leader-card { background: var(--card-bg); border: 1px solid var(--border); padding: 4rem; border-radius: 20px; text-align: center; width: 340px; transition: 0.3s; }
         .leader-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border); margin-bottom: 2rem; }
 
         /* --- SETTLEMENTS --- */
@@ -206,11 +206,26 @@
                     <img src="anymousxe.png" class="leader-img">
                     <h2 style="font-size: 2.5rem;">Anymousxe</h2>
                     <p style="color: var(--mouseland-accent); font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Mice In Charge [CHIEF]</p>
+                    <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 5px;">@anymousxe</p>
                 </div>
                 <div class="leader-card tilt-card">
-                    <img src="color.png" class="leader-img">
-                    <h2 style="font-size: 2.5rem;">Color</h2>
+                    <img src="../src/mat.png" class="leader-img">
+                    <h2 style="font-size: 2.5rem;">Mat</h2>
                     <p style="color: #a855f7; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Vice Mice In Charge [VICE]</p>
+                    <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 5px;">@mat_tkd</p>
+                </div>
+                <div class="leader-card tilt-card">
+                    <img src="../src/roddy.png" class="leader-img">
+                    <h2 style="font-size: 2.5rem;">Roddy</h2>
+                    <p style="color: var(--link-color); font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Leader of BBQ Chicken Land</p>
+                    <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 5px;">War Ally [Joined to help]</p>
+                </div>
+            </section>
+
+            <section class="news-section">
+                <h2 style="margin-bottom: 4rem; font-size: 3rem; font-weight: 900; letter-spacing: -1px;">State Broadcasts</h2>
+                <div id="news-feed" class="news-archive-container">
+                    <div style="text-align: center; padding: 5rem; color: #333; font-family: var(--font-mono);">SYNCING SECURE FREQUENCY...</div>
                 </div>
             </section>
 
@@ -252,13 +267,6 @@
                         <img src="mouseland%20war%20map.png" alt="Combat Map">
                         <p style="font-size: 0.7rem; color: var(--danger); margin-top: 10px;">Active Frontlines // THE GREASE-LINE SECTOR</p>
                     </div>
-                </div>
-            </section>
-
-            <section class="news-section">
-                <h2 style="margin-bottom: 4rem; font-size: 3rem; font-weight: 900; letter-spacing: -1px;">State Broadcasts</h2>
-                <div id="news-feed" class="news-archive-container">
-                    <div style="text-align: center; padding: 5rem; color: #333; font-family: var(--font-mono);">SYNCING SECURE FREQUENCY...</div>
                 </div>
             </section>
 
@@ -406,9 +414,9 @@
                 title: document.getElementById('post-title').value,
                 content: document.getElementById('post-content').value,
                 type: document.getElementById('post-type').value,
-                author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
+                author: user.email.includes("anymousxe") ? "Anymousxe" : "Mat",
                 role: user.email.includes("anymousxe") ? "Mice In Charge" : "Vice Mice In Charge",
-                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
+                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "../src/mat.png",
                 updatedAt: serverTimestamp()
             };
 
