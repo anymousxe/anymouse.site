@@ -209,9 +209,15 @@
                     <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 5px;">@anymousxe</p>
                 </div>
                 <div class="leader-card tilt-card">
+                    <img src="color.png" class="leader-img">
+                    <h2 style="font-size: 2.5rem;">Color</h2>
+                    <p style="color: #a855f7; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Vice Mice In Charge [VICE]</p>
+                    <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 5px;">@color_aqua</p>
+                </div>
+                <div class="leader-card tilt-card">
                     <img src="../src/mat.png" class="leader-img">
                     <h2 style="font-size: 2.5rem;">Mat</h2>
-                    <p style="color: #a855f7; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Vice Mice In Charge [VICE]</p>
+                    <p style="color: #facc15; font-weight: 900; letter-spacing: 3px; margin-top: 1rem;">Head of Cheese</p>
                     <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 5px;">@mat_tkd</p>
                 </div>
                 <div class="leader-card tilt-card">
@@ -224,6 +230,23 @@
 
             <section class="news-section">
                 <h2 style="margin-bottom: 4rem; font-size: 3rem; font-weight: 900; letter-spacing: -1px;">State Broadcasts</h2>
+                
+                <div class="news-item urgent">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <img src="mouselandflag.png" style="width:45px; height:45px; border-radius:50%; border:2px solid #222;">
+                            <div>
+                                <div style="font-weight:900;">MIC ARCHIVE <span style="font-size:0.6rem; background:var(--danger); color:#fff; padding:2px 8px; border-radius:3px;">HISTORICAL LOG</span></div>
+                                <div style="font-size:0.7rem; color:#444;">RECORDS: JAN 08, 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 style="margin:2.5rem 0 1rem 0; font-size:1.8rem; color:#fff;">🚨 THE DENMARK DEPORTATION INCIDENT</h3>
+                    <div style="color:#aaa; font-size:1.05rem;">
+                        Following internal controversy, <span style="color:var(--mouseland-accent); font-weight:bold;">Color</span> was forcefully stepped down from the MIC cabinet and deported back to Denmark. However, High Command realized the vibes were off without him and he was officially reinstated as Vice Mice In Charge 24 hours later. The state apologizes for the temporary confusion.
+                    </div>
+                </div>
+
                 <div id="news-feed" class="news-archive-container">
                     <div style="text-align: center; padding: 5rem; color: #333; font-family: var(--font-mono);">SYNCING SECURE FREQUENCY...</div>
                 </div>
@@ -414,9 +437,9 @@
                 title: document.getElementById('post-title').value,
                 content: document.getElementById('post-content').value,
                 type: document.getElementById('post-type').value,
-                author: user.email.includes("anymousxe") ? "Anymousxe" : "Mat",
+                author: user.email.includes("anymousxe") ? "Anymousxe" : "Color",
                 role: user.email.includes("anymousxe") ? "Mice In Charge" : "Vice Mice In Charge",
-                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "../src/mat.png",
+                pfp: user.email.includes("anymousxe") ? "anymousxe.png" : "color.png",
                 updatedAt: serverTimestamp()
             };
 
