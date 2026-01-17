@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOUSE.SHOP | Official Tech Supply</title>
+    <title>MOUSE.SHOP | Tech Supply</title>
     
     <link rel="icon" type="image/png" href="mouseicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CONFIG & VARIABLES (MATCHING GOV SITE) --- */
+        /* --- CONFIG & VARIABLES --- */
         :root {
             --bg-color: #09090b; 
             --card-bg: #111113;  
             --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
             --mouseland-accent: #10b981; 
-            --shop-accent: #3b82f6; /* Blue for Tech/Shop differentiation */
+            --shop-accent: #3b82f6; 
             --danger: #ef4444;            
-            --warning: #f59e0b;            
             --border: #27272a;            
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', 'Courier New', monospace;
@@ -39,46 +38,45 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.3;
         }
 
-        /* --- LAYOUT --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 10; }
 
         /* --- HEADER & NAV --- */
         .shop-header {
             padding: 2rem 0;
             border-bottom: 1px solid var(--border);
-            background: rgba(9, 9, 11, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(9, 9, 11, 0.9);
+            backdrop-filter: blur(15px);
             position: sticky;
             top: 0;
             z-index: 100;
         }
         .nav-bar { display: flex; justify-content: space-between; align-items: center; }
         
-        .logo-area { font-family: var(--font-mono); font-weight: 900; font-size: 1.5rem; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        .logo-area { font-family: var(--font-mono); font-weight: 900; font-size: 1.5rem; letter-spacing: -1px; display: flex; align-items: center; }
         .logo-area span { color: var(--shop-accent); }
 
         .wallet-display {
-            background: var(--card-bg);
+            background: #000;
             border: 1px solid var(--mouseland-accent);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
             font-family: var(--font-mono);
             color: var(--mouseland-accent);
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
         }
 
+        /* --- BUTTONS --- */
         .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.8rem 1.6rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: 0.2s; text-decoration: none; }
         .btn-back { background: transparent; color: var(--text-muted); border: 1px solid var(--border); margin-right: 20px; }
-        .btn-back:hover { color: #fff; border-color: #fff; }
-        .btn-buy { background: var(--shop-accent); color: #000; width: 100%; margin-top: 15px; font-family: var(--font-mono); text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
-        .btn-buy:hover { background: #fff; box-shadow: 0 0 20px var(--shop-accent); }
-        .btn-buy:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
+        .btn-back:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-buy { background: var(--shop-accent); color: #fff; width: 100%; margin-top: 15px; font-family: var(--font-mono); text-transform: uppercase; font-weight: 900; }
+        .btn-buy:hover { background: #fff; color: #000; box-shadow: 0 0 25px var(--shop-accent); }
 
-        /* --- HERO SECTION (NEW PRODUCT) --- */
+        /* --- HERO: MAUSGG6 --- */
         .hero-product {
             margin: 4rem 0;
             background: linear-gradient(135deg, #0f0f11 0%, #050505 100%);
@@ -90,41 +88,18 @@
             gap: 4rem;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-left: 5px solid var(--mouseland-accent);
         }
-        .hero-product::before {
-            content: "NEW ARRIVAL";
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--mouseland-accent);
-            color: #000;
-            padding: 5px 15px;
-            font-weight: 900;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            border-radius: 4px;
-        }
-        .hero-img-placeholder {
-            flex: 1;
-            height: 400px;
-            background: radial-gradient(circle, #222 0%, #000 70%);
-            border: 1px solid #333;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-            color: #333;
-        }
+        .hero-img { flex: 1; text-align: center; font-size: 10rem; color: #1a1a1a; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.2)); }
         .hero-details { flex: 1; }
-        .hero-title { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 1rem; letter-spacing: -2px; }
-        .hero-price { font-size: 2.5rem; color: var(--mouseland-accent); font-family: var(--font-mono); margin-bottom: 2rem; display: block; }
+        .hero-title { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 0.5rem; letter-spacing: -2px; }
+        .hero-price { font-size: 2.5rem; color: var(--mouseland-accent); font-family: var(--font-mono); margin-bottom: 2rem; display: block; font-weight: 900; }
         .specs-list { list-style: none; margin-bottom: 2rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem; }
-        .specs-list li { margin-bottom: 0.5rem; border-left: 2px solid var(--shop-accent); padding-left: 10px; }
+        .specs-list li { margin-bottom: 0.5rem; padding-left: 15px; position: relative; }
+        .specs-list li::before { content: ">"; position: absolute; left: 0; color: var(--shop-accent); }
 
         /* --- PRODUCT GRID --- */
-        .section-title { font-size: 2rem; font-weight: 900; margin-bottom: 2rem; border-bottom: 1px solid #222; padding-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; }
+        .grid-header { font-size: 1.5rem; font-weight: 900; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 4px; color: #333; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 6rem; }
         
         .product-card {
@@ -133,77 +108,54 @@
             border-radius: 12px;
             padding: 2rem;
             transition: 0.3s;
-            position: relative;
         }
         .product-card:hover { transform: translateY(-5px); border-color: var(--shop-accent); }
-        .p-img { width: 100%; height: 200px; background: #050505; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; color: #333; font-size: 3rem; border: 1px solid #1a1a1a; }
+        .p-icon { font-size: 3rem; margin-bottom: 1.5rem; color: #222; }
         .p-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
-        .p-price { color: var(--text-muted); font-family: var(--font-mono); font-weight: bold; font-size: 1.2rem; }
+        .p-price { color: var(--text-muted); font-family: var(--font-mono); font-weight: bold; }
 
         /* --- BUNDLE --- */
-        .bundle-section {
-            background: linear-gradient(45deg, #1e1b4b, #312e81);
-            border: 1px solid #4338ca;
+        .bundle-card {
+            background: linear-gradient(to right, #1e1b4b, #000);
+            border: 2px solid #312e81;
             border-radius: 20px;
             padding: 4rem;
             text-align: center;
-            margin-bottom: 6rem;
+            margin-bottom: 8rem;
             position: relative;
+            overflow: hidden;
         }
-        .bundle-badge {
-            background: #facc15; color: #000; padding: 10px 30px; 
-            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-            font-weight: 900; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 2px;
-            border: 3px solid #000;
-        }
-
-        /* --- CURRENCY ICON --- */
-        .mousin-symbol {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px; height: 20px;
-            background: var(--mouseland-accent);
-            color: #000;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: 900;
-            font-family: serif;
-            margin-right: 5px;
+        .bundle-tag {
+            position: absolute; top: 0; left: 0; background: #facc15; color: #000;
+            padding: 5px 20px; font-weight: 900; font-family: var(--font-mono); font-size: 0.7rem;
         }
 
-        /* --- NOTIFICATIONS --- */
-        #notification-area {
-            position: fixed; bottom: 20px; right: 20px; z-index: 999;
-            display: flex; flex-direction: column; gap: 10px;
+        /* --- UI ELEMENTS --- */
+        .mousin { font-family: serif; font-weight: 900; text-transform: lowercase; margin-right: 4px; color: var(--mouseland-accent); }
+        
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; }
+        .toast { 
+            background: #000; border: 1px solid var(--mouseland-accent); color: #fff; 
+            padding: 1rem 2rem; border-radius: 4px; margin-top: 10px; font-family: var(--font-mono);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-left: 5px solid var(--mouseland-accent);
         }
-        .toast {
-            background: #000; border: 1px solid var(--mouseland-accent); color: #fff;
-            padding: 1rem 2rem; border-radius: 8px; font-family: var(--font-mono);
-            animation: slideIn 0.3s ease-out; box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-        }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-        footer { padding: 4rem 0; text-align: center; color: #444; font-family: var(--font-mono); font-size: 0.8rem; border-top: 1px solid var(--border); }
+        footer { padding: 4rem 0; text-align: center; color: #222; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 5px; }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
-    
-    <audio id="sfx-buy"><source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="sfx-error"><source src="https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3" type="audio/mpeg"></audio>
 
     <div class="shop-header">
         <div class="container">
             <nav class="nav-bar">
                 <div class="logo-area">
-                    <a href="https://anymousxe.site/mouseland" class="btn btn-back"><i class="fas fa-arrow-left"></i> GOV SITE</a>
-                    <div>MOUSE<span>.SHOP</span> <i class="fas fa-microchip"></i></div>
+                    <a href="https://anymouse.site/mouseland" class="btn btn-back"><i class="fas fa-chevron-left"></i> BACK</a>
+                    MOUSE<span>.SHOP</span>
                 </div>
                 <div class="wallet-display">
-                    <span class="mousin-symbol">m</span>
-                    <span id="user-balance">...</span>
+                    <span class="mousin">m</span> <span id="balance-amt">0</span>
                 </div>
             </nav>
         </div>
@@ -212,157 +164,129 @@
     <div class="container">
         
         <div class="hero-product">
-            <div class="hero-img-placeholder">
-                <i class="fas fa-server" style="color:#222; font-size: 8rem;"></i>
+            <div class="hero-img">
+                <i class="fas fa-microchip"></i>
             </div>
             <div class="hero-details">
-                <div style="font-family:var(--font-mono); color:var(--shop-accent); margin-bottom:10px;">FLAGSHIP WORKSTATION</div>
+                <div style="color: var(--shop-accent); font-weight: 900; font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 1rem;">[ STATUS: JUST DROPPED ]</div>
                 <h1 class="hero-title">mausGG6 m5-3</h1>
-                <div class="hero-price"><span class="mousin-symbol">m</span> 5,200</div>
+                <span class="hero-price"><span class="mousin">m</span> 5,200</span>
                 <ul class="specs-list">
-                    <li><strong>GPU:</strong> Nvidia RTX 6090 Ti (Mouse Edition)</li>
-                    <li><strong>RAM:</strong> 156 GB DDR6 Overclocked</li>
-                    <li><strong>CPU:</strong> MausCore i9 Extreme</li>
-                    <li><strong>Cooling:</strong> Liquid Nitrogen Loop</li>
+                    <li>ULTRA-WIDE BAND GPU (BEST IN CLASS)</li>
+                    <li>156GB+ HYPER-THREADED RAM</li>
+                    <li>MIC SECURE ENCLAVE CHIP</li>
+                    <li>LIQUID CHEESE COOLING READY</li>
                 </ul>
-                <button class="btn btn-buy" onclick="buyItem('mausGG6 m5-3', 5200)">PURCHASE UNIT</button>
+                <button class="btn btn-buy" onclick="buy('mausGG6 m5-3', 5200)">AUTHORIZE PURCHASE</button>
             </div>
         </div>
 
-        <h2 class="section-title">Standard Issue Tech</h2>
+        <h2 class="grid-header">Hardware Catalog</h2>
         <div class="products-grid">
-            
             <div class="product-card">
-                <div class="p-img"><i class="fas fa-mobile-alt"></i></div>
+                <i class="fas fa-mobile-alt p-icon"></i>
                 <h3 class="p-title">Orbital B1</h3>
-                <p class="p-price"><span class="mousin-symbol">m</span> 800</p>
-                <div style="color:#666; font-size:0.8rem; margin: 10px 0;">Solid reliable communication device. Standard government issue.</div>
-                <button class="btn btn-buy" onclick="buyItem('Orbital B1', 800)">ADD TO CART</button>
+                <p class="p-price"><span class="mousin">m</span> 450</p>
+                <button class="btn btn-buy" onclick="buy('Orbital B1', 450)">BUY</button>
             </div>
 
             <div class="product-card">
-                <div class="p-img"><i class="fas fa-mobile-screen-button"></i></div>
+                <i class="fas fa-mobile-screen p-icon" style="color: var(--shop-accent);"></i>
                 <h3 class="p-title">Orbital B2</h3>
-                <p class="p-price"><span class="mousin-symbol">m</span> 1,200</p>
-                <div style="color:#666; font-size:0.8rem; margin: 10px 0;">Upgraded screen, faster processor, and direct Websim uplink.</div>
-                <button class="btn btn-buy" onclick="buyItem('Orbital B2', 1200)">ADD TO CART</button>
+                <p class="p-price"><span class="mousin">m</span> 850</p>
+                <button class="btn btn-buy" onclick="buy('Orbital B2', 850)">BUY</button>
             </div>
 
             <div class="product-card">
-                <div class="p-img"><i class="fas fa-laptop-code"></i></div>
+                <i class="fas fa-laptop p-icon"></i>
                 <h3 class="p-title">V2 Laptop</h3>
-                <p class="p-price"><span class="mousin-symbol">m</span> 2,500</p>
-                <div style="color:#666; font-size:0.8rem; margin: 10px 0;">Heavy duty laptop for coding Deno bots and managing servers.</div>
-                <button class="btn btn-buy" onclick="buyItem('V2 Laptop', 2500)">ADD TO CART</button>
+                <p class="p-price"><span class="mousin">m</span> 1,800</p>
+                <button class="btn btn-buy" onclick="buy('V2 Laptop', 1800)">BUY</button>
             </div>
-
         </div>
 
-        <div class="bundle-section">
-            <div class="bundle-badge">LIMITED TIME OFFER</div>
-            <h2 style="font-size: 3.5rem; font-weight: 900; margin-bottom: 1rem;">MAUS GG'S! BUNDLE</h2>
-            <p style="color: #a5b4fc; font-size: 1.2rem; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                The ultimate gamer setup. Includes the exclusive <strong>mausGG6 m5-3.5 Pro</strong> with extra RAM and military-grade components.
+        <div class="bundle-card">
+            <div class="bundle-tag">MIC SPECIAL OPS</div>
+            <h2 style="font-size: 3rem; margin-bottom: 1rem;">"MAUS GG'S!" BUNDLE</h2>
+            <p style="color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 2rem;">
+                THE FULL GAMER RIG: mausGG6 m5-3.5 Pro + Extended VRAM + Ceramic Housing
             </p>
-            <div style="display:flex; justify-content:center; gap: 4rem; align-items:center; margin-bottom:3rem;">
-                <div style="text-align:left;">
-                    <div style="color:#818cf8; font-family:var(--font-mono);">INCLUDES:</div>
-                    <ul style="list-style:none; text-align:left; font-size:1.1rem; font-weight:bold;">
-                        <li><i class="fas fa-check" style="color:#4ade80"></i> mausGG6 m5-3.5 PRO</li>
-                        <li><i class="fas fa-check" style="color:#4ade80"></i> RGB Mousepad</li>
-                        <li><i class="fas fa-check" style="color:#4ade80"></i> 1 Year Warranty</li>
-                    </ul>
-                </div>
-                <div style="font-size: 4rem; font-weight:900; font-family:var(--font-mono); color:#fff;">
-                    <span class="mousin-symbol" style="width:40px; height:40px; font-size:20px;">m</span>7,500
-                </div>
+            <div style="font-size: 3rem; font-weight: 900; margin-bottom: 2rem;">
+                <span class="mousin">m</span> 8,900
             </div>
-            <button class="btn btn-buy" style="max-width:300px; background:#fff; color:#000;" onclick="buyItem('MAUS GG BUNDLE', 7500)">CLAIM BUNDLE</button>
+            <button class="btn btn-buy" style="max-width: 300px; background: #fff; color: #000;" onclick="buy('MAUS GG BUNDLE', 8900)">CLAIM BUNDLE</button>
         </div>
 
     </div>
 
-    <div id="notification-area"></div>
+    <div id="toast-container"></div>
 
     <footer>
-        &copy; 2026 MOUSE.SHOP // AUTHORIZED RETAILER FOR MOUSELAND
+        SECURE TERMINAL // MOUSE.SHOP // &copy; 2026
     </footer>
 
     <script>
-        // --- LOGIC ---
+        // --- DATA MGMT ---
+        let balance = localStorage.getItem('mousins') ? parseInt(localStorage.getItem('mousins')) : 15000;
         
-        // 1. Fake Economy System
-        let balance = localStorage.getItem('mousinBalance') ? parseInt(localStorage.getItem('mousinBalance')) : 10000;
-        
-        function updateDisplay() {
-            document.getElementById('user-balance').innerText = balance.toLocaleString();
-            localStorage.setItem('mousinBalance', balance);
+        function updateUI() {
+            document.getElementById('balance-amt').innerText = balance.toLocaleString();
+            localStorage.setItem('mousins', balance);
         }
 
-        function notify(msg, type = 'success') {
-            const area = document.getElementById('notification-area');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderColor = type === 'error' ? 'var(--danger)' : 'var(--mouseland-accent)';
-            toast.innerHTML = type === 'error' ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
-            area.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
-        }
-
-        window.buyItem = function(itemName, cost) {
-            if (balance >= cost) {
-                balance -= cost;
-                updateDisplay();
-                document.getElementById('sfx-buy').play();
-                notify(`PURCHASED: ${itemName}`);
+        function buy(name, price) {
+            if (balance >= price) {
+                balance -= price;
+                updateUI();
+                showToast(`SUCCESS: ${name} deployed to your inventory.`);
             } else {
-                document.getElementById('sfx-error').play();
-                notify(`INSUFFICIENT FUNDS! Need ${cost - balance} more mousins.`, 'error');
+                showToast(`REJECTED: Need ${price - balance} more mousins.`, true);
             }
-        };
+        }
 
-        // Initialize Display
-        updateDisplay();
+        function showToast(msg, isError = false) {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            if(isError) t.style.borderColor = 'var(--danger)';
+            t.innerText = msg;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 4000);
+        }
 
+        updateUI();
 
-        // --- VISUALS (PARTICLE SYSTEM) ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('bg-canvas');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            
-            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-            resize(); window.onresize = resize;
+        // --- BACKGROUND ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        
+        function res() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = res; res();
 
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 2;
-                    this.speedX = (Math.random() - 0.5) * 0.5;
-                    this.speedY = (Math.random() - 0.5) * 0.5;
-                    this.color = Math.random() > 0.5 ? '#10b981' : '#3b82f6'; // Green or Blue
-                }
-                update() {
-                    this.x += this.speedX; this.y += this.speedY;
-                    if (this.x > canvas.width) this.x = 0;
-                    if (this.x < 0) this.x = canvas.width;
-                    if (this.y > canvas.height) this.y = 0;
-                    if (this.y < 0) this.y = canvas.height;
-                }
-                draw() {
-                    ctx.fillStyle = this.color; ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-                }
+        class Pt {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vX = (Math.random() - 0.5) * 0.5;
+                this.vY = (Math.random() - 0.5) * 0.5;
             }
-            for(let i=0; i<80; i++) particles.push(new Particle());
-            function animate() {
-                ctx.clearRect(0,0,canvas.width, canvas.height);
-                particles.forEach(p => { p.update(); p.draw(); });
-                requestAnimationFrame(animate);
+            upd() {
+                this.x += this.vX; this.y += this.vY;
+                if(this.x < 0 || this.x > canvas.width) this.vX *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.vY *= -1;
             }
-            animate();
-        });
+            drw() {
+                ctx.fillStyle = '#10b981'; ctx.beginPath();
+                ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill();
+            }
+        }
+        for(let i=0; i<60; i++) pts.push(new Pt());
+        function anim() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            pts.forEach(p => { p.upd(); p.drw(); });
+            requestAnimationFrame(anim);
+        }
+        anim();
     </script>
 </body>
 </html>
