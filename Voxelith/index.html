@@ -5,143 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voxelith | Coming Soon</title>
     <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
+        /* --- CORE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
+        
         body {
             background-color: #0d0d0d;
-            color: #ffffff;
+            color: #fff;
             height: 100vh;
+            overflow: hidden; /* Keeps scrollbars away during load */
+        }
+
+        /* --- THE LOADING SCREEN --- */
+        #loader-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0d0d0d;
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            transition: opacity 1s ease-out; /* Smooth fade out */
+        }
+
+        .loader-content { width: 300px; text-align: left; }
+        .loading-text { color: #00ff88; margin-bottom: 5px; font-size: 0.8rem; display: flex; justify-content: space-between; }
+        
+        .bar-bg { width: 100%; height: 6px; background: #222; border: 1px solid #333; }
+        .bar-fill {
+            height: 100%; background: #00ff88; width: 0%;
+            animation: loadProgress 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        /* --- THE MAIN SITE (Hidden initially) --- */
+        #main-site {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0; /* Starts invisible */
+            transition: opacity 1.5s ease-in;
             background-image: radial-gradient(#1f1f1f 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-size: 30px 30px;
         }
 
-        /* Top Nav */
-        .top-nav {
+        /* Hero Content */
+        h1.hero-title {
+            font-size: 5rem;
+            text-transform: uppercase;
+            letter-spacing: -4px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        p.hero-desc { color: #888; font-size: 1.2rem; margin-bottom: 3rem; max-width: 600px; line-height: 1.5; }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #333;
+            background: #111;
+            color: #666;
+            font-size: 0.7rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .footer-credit {
             position: absolute;
-            top: 25px;
-            right: 25px;
-            z-index: 10;
+            bottom: 30px;
+            font-size: 0.8rem;
+            color: #555;
         }
+        .footer-credit span { color: #00ff88; font-weight: bold; }
 
+        /* --- NAV BUTTON (Always Visible) --- */
+        .top-nav { position: fixed; top: 25px; right: 25px; z-index: 10000; }
         .main-btn {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
             border: 1px solid #00ff88;
             color: #00ff88;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.8rem;
-            letter-spacing: 1px;
             transition: 0.3s;
         }
-
-        .main-btn:hover {
-            background: #00ff88;
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-        }
-
-        /* Main Container */
-        .container {
-            text-align: center;
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 4rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: -3px;
-            text-transform: uppercase;
-            animation: glitchText 3s infinite alternate-reverse;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 3rem;
-            font-size: 1.1rem;
-        }
-
-        /* THE FIX: Loading Bar */
-        .loading-wrapper {
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .loading-text {
-            font-size: 0.8rem;
-            color: #00ff88;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .bar-bg {
-            width: 100%;
-            height: 6px;
-            background: #222;
-            border: 1px solid #333;
-            position: relative;
-        }
-
-        .bar-fill {
-            height: 100%;
-            background: #00ff88;
-            width: 0%;
-            /* 'forwards' makes it stop at 100% instead of looping */
-            animation: fillBar 2.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; 
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-
-        .creator {
-            margin-top: 4rem;
-            font-size: 0.8rem;
-            color: #444;
-            opacity: 0;
-            animation: fadeIn 1s ease 2.5s forwards; /* Appears after bar fills */
-        }
-
-        .creator span {
-            color: #fff;
-            font-weight: bold;
-        }
+        .main-btn:hover { background: #00ff88; color: #000; box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); }
 
         /* Animations */
-        @keyframes fillBar {
+        @keyframes loadProgress {
             0% { width: 0%; }
+            40% { width: 60%; } /* Stalls a bit for realism */
             100% { width: 100%; }
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Subtle text glitch effect */
-        @keyframes glitchText {
-            0% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; }
-            95% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; }
-            96% { text-shadow: -2px 0 #ff0055, 2px 0 #00ff88; transform: translate(2px, 2px); }
-            97% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; transform: translate(-2px, -2px); }
-            100% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; }
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
+        @media(max-width: 600px) {
+            h1.hero-title { font-size: 3rem; }
+            .loader-content { width: 80%; }
         }
     </style>
 </head>
@@ -151,24 +117,60 @@
         <a href="https://anymouse.site" class="main-btn">go to page</a>
     </div>
 
-    <div class="container">
-        <h1>VOXELITH</h1>
-        <p class="subtitle">Constructing World...</p>
-
-        <div class="loading-wrapper">
+    <div id="loader-screen">
+        <div class="loader-content">
             <div class="loading-text">
-                <span>LOADING ASSETS</span>
-                <span>100%</span>
+                <span>INITIALIZING VOXEL ENGINE...</span>
+                <span id="percent">0%</span>
             </div>
             <div class="bar-bg">
                 <div class="bar-fill"></div>
             </div>
         </div>
+    </div>
 
-        <div class="creator">
-            Project by <span>anymousxe</span>
+    <div id="main-site">
+        <div class="badge">Side Project</div>
+        <h1 class="hero-title">VOXELITH</h1>
+        <p class="hero-desc">
+            A new world is being constructed, block by block. <br>
+            The game is currently in the makings.
+        </p>
+
+        <div class="footer-credit">
+            Developed by <span>anymousxe</span>
         </div>
     </div>
+
+    <script>
+        // Wait for page load
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader-screen');
+            const mainSite = document.getElementById('main-site');
+            const percentText = document.getElementById('percent');
+
+            // Quick percent counter effect
+            let p = 0;
+            const timer = setInterval(() => {
+                p += Math.floor(Math.random() * 5);
+                if(p > 100) p = 100;
+                percentText.innerText = p + "%";
+                if(p === 100) clearInterval(timer);
+            }, 100);
+
+            // After 3.5 seconds (animation time + buffer), switch screens
+            setTimeout(() => {
+                loader.style.opacity = '0'; // Fade out loader
+                
+                // Remove loader from DOM after fade so buttons work
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    mainSite.style.opacity = '1'; // Fade in site
+                }, 1000);
+                
+            }, 3000);
+        });
+    </script>
 
 </body>
 </html>
