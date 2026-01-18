@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voxelith | Coming Soon</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace; /* Voxel/Code aesthetic */
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: radial-gradient(#1f1f1f 1px, transparent 1px);
+            background-size: 20px 20px; /* Grid pattern for that voxel feel */
+        }
+
+        /* Top Navigation Button */
+        .top-nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .main-btn {
+            background-color: transparent;
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .main-btn:hover {
+            background-color: #00ff88;
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Hero Section */
+        .container {
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -2px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .glitch-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .creator-tag {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #555;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+            display: inline-block;
+        }
+
+        .creator-tag span {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        /* Simple Loading Bar Animation */
+        .loader-container {
+            width: 200px;
+            height: 4px;
+            background: #222;
+            margin: 0 auto;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-bar {
+            height: 100%;
+            background: #00ff88;
+            width: 0%;
+            animation: load 3s infinite ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes load {
+            0% { width: 0%; margin-left: 0; }
+            50% { width: 100%; margin-left: 0; }
+            100% { width: 0%; margin-left: 100%; }
+        }
+
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .top-nav { top: 15px; right: 15px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="https://anymouse.site" class="main-btn">go to page</a>
+    </div>
+
+    <div class="container">
+        <div class="glitch-wrapper">
+            <h1>VOXELITH</h1>
+        </div>
+        <p class="subtitle">A New Dimension is Loading...</p>
+        
+        <div class="loader-container">
+            <div class="loader-bar"></div>
+        </div>
+
+        <div class="creator-tag">
+            Side project by <span>anymousxe</span>
+        </div>
+    </div>
+
+</body>
+</html>
