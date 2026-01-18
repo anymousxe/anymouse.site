@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voxelith | Coming Soon</title>
     <style>
-        /* Reset and Base Styles */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace; /* Voxel/Code aesthetic */
+            font-family: 'Courier New', Courier, monospace;
         }
 
         body {
@@ -23,108 +23,125 @@
             align-items: center;
             overflow: hidden;
             background-image: radial-gradient(#1f1f1f 1px, transparent 1px);
-            background-size: 20px 20px; /* Grid pattern for that voxel feel */
+            background-size: 20px 20px;
         }
 
-        /* Top Navigation Button */
+        /* Top Nav */
         .top-nav {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 25px;
+            right: 25px;
+            z-index: 10;
         }
 
         .main-btn {
-            background-color: transparent;
-            border: 2px solid #00ff88;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #00ff88;
             color: #00ff88;
             padding: 10px 20px;
             text-decoration: none;
             font-weight: bold;
             text-transform: uppercase;
+            font-size: 0.8rem;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 0.9rem;
+            transition: 0.3s;
         }
 
         .main-btn:hover {
-            background-color: #00ff88;
+            background: #00ff88;
             color: #000;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
         }
 
-        /* Hero Section */
+        /* Main Container */
         .container {
             text-align: center;
-            padding: 2rem;
-            animation: fadeIn 1.5s ease-in-out;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
         }
 
         h1 {
             font-size: 4rem;
             margin-bottom: 0.5rem;
-            letter-spacing: -2px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-
-        .glitch-wrapper {
-            display: inline-block;
-            position: relative;
+            letter-spacing: -3px;
+            text-transform: uppercase;
+            animation: glitchText 3s infinite alternate-reverse;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
         }
 
-        .creator-tag {
-            margin-top: 3rem;
-            font-size: 0.9rem;
-            color: #555;
-            border-top: 1px solid #333;
-            padding-top: 1rem;
-            display: inline-block;
-        }
-
-        .creator-tag span {
-            color: #00ff88;
-            font-weight: bold;
-        }
-
-        /* Simple Loading Bar Animation */
-        .loader-container {
-            width: 200px;
-            height: 4px;
-            background: #222;
+        /* THE FIX: Loading Bar */
+        .loading-wrapper {
+            width: 100%;
+            max-width: 300px;
             margin: 0 auto;
-            border-radius: 2px;
-            overflow: hidden;
+            text-align: left;
         }
 
-        .loader-bar {
+        .loading-text {
+            font-size: 0.8rem;
+            color: #00ff88;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #222;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .bar-fill {
             height: 100%;
             background: #00ff88;
             width: 0%;
-            animation: load 3s infinite ease-in-out;
+            /* 'forwards' makes it stop at 100% instead of looping */
+            animation: fillBar 2.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; 
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .creator {
+            margin-top: 4rem;
+            font-size: 0.8rem;
+            color: #444;
+            opacity: 0;
+            animation: fadeIn 1s ease 2.5s forwards; /* Appears after bar fills */
+        }
+
+        .creator span {
+            color: #fff;
+            font-weight: bold;
         }
 
         /* Animations */
+        @keyframes fillBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            to { opacity: 1; }
         }
 
-        @keyframes load {
-            0% { width: 0%; margin-left: 0; }
-            50% { width: 100%; margin-left: 0; }
-            100% { width: 0%; margin-left: 100%; }
+        /* Subtle text glitch effect */
+        @keyframes glitchText {
+            0% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; }
+            95% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; }
+            96% { text-shadow: -2px 0 #ff0055, 2px 0 #00ff88; transform: translate(2px, 2px); }
+            97% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; transform: translate(-2px, -2px); }
+            100% { text-shadow: 2px 0 #ff0055, -2px 0 #00ff88; }
         }
 
-        /* Mobile tweaks */
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
-            .top-nav { top: 15px; right: 15px; } 
         }
     </style>
 </head>
@@ -135,17 +152,21 @@
     </div>
 
     <div class="container">
-        <div class="glitch-wrapper">
-            <h1>VOXELITH</h1>
-        </div>
-        <p class="subtitle">A New Dimension is Loading...</p>
-        
-        <div class="loader-container">
-            <div class="loader-bar"></div>
+        <h1>VOXELITH</h1>
+        <p class="subtitle">Constructing World...</p>
+
+        <div class="loading-wrapper">
+            <div class="loading-text">
+                <span>LOADING ASSETS</span>
+                <span>100%</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-fill"></div>
+            </div>
         </div>
 
-        <div class="creator-tag">
-            Side project by <span>anymousxe</span>
+        <div class="creator">
+            Project by <span>anymousxe</span>
         </div>
     </div>
 
