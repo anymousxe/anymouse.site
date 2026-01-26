@@ -1,39 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voxelith | Coming Soon</title>
+
+    <link rel="icon" type="image/png" href="../assets/img/mouseicon.png">
+
+    <meta name="theme-color" content="#00ff88">
+    <meta name="description"
+        content="Voxelith: A new world is being constructed, block by block. A side project by anymousxe.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://anymouse.site/Voxelith/">
+    <meta property="og:title" content="VOXELITH | VOXEL ENGINE">
+    <meta property="og:site_name" content="Voxelith Projects">
+    <meta property="og:description"
+        content="A new world is being constructed, block by block. Official Voxelith Landing Page.">
+    <meta property="og:image" content="https://anymouse.site/assets/img/anymousxe.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://anymouse.site/Voxelith/">
+    <meta property="twitter:title" content="VOXELITH | VOXEL ENGINE">
+    <meta property="twitter:description"
+        content="A new world is being constructed, block by block. Official Voxelith Landing Page.">
+    <meta property="twitter:image" content="https://anymouse.site/assets/img/anymousxe.png">
     <style>
         /* --- CORE STYLES --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
         body {
             background-color: #0d0d0d;
             color: #fff;
             height: 100vh;
-            overflow: hidden; /* Keeps scrollbars away during load */
+            overflow: hidden;
+            /* Keeps scrollbars away during load */
         }
 
         /* --- THE LOADING SCREEN --- */
         #loader-screen {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: #0d0d0d;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease-out; /* Smooth fade out */
+            transition: opacity 1s ease-out;
+            /* Smooth fade out */
         }
 
-        .loader-content { width: 300px; text-align: left; }
-        .loading-text { color: #00ff88; margin-bottom: 5px; font-size: 0.8rem; display: flex; justify-content: space-between; }
-        
-        .bar-bg { width: 100%; height: 6px; background: #222; border: 1px solid #333; }
+        .loader-content {
+            width: 300px;
+            text-align: left;
+        }
+
+        .loading-text {
+            color: #00ff88;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #222;
+            border: 1px solid #333;
+        }
+
         .bar-fill {
-            height: 100%; background: #00ff88; width: 0%;
+            height: 100%;
+            background: #00ff88;
+            width: 0%;
             animation: loadProgress 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
         }
@@ -46,7 +96,8 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            opacity: 0; /* Starts invisible */
+            opacity: 0;
+            /* Starts invisible */
             transition: opacity 1.5s ease-in;
             background-image: radial-gradient(#1f1f1f 1px, transparent 1px);
             background-size: 30px 30px;
@@ -61,8 +112,14 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
-        p.hero-desc { color: #888; font-size: 1.2rem; margin-bottom: 3rem; max-width: 600px; line-height: 1.5; }
-        
+        p.hero-desc {
+            color: #888;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
         .badge {
             display: inline-block;
             padding: 5px 10px;
@@ -81,12 +138,22 @@
             font-size: 0.8rem;
             color: #555;
         }
-        .footer-credit span { color: #00ff88; font-weight: bold; }
+
+        .footer-credit span {
+            color: #00ff88;
+            font-weight: bold;
+        }
 
         /* --- NAV BUTTON (Always Visible) --- */
-        .top-nav { position: fixed; top: 25px; right: 25px; z-index: 10000; }
+        .top-nav {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 10000;
+        }
+
         .main-btn {
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid #00ff88;
             color: #00ff88;
             padding: 12px 24px;
@@ -96,21 +163,41 @@
             font-size: 0.8rem;
             transition: 0.3s;
         }
-        .main-btn:hover { background: #00ff88; color: #000; box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); }
+
+        .main-btn:hover {
+            background: #00ff88;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
 
         /* Animations */
         @keyframes loadProgress {
-            0% { width: 0%; }
-            40% { width: 60%; } /* Stalls a bit for realism */
-            100% { width: 100%; }
+            0% {
+                width: 0%;
+            }
+
+            40% {
+                width: 60%;
+            }
+
+            /* Stalls a bit for realism */
+            100% {
+                width: 100%;
+            }
         }
 
         @media(max-width: 600px) {
-            h1.hero-title { font-size: 3rem; }
-            .loader-content { width: 80%; }
+            h1.hero-title {
+                font-size: 3rem;
+            }
+
+            .loader-content {
+                width: 80%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="top-nav">
@@ -153,24 +240,25 @@
             let p = 0;
             const timer = setInterval(() => {
                 p += Math.floor(Math.random() * 5);
-                if(p > 100) p = 100;
+                if (p > 100) p = 100;
                 percentText.innerText = p + "%";
-                if(p === 100) clearInterval(timer);
+                if (p === 100) clearInterval(timer);
             }, 100);
 
             // After 3.5 seconds (animation time + buffer), switch screens
             setTimeout(() => {
                 loader.style.opacity = '0'; // Fade out loader
-                
+
                 // Remove loader from DOM after fade so buttons work
                 setTimeout(() => {
                     loader.style.display = 'none';
                     mainSite.style.opacity = '1'; // Fade in site
                 }, 1000);
-                
+
             }, 3000);
         });
     </script>
 
 </body>
+
 </html>
