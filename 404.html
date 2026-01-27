@@ -33,14 +33,75 @@
     </style>
 </head>
 
-<body>
+<body class="unlocked">
+
+    <div class="scanlines"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
     <div class="error-page container">
         <div class="error-num">404</div>
         <h2>You fell for the trap!</h2>
-        <p>This page doesn't exist. You might be lost in the sewers.</p>
+        <p>This page doesn't exist. You might be lost in the sewers of Mouseland.</p>
         <br>
-        <a href="/" class="btn btn-primary">Return to Safety</a>
+        <a href="/" class="btn btn-glitch">Return to Safety</a>
     </div>
+
+    <script>
+        // --- REDIRECT LOGIC ---
+        const path = window.location.pathname.toLowerCase();
+        if (path === '/voxelith' || path === '/voxelith/') {
+            window.location.replace('/Voxelith/');
+        }
+
+        // --- INLINED CURSOR LOGIC (Ensures it works on 404) ---
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            if (cursor && follower) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                setTimeout(() => {
+                    follower.style.left = (e.clientX - 20) + 'px';
+                    follower.style.top = (e.clientY - 20) + 'px';
+                }, 80);
+            }
+        });
+
+        // Initialize background particles if canvas exists
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('bg-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                let particles = [];
+                for (let i = 0; i < 50; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5
+                    });
+                }
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)'; // Red for 404
+                    particles.forEach(p => {
+                        p.x += p.vx; p.y += p.vy;
+                        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                        ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, Math.PI * 2); ctx.fill();
+                    });
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+        });
+    </script>
 </body>
 
 </html>
