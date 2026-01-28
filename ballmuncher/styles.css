@@ -1,3 +1,7 @@
+/* ============================================
+   BALLMUNCHER STYLES
+   ============================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,10 +9,21 @@
 }
 
 body {
-    background: #0a0a0f;
+    background: #000;
+    color: #fff;
     font-family: 'Space Grotesk', sans-serif;
     overflow: hidden;
-    color: #fff;
+}
+
+/* UI Layers */
+#main-menu,
+#game-container,
+#pause-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* ============================================
@@ -16,18 +31,13 @@ body {
    ============================================ */
 
 #main-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+    background: radial-gradient(circle at center, #1a1a2e 0%, #05050a 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transition: opacity 0.5s, transform 0.5s;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
 #main-menu.hidden {
@@ -36,111 +46,50 @@ body {
     transform: scale(1.1);
 }
 
-.menu-confetti {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.confetti-piece {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    animation: fall linear infinite;
-}
-
-@keyframes fall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0.5;
-    }
-}
-
 .menu-title {
     font-family: 'Bangers', cursive;
-    font-size: clamp(3rem, 10vw, 8rem);
+    font-size: clamp(3rem, 12vw, 8rem);
     color: #ff6b6b;
-    text-shadow: 
-        4px 4px 0 #feca57,
-        8px 8px 0 #48dbfb,
-        12px 12px 0 #ff9ff3;
-    letter-spacing: 8px;
-    animation: titlePulse 2s ease-in-out infinite;
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-@keyframes titlePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
+    text-shadow: 4px 4px 0 #48dbfb, 8px 8px 0 rgba(0, 0, 0, 0.5);
+    letter-spacing: 5px;
+    margin-bottom: 20px;
 }
 
 .menu-subtitle {
-    font-size: clamp(1rem, 3vw, 1.8rem);
-    color: #a0a0a0;
+    font-size: 1.2rem;
+    color: #888;
+    margin-bottom: 50px;
     text-align: center;
-    max-width: 600px;
-    padding: 0 2rem;
-    margin-bottom: 4rem;
-    line-height: 1.6;
+    max-width: 500px;
+    padding: 0 20px;
 }
 
 .play-btn {
-    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    background: linear-gradient(135deg, #ff6b6b, #ff4757);
     border: none;
-    padding: 1.5rem 4rem;
-    font-size: 2rem;
+    padding: 20px 60px;
+    font-size: 2.22rem;
     font-family: 'Bangers', cursive;
-    color: #1a1a2e;
+    color: #fff;
     cursor: pointer;
     border-radius: 50px;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
-    position: relative;
-    overflow: hidden;
-}
-
-.play-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-    100% { left: 100%; }
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+    letter-spacing: 2px;
 }
 
 .play-btn:hover {
-    transform: scale(1.1) rotate(-2deg);
-    box-shadow: 0 15px 50px rgba(255, 107, 107, 0.6);
-}
-
-.play-btn:active {
-    transform: scale(0.95);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
 }
 
 /* ============================================
-   GAME CONTAINER
+   GAMEPLAY UI
    ============================================ */
 
 #game-container {
-    width: 100%;
-    height: 100vh;
     display: none;
-    position: relative;
+    z-index: 50;
 }
 
 #game-container.active {
@@ -150,7 +99,6 @@ body {
 #game-canvas {
     width: 100%;
     height: 100%;
-    display: block;
 }
 
 #crosshair {
@@ -158,95 +106,77 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(255, 255, 255, 0.8);
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     pointer-events: none;
     z-index: 100;
-    display: none;
 }
 
-#crosshair::before,
 #crosshair::after {
     content: '';
     position: absolute;
-    background: rgba(255, 255, 255, 0.8);
-}
-
-#crosshair::before {
-    width: 2px;
-    height: 10px;
     top: 50%;
     left: 50%;
+    width: 4px;
+    height: 4px;
+    background: white;
     transform: translate(-50%, -50%);
-}
-
-#crosshair::after {
-    width: 10px;
-    height: 2px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#game-container.active #crosshair {
-    display: block;
+    border-radius: 50%;
 }
 
 #hud {
     position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 100;
+    top: 30px;
+    left: 30px;
     font-family: 'Bangers', cursive;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: #feca57;
-    text-shadow: 2px 2px 0 #ff6b6b;
-    display: none;
-}
-
-#game-container.active #hud {
-    display: block;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    z-index: 100;
 }
 
 #instructions {
     position: fixed;
-    bottom: 20px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.8);
-    padding: 1rem 2rem;
+    padding: 12px 30px;
     border-radius: 10px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #fff;
     z-index: 100;
-    display: none;
     text-align: center;
+    border: 1px solid #333;
 }
 
-#game-container.active #instructions {
-    display: block;
-}
-
-.click-to-start {
-    color: #feca57;
+#click-prompt {
+    color: #ff6b6b;
     font-weight: bold;
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: flash 1.5s infinite;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+@keyframes flash {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
 }
 
 kbd {
-    background: #333;
-    padding: 0.2rem 0.5rem;
+    background: #444;
+    padding: 2px 6px;
     border-radius: 4px;
-    border: 1px solid #555;
-    margin: 0 0.2rem;
     font-family: monospace;
+    font-size: 0.9em;
+    border-bottom: 2px solid #222;
 }
 
 /* ============================================
@@ -254,17 +184,13 @@ kbd {
    ============================================ */
 
 #pause-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.85);
     display: none;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    z-index: 200;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
 }
 
 #pause-menu.active {
@@ -273,42 +199,55 @@ kbd {
 
 .pause-title {
     font-family: 'Bangers', cursive;
-    font-size: 4rem;
+    font-size: 5rem;
     color: #ff6b6b;
-    margin-bottom: 2rem;
+    margin-bottom: 40px;
 }
 
 .pause-btn {
-    background: linear-gradient(135deg, #48dbfb, #ff9ff3);
+    background: #48dbfb;
     border: none;
-    padding: 1rem 3rem;
+    padding: 15px 40px;
+    margin: 10px;
     font-size: 1.5rem;
     font-family: 'Bangers', cursive;
-    color: #1a1a2e;
+    color: #000;
     cursor: pointer;
-    border-radius: 30px;
-    margin: 0.5rem;
-    transition: transform 0.2s;
+    border-radius: 10px;
+    width: 250px;
+    transition: 0.2s;
 }
 
 .pause-btn:hover {
+    background: #fff;
     transform: scale(1.05);
 }
 
 /* ============================================
-   BITE EFFECT
+   EFFECTS
    ============================================ */
 
 .bite-effect {
     position: fixed;
     pointer-events: none;
-    z-index: 150;
-    font-size: 4rem;
-    animation: biteAnim 0.5s forwards;
+    z-index: 1500;
+    font-size: 5rem;
+    animation: munchAnim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes biteAnim {
-    0% { transform: scale(0) rotate(-20deg); opacity: 1; }
-    50% { transform: scale(1.5) rotate(10deg); opacity: 1; }
-    100% { transform: scale(1) rotate(0deg); opacity: 0; }
+@keyframes munchAnim {
+    0% {
+        transform: scale(0) rotate(-30deg);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.6) rotate(15deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.2) rotate(0deg);
+        opacity: 0;
+    }
 }
