@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
     // --- 1. INTRO SEQUENCE ---
     const enterBtn = document.getElementById('enter-btn');
     const overlay = document.getElementById('intro-overlay');

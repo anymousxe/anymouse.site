@@ -109,6 +109,7 @@ main.visible { opacity: 1; }
 }
 .link-card:hover { border-color: var(--accent); }
 .link-card .icon { font-size: 2rem; margin-bottom: 1rem; color: var(--accent); }
+.link-card .icon svg { width: 2rem; height: 2rem; stroke: var(--accent); }
 .link-card h3 { font-family: var(--font-head); margin-bottom: 0.5rem; }
 .link-card p { font-size: 0.9rem; color: var(--text-dim); }
 
