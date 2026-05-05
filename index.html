@@ -9,23 +9,23 @@
     <link rel="icon" type="image/png" href="assets/img/mouseicon.png">
 
     <meta name="theme-color" content="#0a0a0a">
-    <meta name="description" content="i build websites, discord bots, and games.">
+    <meta name="description" content="i lowk just make random stuff, hmu if you want something made or smth">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://anymouse.site/">
     <meta property="og:title" content="anymousxe">
     <meta property="og:site_name" content="anymouse.site">
-    <meta property="og:description" content="i build websites, discord bots, and games.">
+    <meta property="og:description" content="i lowk just make random stuff, hmu if you want something made or smth">
     <meta property="og:image" content="https://anymouse.site/assets/img/anyrat.png">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://anymouse.site/">
     <meta property="twitter:title" content="anymousxe">
-    <meta property="twitter:description" content="i build websites, discord bots, and games.">
+    <meta property="twitter:description" content="i lowk just make random stuff, hmu if you want something made or smth">
     <meta property="twitter:image" content="https://anymouse.site/assets/img/anyrat.png">
 
     <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -33,10 +33,12 @@
 
     <nav class="nav">
         <div class="nav-inner">
-            <a href="/" class="nav-logo">anymousxe</a>
+            <a href="/" class="nav-logo">
+                <img src="assets/img/anyrat.png" alt="" class="nav-pfp">
+                anymousxe
+            </a>
             <div class="nav-links">
                 <a href="#work">work</a>
-                <a href="#about">about</a>
                 <a href="#links">links</a>
             </div>
         </div>
@@ -45,118 +47,86 @@
     <main>
         <section class="hero">
             <div class="hero-inner">
-                <div class="hero-pfp">
-                    <img src="assets/img/anyrat.png" alt="anymousxe">
-                </div>
-                <div class="hero-text">
-                    <h1>anymousxe</h1>
-                    <p class="hero-sub">web dev / bots / games</p>
-                    <p class="hero-desc">i build websites, discord bots, and games. got a few things out in the wild, and something new coming soon.</p>
-                </div>
+                <h1>anymousxe</h1>
+                <p class="hero-desc">I lowk just make random stuff, hmu if you want something made or smth</p>
             </div>
         </section>
 
         <section id="work" class="section">
             <div class="section-inner">
-                <h2 class="section-title">work</h2>
-                <div class="work-grid">
+                <h2 class="section-title">stuff i made</h2>
+                <div class="work-list">
 
-                    <a href="https://www.softworks-tycoon.xyz" target="_blank" rel="noopener" class="card">
-                        <div class="card-header">
+                    <a href="https://www.softworks-tycoon.xyz" target="_blank" rel="noopener" class="work-item">
+                        <div class="work-left">
                             <i data-lucide="layout-grid"></i>
-                            <span class="card-tag">website</span>
+                            <span class="work-name">Softworks Tycoon</span>
                         </div>
-                        <h3>Softworks Tycoon</h3>
-                        <p>tycoon game hub. built the whole site from scratch.</p>
+                        <span class="work-tag">website</span>
                     </a>
 
-                    <a href="/ballmuncher/" class="card">
-                        <div class="card-header">
+                    <a href="/ballmuncher/" class="work-item">
+                        <div class="work-left">
                             <i data-lucide="gamepad-2"></i>
-                            <span class="card-tag">game</span>
+                            <span class="work-name">Ballmuncher</span>
                         </div>
-                        <h3>Ballmuncher</h3>
-                        <p>3d browser game i made because robert told me to. it's actually kinda fun.</p>
+                        <span class="work-tag">game</span>
                     </a>
 
-                    <a href="/Voxelith/" class="card">
-                        <div class="card-header">
+                    <a href="/Voxelith/" class="work-item">
+                        <div class="work-left">
                             <i data-lucide="box"></i>
-                            <span class="card-tag">game</span>
+                            <span class="work-name">Voxelith</span>
                         </div>
-                        <h3>Voxelith</h3>
-                        <p>voxel engine project. still in the works but coming together.</p>
+                        <span class="work-tag">game</span>
                     </a>
 
-                    <div class="card card-static">
-                        <div class="card-header">
+                    <div class="work-item work-static">
+                        <div class="work-left">
                             <i data-lucide="bot"></i>
-                            <span class="card-tag">bot</span>
+                            <span class="work-name">Discord Bots</span>
                         </div>
-                        <h3>Discord Bots</h3>
-                        <p>built a few over time. moderation, utility, random stuff. always tinkering with new ones.</p>
+                        <span class="work-tag">bot</span>
                     </div>
 
-                    <div class="card card-static">
-                        <div class="card-header">
+                    <div class="work-item work-static">
+                        <div class="work-left">
                             <i data-lucide="globe"></i>
-                            <span class="card-tag">web</span>
+                            <span class="work-name">Other Sites</span>
                         </div>
-                        <h3>Other Sites</h3>
-                        <p>a bunch of websites and side projects. some shipped, some abandoned, all learned from.</p>
+                        <span class="work-tag">web</span>
                     </div>
 
-                    <div class="card card-soon">
-                        <div class="card-header">
+                    <div class="work-item work-soon">
+                        <div class="work-left">
                             <i data-lucide="sparkles"></i>
-                            <span class="card-tag">soon</span>
+                            <span class="work-name">???</span>
                         </div>
-                        <h3>???</h3>
-                        <p>working on something new. not ready to talk about it yet.</p>
+                        <span class="work-tag">soon</span>
                     </div>
 
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="section">
-            <div class="section-inner">
-                <h2 class="section-title">about</h2>
-                <div class="about-content">
-                    <p>i'm anymousxe (or aiden, whichever). i mostly do web dev and game dev. i've made a bunch of websites, some discord bots, a few games here and there.</p>
-                    <p>i like building stuff more than talking about building stuff. most of my projects start because i got curious about something and then suddenly it's 3am and i have a whole new thing.</p>
-                    <p>right now i'm working on something i think is gonna be pretty cool. no spoilers tho.</p>
                 </div>
             </div>
         </section>
 
         <section id="links" class="section">
             <div class="section-inner">
-                <h2 class="section-title">links</h2>
-                <div class="links-grid">
+                <h2 class="section-title">find me</h2>
+                <div class="links-list">
 
-                    <a href="https://www.youtube.com/@anymousxe" target="_blank" rel="noopener" class="card">
-                        <div class="card-header">
-                            <i data-lucide="youtube"></i>
-                        </div>
-                        <h3>YouTube</h3>
-                        <p>devlogs & gameplay</p>
+                    <a href="https://www.youtube.com/@anymousxe" target="_blank" rel="noopener" class="link-item">
+                        <i data-lucide="youtube"></i>
+                        <span>YouTube</span>
                     </a>
 
-                    <a href="https://www.roblox.com/users/868921271/profile" target="_blank" rel="noopener" class="card">
-                        <div class="card-header">
-                            <i data-lucide="gamepad-2"></i>
-                        </div>
-                        <h3>Roblox</h3>
-                        <p>profile</p>
+                    <a href="https://www.roblox.com/users/868921271/profile" target="_blank" rel="noopener" class="link-item">
+                        <i data-lucide="gamepad-2"></i>
+                        <span>Roblox</span>
                     </a>
 
-                    <a href="mailto:anymousxe.info@gmail.com" class="card">
-                        <div class="card-header">
-                            <i data-lucide="mail"></i>
-                        </div>
-                        <h3>Email</h3>
-                        <p>business only</p>
+                    <a href="mailto:anymousxe.info@gmail.com" class="link-item">
+                        <i data-lucide="mail"></i>
+                        <span>Email</span>
                     </a>
 
                 </div>
