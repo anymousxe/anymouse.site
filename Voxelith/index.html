@@ -4,259 +4,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voxelith | Coming Soon</title>
+    <title>Voxelith</title>
 
     <link rel="icon" type="image/png" href="../assets/img/mouseicon.png">
 
-    <meta name="theme-color" content="#00ff88">
-    <meta name="description"
-        content="Voxelith: A new world is being constructed, block by block. A side project by anymousxe.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="Voxel engine project by anymousxe. Coming soon.">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://anymouse.site/Voxelith/">
-    <meta property="og:title" content="VOXELITH | VOXEL ENGINE">
-    <meta property="og:site_name" content="Voxelith Projects">
-    <meta property="og:description"
-        content="A new world is being constructed, block by block. Official Voxelith Landing Page.">
-    <meta property="og:image" content="https://anymouse.site/assets/img/anymousxe.png">
+    <meta property="og:title" content="Voxelith">
+    <meta property="og:site_name" content="anymouse.site">
+    <meta property="og:description" content="Voxel engine project by anymousxe. Coming soon.">
+    <meta property="og:image" content="https://anymouse.site/assets/img/anyrat.png">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://anymouse.site/Voxelith/">
-    <meta property="twitter:title" content="VOXELITH | VOXEL ENGINE">
-    <meta property="twitter:description"
-        content="A new world is being constructed, block by block. Official Voxelith Landing Page.">
-    <meta property="twitter:image" content="https://anymouse.site/assets/img/anymousxe.png">
+    <meta property="twitter:title" content="Voxelith">
+    <meta property="twitter:description" content="Voxel engine project by anymousxe. Coming soon.">
+    <meta property="twitter:image" content="https://anymouse.site/assets/img/anyrat.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- CORE STYLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', monospace;
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #141414;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.18);
+            --text: #f0f0f0;
+            --text-muted: #999;
+            --text-dim: #555;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: #0d0d0d;
-            color: #fff;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
             height: 100vh;
             overflow: hidden;
-            /* Keeps scrollbars away during load */
         }
 
-        /* --- THE LOADING SCREEN --- */
-        #loader-screen {
+        ::selection { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+        /* loader */
+        #loader {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0d0d0d;
+            inset: 0;
+            background: var(--bg);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease-out;
-            /* Smooth fade out */
+            transition: opacity 800ms ease;
         }
 
-        .loader-content {
-            width: 300px;
-            text-align: left;
+        .loader-inner {
+            width: 280px;
         }
 
-        .loading-text {
-            color: #00ff88;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
+        .loader-label {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
-        .bar-bg {
+        .loader-track {
             width: 100%;
-            height: 6px;
-            background: #222;
-            border: 1px solid #333;
+            height: 2px;
+            background: #1a1a1a;
+            border-radius: 1px;
+            overflow: hidden;
         }
 
-        .bar-fill {
+        .loader-bar {
             height: 100%;
-            background: #00ff88;
+            background: var(--text-muted);
             width: 0%;
-            animation: loadProgress 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            border-radius: 1px;
+            animation: loaderFill 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        /* --- THE MAIN SITE (Hidden initially) --- */
-        #main-site {
-            height: 100%;
+        @keyframes loaderFill {
+            0% { width: 0%; }
+            35% { width: 55%; }
+            70% { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        /* nav */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 52px;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 200ms;
+        }
+
+        .nav-back:hover { color: var(--text); }
+
+        .nav-back svg {
+            width: 15px;
+            height: 15px;
+            stroke-width: 1.5;
+        }
+
+        /* main */
+        #main {
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             opacity: 0;
-            /* Starts invisible */
-            transition: opacity 1.5s ease-in;
-            background-image: radial-gradient(#1f1f1f 1px, transparent 1px);
-            background-size: 30px 30px;
+            transition: opacity 800ms ease;
+            padding: 0 24px;
         }
 
-        /* Hero Content */
-        h1.hero-title {
-            font-size: 5rem;
-            text-transform: uppercase;
-            letter-spacing: -4px;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
+        #main.visible { opacity: 1; }
 
-        p.hero-desc {
-            color: #888;
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            line-height: 1.5;
-        }
-
-        .badge {
+        .tag {
             display: inline-block;
-            padding: 5px 10px;
-            border: 1px solid #333;
-            background: #111;
-            color: #666;
-            font-size: 0.7rem;
-            margin-bottom: 2rem;
+            font-size: 0.68rem;
+            color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 0.08em;
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 400ms ease 100ms, transform 400ms ease 100ms;
         }
 
-        .footer-credit {
-            position: absolute;
-            bottom: 30px;
-            font-size: 0.8rem;
-            color: #555;
+        #main.visible .tag {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .footer-credit span {
-            color: #00ff88;
-            font-weight: bold;
+        h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 500ms ease 200ms, transform 500ms ease 200ms;
         }
 
-        /* --- NAV BUTTON (Always Visible) --- */
-        .top-nav {
+        #main.visible h1 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 420px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 400ms ease 350ms, transform 400ms ease 350ms;
+        }
+
+        #main.visible .desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .credit {
             position: fixed;
-            top: 25px;
-            right: 25px;
-            z-index: 10000;
+            bottom: 28px;
+            font-size: 0.72rem;
+            color: var(--text-dim);
         }
 
-        .main-btn {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #00ff88;
-            color: #00ff88;
-            padding: 12px 24px;
-            text-decoration: none;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: 0.3s;
+        /* dots bg */
+        #main {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
-        .main-btn:hover {
-            background: #00ff88;
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        @media (max-width: 600px) {
+            .loader-inner { width: 70%; }
         }
 
-        /* Animations */
-        @keyframes loadProgress {
-            0% {
-                width: 0%;
+        @media (prefers-reduced-motion: reduce) {
+            .tag, h1, .desc {
+                opacity: 1;
+                transform: none;
+                transition: none;
             }
-
-            40% {
-                width: 60%;
-            }
-
-            /* Stalls a bit for realism */
-            100% {
-                width: 100%;
-            }
-        }
-
-        @media(max-width: 600px) {
-            h1.hero-title {
-                font-size: 3rem;
-            }
-
-            .loader-content {
-                width: 80%;
-            }
+            #main { opacity: 1; transition: none; }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="top-nav">
-        <a href="https://anymouse.site" class="main-btn">go to page</a>
-    </div>
-
-    <div id="loader-screen">
-        <div class="loader-content">
-            <div class="loading-text">
-                <span>INITIALIZING VOXEL ENGINE...</span>
-                <span id="percent">0%</span>
+    <div id="loader">
+        <div class="loader-inner">
+            <div class="loader-label">
+                <span>loading</span>
+                <span id="pct">0%</span>
             </div>
-            <div class="bar-bg">
-                <div class="bar-fill"></div>
+            <div class="loader-track">
+                <div class="loader-bar"></div>
             </div>
         </div>
     </div>
 
-    <div id="main-site">
-        <div class="badge">Side Project</div>
-        <h1 class="hero-title">VOXELITH</h1>
-        <p class="hero-desc">
-            A new world is being constructed, block by block. <br>
-            The game is currently in the makings.
-        </p>
+    <nav class="top-nav">
+        <a href="https://anymouse.site" class="nav-back">
+            <i data-lucide="arrow-left"></i>
+            anymouse.site
+        </a>
+    </nav>
 
-        <div class="footer-credit">
-            Developed by <span>anymousxe</span>
-        </div>
+    <div id="main">
+        <div class="tag">side project</div>
+        <h1>Voxelith</h1>
+        <p class="desc">a voxel engine i'm building. block by block. still in the works but coming together.</p>
+        <div class="credit">anymousxe</div>
     </div>
 
     <script>
-        // Wait for page load
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader-screen');
-            const mainSite = document.getElementById('main-site');
-            const percentText = document.getElementById('percent');
+        lucide.createIcons()
 
-            // Quick percent counter effect
-            let p = 0;
-            const timer = setInterval(() => {
-                p += Math.floor(Math.random() * 5);
-                if (p > 100) p = 100;
-                percentText.innerText = p + "%";
-                if (p === 100) clearInterval(timer);
-            }, 100);
+        let p = 0
+        const pct = document.getElementById('pct')
+        const timer = setInterval(() => {
+            p += Math.floor(Math.random() * 6)
+            if (p > 100) p = 100
+            pct.textContent = p + '%'
+            if (p === 100) clearInterval(timer)
+        }, 80)
 
-            // After 3.5 seconds (animation time + buffer), switch screens
+        setTimeout(() => {
+            const loader = document.getElementById('loader')
+            const main = document.getElementById('main')
+            loader.style.opacity = '0'
             setTimeout(() => {
-                loader.style.opacity = '0'; // Fade out loader
-
-                // Remove loader from DOM after fade so buttons work
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    mainSite.style.opacity = '1'; // Fade in site
-                }, 1000);
-
-            }, 3000);
-        });
+                loader.style.display = 'none'
+                main.classList.add('visible')
+            }, 800)
+        }, 2800)
     </script>
 
 </body>
