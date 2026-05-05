@@ -4,151 +4,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANYMOUSXE | SYSTEMS ONLINE</title>
+    <title>anymousxe</title>
 
     <link rel="icon" type="image/png" href="assets/img/mouseicon.png">
 
-    <meta name="theme-color" content="#8b5cf6">
-    <meta name="description"
-        content="I'm anymousxe (or aiden), web dev and game dev. I made a discord bot, check it out.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="i build websites, discord bots, and games.">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://anymouse.site/">
-    <meta property="og:title" content="ANYMOUSXE | GAME DEV">
-    <meta property="og:site_name" content="Anymouse.site">
-    <meta property="og:description"
-        content="I'm anymousxe (or aiden), web dev and game dev. I made a discord bot, check it out.">
+    <meta property="og:title" content="anymousxe">
+    <meta property="og:site_name" content="anymouse.site">
+    <meta property="og:description" content="i build websites, discord bots, and games.">
     <meta property="og:image" content="https://anymouse.site/assets/img/anymousxe.png">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://anymouse.site/">
-    <meta property="twitter:title" content="ANYMOUSXE | GAME DEV">
-    <meta property="twitter:description"
-        content="I'm anymousxe (or aiden), web dev and game dev. I made a discord bot, check it out.">
+    <meta property="twitter:title" content="anymousxe">
+    <meta property="twitter:description" content="i build websites, discord bots, and games.">
     <meta property="twitter:image" content="https://anymouse.site/assets/img/anymousxe.png">
 
     <link rel="stylesheet" href="assets/css/style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&display=swap"
-        rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
 
-    <audio id="bg-music" loop>
-        <source src="assets/audio/lofi.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="sfx-hover">
-        <source src="assets/audio/hover.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="sfx-click">
-        <source src="assets/audio/click.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="scanlines"></div>
-
-    <div id="intro-overlay">
-        <div class="intro-content">
-            <div class="loader-bar"></div>
-            <div class="glitch-wrapper">
-                <h1 class="glitch" data-text="ANYMOUSE.SITE">ANYMOUSE.SITE</h1>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">anymousxe</a>
+            <div class="nav-links">
+                <a href="#work">work</a>
+                <a href="#about">about</a>
+                <a href="#links">links</a>
             </div>
-            <p class="subtitle">SYSTEMS INITIALIZING...</p>
-            <div class="pfp-preview">
-                <img src="assets/img/anymousxe.png" alt="Profile">
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="hero-pfp">
+                    <img src="assets/img/anymousxe.png" alt="anymousxe">
+                </div>
+                <div class="hero-text">
+                    <h1>anymousxe</h1>
+                    <p class="hero-sub">web dev / bots / games</p>
+                    <p class="hero-desc">i build websites, discord bots, and games. got a few things out in the wild, and something new coming soon.</p>
+                </div>
             </div>
-            <p class="credits">MADE BY ANYMOUSE</p>
-            <button id="enter-btn">ENTER REALITY</button>
-        </div>
-    </div>
+        </section>
 
-    <canvas id="bg-canvas"></canvas>
+        <section id="work" class="section">
+            <div class="section-inner">
+                <h2 class="section-title">work</h2>
+                <div class="work-grid">
 
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
+                    <a href="https://www.softworks-tycoon.xyz" target="_blank" rel="noopener" class="card">
+                        <div class="card-header">
+                            <i data-lucide="layout-grid"></i>
+                            <span class="card-tag">website</span>
+                        </div>
+                        <h3>Softworks Tycoon</h3>
+                        <p>tycoon game hub. built the whole site from scratch.</p>
+                    </a>
 
-    <main id="main-content" class="hidden">
+                    <a href="/ballmuncher/" class="card">
+                        <div class="card-header">
+                            <i data-lucide="gamepad-2"></i>
+                            <span class="card-tag">game</span>
+                        </div>
+                        <h3>Ballmuncher</h3>
+                        <p>3d browser game i made because robert told me to. it's actually kinda fun.</p>
+                    </a>
 
-        <div class="container">
-            <header class="profile-header">
-                <div class="pfp-container tilt-card">
-                    <img src="assets/img/anymousxe.png" alt="Anymousxe PFP">
-                    <div class="status-indicator"></div>
+                    <a href="/Voxelith/" class="card">
+                        <div class="card-header">
+                            <i data-lucide="box"></i>
+                            <span class="card-tag">game</span>
+                        </div>
+                        <h3>Voxelith</h3>
+                        <p>voxel engine project. still in the works but coming together.</p>
+                    </a>
+
+                    <div class="card card-static">
+                        <div class="card-header">
+                            <i data-lucide="bot"></i>
+                            <span class="card-tag">bot</span>
+                        </div>
+                        <h3>Discord Bots</h3>
+                        <p>built a few over time. moderation, utility, random stuff. always tinkering with new ones.</p>
+                    </div>
+
+                    <div class="card card-static">
+                        <div class="card-header">
+                            <i data-lucide="globe"></i>
+                            <span class="card-tag">web</span>
+                        </div>
+                        <h3>Other Sites</h3>
+                        <p>a bunch of websites and side projects. some shipped, some abandoned, all learned from.</p>
+                    </div>
+
+                    <div class="card card-soon">
+                        <div class="card-header">
+                            <i data-lucide="sparkles"></i>
+                            <span class="card-tag">soon</span>
+                        </div>
+                        <h3>???</h3>
+                        <p>working on something new. not ready to talk about it yet.</p>
+                    </div>
+
                 </div>
-                <div class="bio">
-                    <h1 class="hero-name" data-value="ANYMOUSXE">ANYMOUSXE</h1>
-                    <div class="role-badge">
-                        <span>DEV</span><span>//</span><span>CREATOR</span>
-                    </div>
-                    <p class="bio-text">
-                        I'm anymousxe (or aiden) i do web development and game development (im kinda ass ngl) also yes i vibe code lil bro, i made a discord bot, scroll down to see it.
-                    </p>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="section-inner">
+                <h2 class="section-title">about</h2>
+                <div class="about-content">
+                    <p>i'm anymousxe (or aiden, whichever). i mostly do web dev and game dev. i've made a bunch of websites, some discord bots, a few games here and there.</p>
+                    <p>i like building stuff more than talking about building stuff. most of my projects start because i got curious about something and then suddenly it's 3am and i have a whole new thing.</p>
+                    <p>right now i'm working on something i think is gonna be pretty cool. no spoilers tho.</p>
                 </div>
-            </header>
+            </div>
+        </section>
 
-            <section class="links-grid">
+        <section id="links" class="section">
+            <div class="section-inner">
+                <h2 class="section-title">links</h2>
+                <div class="links-grid">
 
-                <a href="https://www.youtube.com/@anymousxe" target="_blank" class="link-card tilt-card" data-sfx>
-                    <div class="card-bg"></div>
-                    <div class="card-content">
-                        <i class="fab fa-youtube icon"></i>
-                        <h3 data-value="YOUTUBE">YOUTUBE</h3>
-                        <p>Devlogs & Gameplay</p>
-                    </div>
-                </a>
+                    <a href="https://www.youtube.com/@anymousxe" target="_blank" rel="noopener" class="card">
+                        <div class="card-header">
+                            <i data-lucide="youtube"></i>
+                        </div>
+                        <h3>YouTube</h3>
+                        <p>devlogs & gameplay</p>
+                    </a>
 
-                <a href="https://www.roblox.com/users/868921271/profile" target="_blank" class="link-card tilt-card"
-                    data-sfx>
-                    <div class="card-bg"></div>
-                    <div class="card-content">
-                        <i class="fas fa-gamepad icon"></i>
-                        <h3 data-value="ROBLOX">ROBLOX</h3>
-                        <p>View Profile</p>
-                    </div>
-                </a>
+                    <a href="https://www.roblox.com/users/868921271/profile" target="_blank" rel="noopener" class="card">
+                        <div class="card-header">
+                            <i data-lucide="gamepad-2"></i>
+                        </div>
+                        <h3>Roblox</h3>
+                        <p>profile</p>
+                    </a>
 
-                <a href="https://www.softworks-tycoon.xyz" target="_blank" class="link-card tilt-card" data-sfx>
-                    <div class="card-bg"></div>
-                    <div class="card-content">
-                        <i class="fas fa-code icon"></i>
-                        <h3 data-value="SOFTWORKS">SOFTWORKS</h3>
-                        <p>Tycoon HQ</p>
-                    </div>
-                </a>
+                    <a href="mailto:anymousxe.info@gmail.com" class="card">
+                        <div class="card-header">
+                            <i data-lucide="mail"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>business only</p>
+                    </a>
 
-                <a href="mailto:anymousxe.info@gmail.com" class="link-card tilt-card" data-sfx>
-                    <div class="card-bg"></div>
-                    <div class="card-content">
-                        <i class="fas fa-envelope icon"></i>
-                        <h3 data-value="EMAIL">EMAIL</h3>
-                        <p>Business Only</p>
-                    </div>
-                </a>
-
-                <a href="https://discord.com/oauth2/authorize?client_id=1475343760777941053&scope=bot+applications.commands" target="_blank" rel="noopener" class="link-card tilt-card" data-sfx>
-                    <div class="card-bg"></div>
-                    <div class="card-content">
-                        <i data-lucide="bot" class="icon"></i>
-                        <h3 data-value="GOOG BOT">GOOG BOT</h3>
-                        <p>Add my Discord bot. AI commands (nano banana 2, text AI) only in one server</p>
-                    </div>
-                </a>
-
-            </section>
-
-            <section class="mouseland-promo tilt-card" data-sfx>
-                <div class="promo-content">
-                    <h2 data-value="ENTER MOUSELAND">🐀 ENTER MOUSELAND</h2>
-                    <p>Lore. Cities. The MIC Decree.</p>
-                    <a href="/mouseland" class="btn btn-glitch">VISIT NOW</a>
                 </div>
-            </section>
-
-        </div>
+            </div>
+        </section>
     </main>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <footer>
+        <div class="footer-inner">
+            <p>anymouse.site</p>
+        </div>
+    </footer>
+
     <script src="assets/js/main.js"></script>
 </body>
 
