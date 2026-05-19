@@ -445,6 +445,18 @@ a.card:hover h3 { color: #fff; }
     transform: translateY(-2px);
 }
 
+.contact-btn-primary {
+    background: #f0f0f0;
+    border-color: #f0f0f0;
+    color: #0a0a0a;
+}
+
+.contact-btn-primary:hover {
+    background: #fff;
+    border-color: #fff;
+    color: #0a0a0a;
+}
+
 .contact-btn svg {
     width: 15px;
     height: 15px;
