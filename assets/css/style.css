@@ -259,6 +259,18 @@ body {
     stroke-width: 1.7;
 }
 
+.social .brand-icon {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+    stroke: none;
+    transition: transform 250ms var(--ease);
+}
+
+.social:hover .brand-icon {
+    transform: scale(1.08);
+}
+
 @keyframes heroFadeIn {
     to { opacity: 1; transform: scale(1); }
 }
