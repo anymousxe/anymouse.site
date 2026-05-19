@@ -150,6 +150,11 @@
     letter-spacing: 0.01em;
 }
 
+.label-hint {
+    color: var(--text-dim);
+    font-weight: 400;
+}
+
 .form-row input,
 .form-row select,
 .form-row textarea {

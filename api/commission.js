@@ -43,6 +43,25 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'missing required fields' })
     }
 
+    if (details.length < 20) {
+        return res.status(400).json({ error: 'please describe what you want in a bit more detail (at least 20 chars)' })
+    }
+
+    // contact must look like an email, discord username, or twitter handle
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact)
+    const isDiscord = /^@?[a-z0-9._]{2,32}$/i.test(contact) && !contact.includes(' ')
+    const isTwitter = /^@?[a-z0-9_]{1,15}$/i.test(contact) && !contact.includes(' ')
+
+    if (!isEmail && !isDiscord && !isTwitter) {
+        return res.status(400).json({ error: 'contact must be a real email, discord username, or twitter @handle' })
+    }
+
+    // basic spam check — block obvious junk
+    const junkPattern = /^(test|asdf|qwerty|aaaa|hello|hi|none|n\/a)$/i
+    if (junkPattern.test(name) || junkPattern.test(contact)) {
+        return res.status(400).json({ error: 'please use a real name and contact' })
+    }
+
     const webhook = process.env.DISCORD_WEBHOOK_URL
     if (!webhook) {
         console.error('DISCORD_WEBHOOK_URL not set')
