@@ -187,6 +187,54 @@ body {
 
 .hero-about p:last-child { margin-bottom: 0; }
 
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: heroSlideIn 700ms var(--ease) 320ms forwards;
+}
+
+.hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: transform 250ms var(--ease), border-color 250ms var(--ease), background 250ms var(--ease);
+}
+
+.hero-cta:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+}
+
+.hero-cta-primary {
+    color: #0a0a0a;
+    background: var(--text);
+    border-color: var(--text);
+}
+
+.hero-cta-primary:hover {
+    color: #0a0a0a;
+    background: #fff;
+    border-color: #fff;
+}
+
+.hero-cta svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 1.8;
+}
+
 .hero-tags {
     display: flex;
     flex-wrap: wrap;
@@ -194,7 +242,7 @@ body {
     margin-top: 24px;
     opacity: 0;
     transform: translateY(14px);
-    animation: heroSlideIn 700ms var(--ease) 360ms forwards;
+    animation: heroSlideIn 700ms var(--ease) 420ms forwards;
 }
 
 .tag {
@@ -229,7 +277,7 @@ body {
     margin-top: 18px;
     opacity: 0;
     transform: translateY(14px);
-    animation: heroSlideIn 700ms var(--ease) 460ms forwards;
+    animation: heroSlideIn 700ms var(--ease) 520ms forwards;
 }
 
 .social {
@@ -553,6 +601,7 @@ footer {
     .hero-text,
     .hero-about,
     .hero-tags,
+    .hero-actions,
     .hero-socials {
         opacity: 1;
         transform: none;
