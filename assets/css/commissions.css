@@ -220,14 +220,7 @@
     background: var(--text-dim);
 }
 
-/* showcase */
-.showcase-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-}
-
-.showcase-card,
+/* process */
 .process-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -237,14 +230,12 @@
     transition: transform 300ms var(--ease), border-color 300ms var(--ease), background 300ms var(--ease);
 }
 
-.showcase-card:hover,
 .process-card:hover {
     transform: translateY(-2px);
     border-color: var(--border-hover);
     background: var(--bg-card-hover);
 }
 
-.showcase-card span,
 .process-card span {
     display: inline-flex;
     color: var(--text-dim);
@@ -254,7 +245,6 @@
     margin-bottom: 14px;
 }
 
-.showcase-card h3,
 .process-card h3 {
     font-size: 0.95rem;
     font-weight: 600;
@@ -262,206 +252,71 @@
     margin-bottom: 8px;
 }
 
-.showcase-card p,
 .process-card p {
     font-size: 0.8rem;
     color: var(--text-muted);
     line-height: 1.6;
 }
 
-/* process */
 .process-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
 }
 
-/* form */
-.commish-form {
+/* direct contact */
+.dm-block {
     max-width: 560px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.form-row label {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    letter-spacing: 0.01em;
-}
-
-.label-hint {
-    color: var(--text-dim);
-    font-weight: 400;
-}
-
-.form-row input,
-.form-row select,
-.form-row textarea {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 0.9rem;
-    padding: 11px 14px;
-    transition: border-color 250ms var(--ease), background 250ms var(--ease);
-    outline: none;
-    width: 100%;
+    border-radius: var(--radius);
+    padding: 22px;
 }
 
-.form-row input:focus,
-.form-row select:focus,
-.form-row textarea:focus {
-    border-color: var(--border-hover);
-    background: var(--bg-card-hover);
+.dm-block h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
 }
 
-.form-row textarea {
-    resize: vertical;
-    min-height: 140px;
-    line-height: 1.55;
-}
-
-.form-row select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-    cursor: pointer;
-}
-
-.hp {
-    position: absolute !important;
-    left: -9999px !important;
-    width: 1px !important;
-    height: 1px !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-.form-actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-}
-
-.form-actions button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font);
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #0a0a0a;
-    background: #f0f0f0;
-    border: 1px solid #f0f0f0;
-    padding: 11px 18px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background 250ms var(--ease), border-color 250ms var(--ease), transform 250ms var(--ease), opacity 250ms var(--ease);
-}
-
-.form-actions button:hover:not(:disabled) {
-    background: #fff;
-    transform: translateY(-1px);
-}
-
-.form-actions button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.form-actions button svg {
-    width: 14px;
-    height: 14px;
-    stroke-width: 1.8;
-}
-
-.form-status {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-}
-
-.form-status.success { color: #4ade80; }
-.form-status.error { color: #f87171; }
-
-/* payment */
-.payment-block {
-    max-width: 560px;
-}
-
-.payment-block p {
-    font-size: 0.9rem;
+.dm-block p {
+    font-size: 0.86rem;
     color: var(--text-muted);
     line-height: 1.65;
 }
 
-.wallet-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 14px 0;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    transition: border-color 250ms var(--ease);
-}
-
-.wallet-row:hover {
-    border-color: var(--border-hover);
-}
-
-.wallet-row code {
-    flex: 1;
-    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-    font-size: 0.78rem;
-    color: var(--text);
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: none;
-}
-
-.wallet-row code::-webkit-scrollbar { display: none; }
-
-.copy-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text-muted);
-    padding: 6px 8px;
-    cursor: pointer;
+.dm-btn {
     display: inline-flex;
     align-items: center;
-    transition: border-color 250ms var(--ease), color 250ms var(--ease), background 250ms var(--ease);
+    gap: 8px;
+    color: #0a0a0a;
+    background: var(--text);
+    border: 1px solid var(--text);
+    border-radius: var(--radius-sm);
+    padding: 11px 16px;
+    margin: 18px 0 12px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 250ms var(--ease), background 250ms var(--ease), border-color 250ms var(--ease);
 }
 
-.copy-btn:hover {
-    border-color: var(--border-hover);
-    color: var(--text);
-    background: var(--bg-card-hover);
+.dm-btn:hover {
+    transform: translateY(-1px);
+    background: #fff;
+    border-color: #fff;
 }
 
-.copy-btn svg {
-    width: 14px;
-    height: 14px;
-    stroke-width: 1.7;
+.dm-btn svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 1.8;
 }
 
-.payment-note {
-    font-size: 0.82rem;
-    color: var(--text-dim);
+.dm-note {
+    color: var(--text-dim) !important;
+    font-size: 0.8rem !important;
 }
 
 /* mobile */
@@ -477,9 +332,5 @@
     .commish-stats,
     .process-grid {
         grid-template-columns: 1fr;
-    }
-
-    .showcase-card {
-        min-height: auto;
     }
 }
