@@ -6,15 +6,10 @@
 
 .commish-kicker {
     width: fit-content;
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-pill);
-    padding: 7px 12px;
-    margin-bottom: 18px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
     opacity: 0;
     transform: translateY(14px);
     animation: heroSlideIn 700ms var(--ease) forwards;
