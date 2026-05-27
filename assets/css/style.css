@@ -118,7 +118,7 @@ body {
 
 /* hero */
 .hero {
-    padding: 132px 0 8px;
+    padding: 96px 0 0;
 }
 
 .hero-inner {
@@ -176,11 +176,11 @@ body {
     letter-spacing: 0.01em;
 }
 
-.intro-section {
-    padding: 14px 0 34px;
+.section.intro-section {
+    padding: 18px 0 38px;
 }
 
-.intro-section + .section {
+.section.intro-section + .section {
     padding-top: 34px;
 }
 
@@ -540,11 +540,11 @@ footer {
 
 /* mobile */
 @media (max-width: 640px) {
-    .hero { padding: 104px 0 6px; }
+    .hero { padding: 86px 0 0; }
 
-    .intro-section { padding: 12px 0 28px; }
+    .section.intro-section { padding: 16px 0 32px; }
 
-    .intro-section + .section { padding-top: 30px; }
+    .section.intro-section + .section { padding-top: 30px; }
 
     .hero-top {
         flex-direction: column;
