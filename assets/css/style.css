@@ -4,12 +4,15 @@
     --bg-card-hover: #181818;
     --border: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(255, 255, 255, 0.22);
-    --shade-a: rgba(255, 255, 255, 0.08);
-    --shade-b: rgba(255, 255, 255, 0.05);
+    --accent: #c4a26f;
+    --accent-soft: rgba(196, 162, 111, 0.13);
+    --accent-border: rgba(196, 162, 111, 0.28);
+    --shade-a: rgba(196, 162, 111, 0.12);
+    --shade-b: rgba(255, 255, 255, 0.055);
     --shade-c: rgba(255, 255, 255, 0.035);
     --text: #f0f0f0;
-    --text-muted: #9a9a9a;
-    --text-dim: #555;
+    --text-muted: #b6b6b6;
+    --text-dim: #777;
     --radius: 14px;
     --radius-sm: 10px;
     --radius-pill: 999px;
@@ -47,7 +50,7 @@ body::before {
         radial-gradient(circle at 14% 18%, var(--shade-a), transparent 30%),
         radial-gradient(circle at 86% 12%, var(--shade-b), transparent 28%),
         radial-gradient(circle at 58% 92%, var(--shade-c), transparent 34%),
-        conic-gradient(from 120deg at 50% 35%, transparent, rgba(255, 255, 255, 0.03), transparent, rgba(255, 255, 255, 0.018), transparent);
+        conic-gradient(from 120deg at 50% 35%, transparent, rgba(255, 255, 255, 0.03), transparent, var(--accent-soft), transparent);
     filter: blur(18px);
     opacity: 0.78;
     animation: shaderDrift 16s var(--ease) infinite alternate;
@@ -121,7 +124,7 @@ body::after {
     left: 0;
     width: 0;
     height: 1px;
-    background: var(--text);
+    background: var(--accent);
     transition: width 350ms var(--ease);
 }
 
@@ -202,7 +205,7 @@ body::after {
     letter-spacing: -0.03em;
     line-height: 1.05;
     width: fit-content;
-    background: linear-gradient(112deg, #fff 0%, #d7d7d7 42%, #8e8e8e 78%, #fff 100%);
+    background: linear-gradient(112deg, #fff 0%, #e4d4b8 46%, #a5895c 78%, #fff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -263,7 +266,7 @@ body::after {
 
 .hero-cta-primary {
     color: #0a0a0a;
-    background: var(--text);
+    background: var(--accent);
     border-color: var(--text);
 }
 
@@ -303,7 +306,7 @@ body::after {
 }
 
 .tag:hover {
-    border-color: var(--border-hover);
+    border-color: var(--accent-border);
     color: var(--text);
     transform: translateY(-1px);
 }
@@ -339,7 +342,7 @@ body::after {
 }
 
 .social:hover {
-    border-color: var(--border-hover);
+    border-color: var(--accent-border);
     color: var(--text);
     background: var(--bg-card-hover);
     transform: translateY(-1px);
@@ -385,7 +388,7 @@ body::after {
 .section-title {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--text-dim);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 28px;
@@ -400,7 +403,7 @@ body::after {
     left: 0;
     width: 0;
     height: 1px;
-    background: var(--text-dim);
+    background: var(--accent);
     transition: width 600ms var(--ease);
 }
 
@@ -416,7 +419,7 @@ body::after {
 }
 
 .card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 42%, rgba(255, 255, 255, 0.025)), var(--bg-card);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 42%, var(--accent-soft)), var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px;
@@ -439,7 +442,7 @@ body::after {
 }
 
 a.card:hover {
-    border-color: var(--border-hover);
+    border-color: var(--accent-border);
     transform: translateY(-3px);
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
     background: var(--bg-card-hover);
@@ -457,7 +460,7 @@ a.card:hover::before { opacity: 1; }
 }
 
 .card-static:hover {
-    border-color: var(--border-hover);
+    border-color: var(--accent-border);
 }
 
 .card-header {
@@ -532,7 +535,7 @@ a.card:hover h3 { color: #fff; }
 }
 
 .contact-btn:hover {
-    border-color: var(--border-hover);
+    border-color: var(--accent-border);
     background: var(--bg-card-hover);
     transform: translateY(-2px);
 }
