@@ -4,9 +4,9 @@
     --bg-card-hover: #181818;
     --border: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(255, 255, 255, 0.22);
-    --shade-a: rgba(111, 88, 255, 0.18);
-    --shade-b: rgba(0, 225, 255, 0.12);
-    --shade-c: rgba(255, 255, 255, 0.08);
+    --shade-a: rgba(255, 255, 255, 0.08);
+    --shade-b: rgba(255, 255, 255, 0.05);
+    --shade-c: rgba(255, 255, 255, 0.035);
     --text: #f0f0f0;
     --text-muted: #9a9a9a;
     --text-dim: #555;
@@ -44,12 +44,12 @@ body::after {
 body::before {
     z-index: -2;
     background:
-        radial-gradient(circle at 12% 18%, var(--shade-a), transparent 28%),
-        radial-gradient(circle at 85% 12%, var(--shade-b), transparent 26%),
-        radial-gradient(circle at 58% 92%, rgba(255, 255, 255, 0.055), transparent 30%),
-        conic-gradient(from 120deg at 50% 35%, transparent, rgba(255, 255, 255, 0.035), transparent, rgba(111, 88, 255, 0.055), transparent);
-    filter: blur(18px) saturate(1.15);
-    opacity: 0.9;
+        radial-gradient(circle at 14% 18%, var(--shade-a), transparent 30%),
+        radial-gradient(circle at 86% 12%, var(--shade-b), transparent 28%),
+        radial-gradient(circle at 58% 92%, var(--shade-c), transparent 34%),
+        conic-gradient(from 120deg at 50% 35%, transparent, rgba(255, 255, 255, 0.03), transparent, rgba(255, 255, 255, 0.018), transparent);
+    filter: blur(18px);
+    opacity: 0.78;
     animation: shaderDrift 16s var(--ease) infinite alternate;
 }
 
@@ -202,7 +202,7 @@ body::after {
     letter-spacing: -0.03em;
     line-height: 1.05;
     width: fit-content;
-    background: linear-gradient(112deg, #fff 0%, #d9dcff 38%, #8ef4ff 72%, #fff 100%);
+    background: linear-gradient(112deg, #fff 0%, #d7d7d7 42%, #8e8e8e 78%, #fff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -416,7 +416,7 @@ body::after {
 }
 
 .card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 42%, rgba(111, 88, 255, 0.04)), var(--bg-card);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 42%, rgba(255, 255, 255, 0.025)), var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px;
