@@ -20,6 +20,11 @@
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.05;
+    width: fit-content;
+    background: linear-gradient(112deg, #fff 0%, #dedfff 36%, #8ef4ff 78%, #fff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
     opacity: 0;
     transform: translateY(14px);
     animation: heroSlideIn 700ms var(--ease) 80ms forwards;
@@ -58,7 +63,7 @@
 }
 
 .commish-stats div {
-    background: var(--bg-card);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018) 48%, rgba(0, 225, 255, 0.035)), var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px;
@@ -111,7 +116,7 @@
 }
 
 .tier-card {
-    background: var(--bg-card);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 45%, rgba(111, 88, 255, 0.035)), var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 22px;
@@ -222,7 +227,7 @@
 
 /* process */
 .process-card {
-    background: var(--bg-card);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.016) 48%, rgba(0, 225, 255, 0.03)), var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 18px;
@@ -267,7 +272,7 @@
 /* direct contact */
 .dm-block {
     max-width: 560px;
-    background: var(--bg-card);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018) 44%, rgba(111, 88, 255, 0.045)), var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 22px;
