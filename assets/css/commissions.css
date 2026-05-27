@@ -72,6 +72,28 @@
     overflow: hidden;
 }
 
+.shine-row div,
+.shine-card,
+.bento-card {
+    isolation: isolate;
+}
+
+.shine-row div::after,
+.shine-card::after,
+.bento-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), var(--accent-border), transparent 42%, rgba(255, 255, 255, 0.11));
+    opacity: 0.55;
+    pointer-events: none;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
 .commish-stats div::before {
     content: '';
     position: absolute;
@@ -111,8 +133,16 @@
 /* tiers */
 .tiers-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
+}
+
+.bento-grid {
+    grid-auto-rows: minmax(190px, auto);
+}
+
+.bento-card-wide {
+    grid-column: span 2;
 }
 
 .tier-card {
@@ -127,6 +157,11 @@
     overflow: hidden;
 }
 
+.tier-card > * {
+    position: relative;
+    z-index: 1;
+}
+
 .tier-card::before {
     content: '';
     position: absolute;
@@ -135,6 +170,13 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 300ms var(--ease);
+}
+
+.bento-card-wide::before {
+    opacity: 1;
+    background:
+        radial-gradient(circle at 82% 18%, var(--accent-soft), transparent 34%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 45%);
 }
 
 .tier-card:hover {
@@ -232,7 +274,14 @@
     border-radius: var(--radius);
     padding: 18px;
     min-height: 168px;
+    position: relative;
+    overflow: hidden;
     transition: transform 300ms var(--ease), border-color 300ms var(--ease), background 300ms var(--ease);
+}
+
+.process-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .process-card:hover {
@@ -276,6 +325,28 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 22px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-card {
+    max-width: 640px;
+}
+
+.cta-card::before {
+    content: '';
+    position: absolute;
+    inset: auto 18px 18px auto;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-soft), transparent 68%);
+    pointer-events: none;
+}
+
+.dm-block > * {
+    position: relative;
+    z-index: 1;
 }
 
 .dm-block h3 {
@@ -337,5 +408,13 @@
     .commish-stats,
     .process-grid {
         grid-template-columns: 1fr;
+    }
+
+    .tiers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bento-card-wide {
+        grid-column: auto;
     }
 }

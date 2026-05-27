@@ -59,11 +59,13 @@ body::before {
 body::after {
     z-index: -1;
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
     background-size: 42px 42px;
-    mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%);
-    opacity: 0.28;
+    mask-image:
+        radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%),
+        linear-gradient(to bottom, black, transparent 82%);
+    opacity: 0.34;
 }
 
 @keyframes shaderDrift {
