@@ -118,7 +118,7 @@ body {
 
 /* hero */
 .hero {
-    padding: 140px 0 18px;
+    padding: 132px 0 8px;
 }
 
 .hero-inner {
@@ -177,7 +177,11 @@ body {
 }
 
 .intro-section {
-    padding-top: 22px;
+    padding: 14px 0 34px;
+}
+
+.intro-section + .section {
+    padding-top: 34px;
 }
 
 .intro-copy {
@@ -536,9 +540,11 @@ footer {
 
 /* mobile */
 @media (max-width: 640px) {
-    .hero { padding: 110px 0 48px; }
+    .hero { padding: 104px 0 6px; }
 
-    .intro-section { padding-top: 0; }
+    .intro-section { padding: 12px 0 28px; }
+
+    .intro-section + .section { padding-top: 30px; }
 
     .hero-top {
         flex-direction: column;
