@@ -118,7 +118,7 @@ body {
 
 /* hero */
 .hero {
-    padding: 140px 0 64px;
+    padding: 140px 0 18px;
 }
 
 .hero-inner {
@@ -131,7 +131,7 @@ body {
     display: flex;
     align-items: center;
     gap: 24px;
-    margin-bottom: 28px;
+    margin-bottom: 0;
 }
 
 .hero-pfp {
@@ -176,21 +176,19 @@ body {
     letter-spacing: 0.01em;
 }
 
-.hero-about {
-    max-width: 560px;
-    opacity: 0;
-    transform: translateY(14px);
-    animation: heroSlideIn 700ms var(--ease) 240ms forwards;
+.intro-section {
+    padding-top: 22px;
 }
 
-.hero-about p {
+.intro-copy {
+    max-width: 620px;
+}
+
+.intro-copy p {
     font-size: 0.92rem;
     color: var(--text-muted);
     line-height: 1.7;
-    margin-bottom: 12px;
 }
-
-.hero-about p:last-child { margin-bottom: 0; }
 
 .hero-actions {
     display: flex;
@@ -200,6 +198,10 @@ body {
     opacity: 0;
     transform: translateY(14px);
     animation: heroSlideIn 700ms var(--ease) 320ms forwards;
+}
+
+.intro-actions {
+    margin-top: 22px;
 }
 
 .hero-cta {
@@ -240,49 +242,11 @@ body {
     stroke-width: 1.8;
 }
 
-.hero-tags {
+.social-section-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 24px;
-    opacity: 0;
-    transform: translateY(14px);
-    animation: heroSlideIn 700ms var(--ease) 420ms forwards;
-}
-
-.tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    border-radius: var(--radius-pill);
-    transition: border-color 250ms var(--ease), color 250ms var(--ease), transform 250ms var(--ease);
-}
-
-.tag:hover {
-    border-color: var(--border-hover);
-    color: var(--text);
-    transform: translateY(-1px);
-}
-
-.tag svg {
-    width: 13px;
-    height: 13px;
-    stroke-width: 1.7;
-}
-
-.hero-socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px;
-    opacity: 0;
-    transform: translateY(14px);
-    animation: heroSlideIn 700ms var(--ease) 520ms forwards;
+    margin-top: 14px;
 }
 
 .social {
@@ -574,6 +538,8 @@ footer {
 @media (max-width: 640px) {
     .hero { padding: 110px 0 48px; }
 
+    .intro-section { padding-top: 0; }
+
     .hero-top {
         flex-direction: column;
         align-items: flex-start;
@@ -589,10 +555,6 @@ footer {
         font-size: 1.95rem;
     }
 
-    .hero-about {
-        max-width: 100%;
-    }
-
     .nav-links { gap: 14px; }
     .nav-links a { font-size: 0.8rem; }
 
@@ -604,10 +566,7 @@ footer {
     .stagger > *,
     .hero-pfp,
     .hero-text,
-    .hero-about,
-    .hero-tags,
-    .hero-actions,
-    .hero-socials {
+    .hero-actions {
         opacity: 1;
         transform: none;
         transition: none;
