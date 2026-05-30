@@ -3,118 +3,160 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>reflex - reaction time test</title>
-<meta name="description" content="test your reaction time. click when it turns. by anymousxe.">
-<meta property="og:title" content="reflex - reaction time test">
+<title>reflex / reaction time test</title>
+<meta name="description" content="test your reaction time. click the moment it changes. a small thing by anymousxe.">
+<meta property="og:title" content="reflex / reaction time test">
 <meta property="og:description" content="how fast are your reflexes? click the moment it changes.">
+<link rel="icon" type="image/png" href="/assets/img/mouseicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0b0d;--text:#f2f2f3;--muted:#9a9aa2;--dim:#646470;--border:rgba(255,255,255,.1);
-  --fd:'Geist',system-ui,sans-serif;--fm:'Geist Mono',ui-monospace,monospace;--ease:cubic-bezier(.22,1,.36,1);
-  --wait:#1c1c22;--go:#3ddc84;--early:#ff5c5c;}
+:root{
+  --bg:#080808;--bg-2:#0e0e0e;--card:#111111;--border:rgba(255,255,255,.08);
+  --border-h:rgba(255,255,255,.24);--text:#f4f4f4;--muted:#a6a6a6;--dim:#6a6a6a;
+  --go:#e9e9ec;--early:#3a3a3a;
+  --fd:'Geist',system-ui,sans-serif;--fb:'Inter',system-ui,sans-serif;--fm:'Geist Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:var(--fd);-webkit-font-smoothing:antialiased;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 ::selection{background:rgba(255,255,255,.16)}
-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;z-index:5}
-.brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.02em;font-size:1.05rem}
-.brand .m{width:18px;height:18px;border-radius:50%;background:var(--go);box-shadow:0 0 12px rgba(61,220,132,.5)}
-.by{font-family:var(--fm);font-size:.74rem;color:var(--muted);text-decoration:none}.by:hover{color:#fff}
-.pad{flex:1;margin:0 16px 16px;border-radius:20px;display:grid;place-items:center;cursor:pointer;background:var(--wait);transition:background .08s linear;user-select:none;text-align:center;padding:24px}
-.pad.go{background:var(--go);color:#062012}
-.pad.early{background:var(--early);color:#2a0808}
-.pad-icon{font-size:3rem;margin-bottom:18px;font-family:var(--fm)}
-.pad h1{font-family:var(--fd);font-size:clamp(1.6rem,4vw,2.6rem);font-weight:700;letter-spacing:-.03em;line-height:1.1}
-.pad p{margin-top:12px;font-size:1.05rem;opacity:.8;max-width:34ch}
-.pad .big{font-family:var(--fd);font-size:clamp(3.5rem,12vw,7rem);font-weight:800;letter-spacing:-.04em;line-height:1}
-.pad .unit{font-family:var(--fm);font-size:1rem;opacity:.7;margin-top:4px}
-.stats{display:flex;justify-content:center;gap:40px;padding:0 28px 24px}
-.stat{text-align:center}
+a{color:inherit;text-decoration:none}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--fd);font-weight:600;letter-spacing:-.02em;font-size:1.02rem}
+.brand .m{width:24px;height:24px;border-radius:7px;object-fit:cover;filter:grayscale(1);transition:filter .3s var(--ease)}
+.brand:hover .m{filter:grayscale(0)}
+.back{font-family:var(--fm);font-size:.74rem;color:var(--muted);transition:color .2s}
+.back:hover{color:#fff}
+
+.pad{
+  flex:1;margin:0 16px 16px;border:1px solid var(--border);border-radius:18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;user-select:none;text-align:center;padding:32px;
+  background:var(--card);
+  transition:background .12s linear,border-color .25s var(--ease);
+  position:relative;overflow:hidden;
+}
+.pad.go{background:var(--go);border-color:var(--go);}
+.pad.go *{color:#080808 !important}
+.pad.early{background:var(--bg-2);border-color:var(--border)}
+
+.eyebrow{font-family:var(--fm);font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--dim);margin-bottom:20px}
+.pad.go .eyebrow,.pad.early .eyebrow{color:inherit;opacity:.6}
+
+.headline{font-family:var(--fd);font-size:clamp(1.8rem,5vw,3rem);font-weight:700;letter-spacing:-.035em;line-height:1.02}
+.sub{margin-top:14px;font-size:1.02rem;color:var(--muted);max-width:38ch;line-height:1.5}
+.pad.go .sub,.pad.early .sub{color:inherit;opacity:.75}
+
+.ms{font-family:var(--fd);font-size:clamp(4rem,15vw,9rem);font-weight:800;letter-spacing:-.05em;line-height:.9}
+.ms-unit{font-family:var(--fm);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:10px}
+.rank{margin-top:26px;font-size:1.02rem;color:var(--muted)}
+.again{margin-top:8px;font-family:var(--fm);font-size:.78rem;color:var(--dim)}
+
+.stats{display:flex;justify-content:center;gap:0;border-top:1px solid var(--border);flex-shrink:0}
+.stat{flex:1;text-align:center;padding:20px 12px;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
 .stat .n{font-family:var(--fd);font-size:1.5rem;font-weight:600;letter-spacing:-.02em}
-.stat .l{font-family:var(--fm);font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-top:5px}
-.hint{font-family:var(--fm);font-size:.8rem;opacity:.6;margin-top:16px}
-@media(max-width:560px){.stats{gap:24px}}
+.stat .l{font-family:var(--fm);font-size:.64rem;text-transform:uppercase;letter-spacing:.14em;color:var(--dim);margin-top:7px}
+
+.hide{display:none !important}
+@media(max-width:560px){.stat .n{font-size:1.2rem}}
 </style>
 </head>
 <body>
 <nav>
-  <div class="brand"><span class="m"></span> reflex</div>
-  <a href="https://anymousxe.dev" target="_blank" rel="noopener" class="by">by anymousxe -&gt;</a>
+  <a href="/" class="brand"><img src="/assets/img/anyrat.png" alt="" class="m"> reflex</a>
+  <a href="/" class="back">back to anymousxe.dev</a>
 </nav>
 
 <div class="pad" id="pad">
-  <div class="pad-icon" id="icon">&gt;</div>
-  <h1 id="title">reaction time test</h1>
-  <p id="sub">click anywhere to start. when the screen turns green, click as fast as you can.</p>
+  <!-- idle -->
+  <div id="screen-idle">
+    <div class="eyebrow">reaction time</div>
+    <div class="headline">how fast are you?</div>
+    <p class="sub">click anywhere to start. when the box turns light, click as fast as you can.</p>
+  </div>
+
+  <!-- waiting -->
+  <div id="screen-wait" class="hide">
+    <div class="eyebrow">get ready</div>
+    <div class="headline">wait for it...</div>
+    <p class="sub">don't jump the gun.</p>
+  </div>
+
+  <!-- go -->
+  <div id="screen-go" class="hide">
+    <div class="headline" style="font-size:clamp(2.4rem,7vw,4.5rem)">click</div>
+  </div>
+
+  <!-- result -->
+  <div id="screen-result" class="hide">
+    <div class="ms" id="ms">0</div>
+    <div class="ms-unit">milliseconds</div>
+    <div class="rank" id="rank"></div>
+    <div class="again">click to go again</div>
+  </div>
+
+  <!-- early -->
+  <div id="screen-early" class="hide">
+    <div class="eyebrow">oops</div>
+    <div class="headline">too early</div>
+    <p class="sub">you clicked before it changed. click to try again.</p>
+  </div>
 </div>
 
 <div class="stats">
-  <div class="stat"><div class="n" id="last">-</div><div class="l">last</div></div>
-  <div class="stat"><div class="n" id="best">-</div><div class="l">best</div></div>
-  <div class="stat"><div class="n" id="avg">-</div><div class="l">avg of 5</div></div>
+  <div class="stat"><div class="n" id="last">--</div><div class="l">last</div></div>
+  <div class="stat"><div class="n" id="best">--</div><div class="l">best</div></div>
+  <div class="stat"><div class="n" id="avg">--</div><div class="l">avg of 5</div></div>
 </div>
 
 <script>
-const pad=document.getElementById('pad'), title=document.getElementById('title'), sub=document.getElementById('sub'), icon=document.getElementById('icon');
-let state='idle', t0=0, timeout=null, scores=[];
 const $=id=>document.getElementById(id);
-const fmt=n=>n===null?'-':Math.round(n)+'ms';
+const pad=$('pad');
+const screens={idle:$('screen-idle'),wait:$('screen-wait'),go:$('screen-go'),result:$('screen-result'),early:$('screen-early')};
+let state='idle', t0=0, timer=null, scores=[];
 
-function setStats(){
-  if(scores.length){
-    $('last').textContent=fmt(scores[scores.length-1]);
-    $('best').textContent=fmt(Math.min(...scores));
-    const last5=scores.slice(-5);
-    $('avg').textContent=fmt(last5.reduce((a,b)=>a+b,0)/last5.length);
-  }
-}
+function show(name){ for(const k in screens) screens[k].classList.toggle('hide', k!==name); }
+function fmt(n){ return n==null?'--':Math.round(n)+'ms'; }
 function rank(ms){
-  if(ms<180)return"inhuman. are you a bot?";
-  if(ms<230)return"elite reflexes.";
-  if(ms<280)return"sharp. above average.";
-  if(ms<350)return"solid, totally normal.";
-  if(ms<450)return"a little sleepy?";
-  return"...you good?";
+  if(ms<170) return "inhuman. did you cheat?";
+  if(ms<220) return "elite. genuinely fast.";
+  if(ms<270) return "sharp, above average.";
+  if(ms<340) return "solid, totally normal.";
+  if(ms<430) return "a little sleepy?";
+  return "...you good?";
 }
-function waiting(){
-  state='waiting';
-  pad.className='pad';
-  icon.textContent='...';
-  title.textContent='wait for green';
-  sub.textContent='don\u2019t click too early.';
-  timeout=setTimeout(go, 1000+Math.random()*3500);
+function setStats(){
+  if(!scores.length) return;
+  $('last').textContent=fmt(scores[scores.length-1]);
+  $('best').textContent=fmt(Math.min(...scores));
+  const l5=scores.slice(-5);
+  $('avg').textContent=fmt(l5.reduce((a,b)=>a+b,0)/l5.length);
 }
-function go(){
-  state='go'; t0=performance.now();
-  pad.className='pad go';
-  icon.textContent='!';
-  title.textContent='CLICK NOW';
-  sub.textContent='';
+
+function toWait(){
+  state='wait'; pad.className='pad'; show('wait');
+  timer=setTimeout(toGo, 1100+Math.random()*3400);
 }
-function result(ms){
-  state='result';
-  scores.push(ms); if(scores.length>50)scores.shift();
-  pad.className='pad';
-  icon.textContent=Math.round(ms);
-  title.innerHTML='<span class="big">'+Math.round(ms)+'</span><div class="unit">milliseconds</div>';
-  sub.textContent=rank(ms)+' \u2014 click to go again';
-  setStats();
+function toGo(){ state='go'; t0=performance.now(); pad.className='pad go'; show('go'); }
+function toResult(ms){
+  state='result'; scores.push(ms); if(scores.length>50)scores.shift();
+  pad.className='pad'; $('ms').textContent=Math.round(ms); $('rank').textContent=rank(ms);
+  show('result'); setStats();
 }
-function early(){
-  state='early'; clearTimeout(timeout);
-  pad.className='pad early';
-  icon.textContent='x';
-  title.textContent='too early!';
-  sub.textContent='you clicked before it turned green. click to retry.';
+function toEarly(){ state='early'; clearTimeout(timer); pad.className='pad early'; show('early'); }
+
+function tap(){
+  if(state==='idle'||state==='result'||state==='early') toWait();
+  else if(state==='wait') toEarly();
+  else if(state==='go') toResult(performance.now()-t0);
 }
-function handle(){
-  if(state==='idle'||state==='result'||state==='early'){ waiting(); }
-  else if(state==='waiting'){ early(); }
-  else if(state==='go'){ result(performance.now()-t0); }
-}
-pad.addEventListener('mousedown',handle);
-document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();handle();}});
+pad.addEventListener('mousedown',tap);
+pad.addEventListener('touchstart',e=>{e.preventDefault();tap();},{passive:false});
+document.addEventListener('keydown',e=>{ if(e.code==='Space'){e.preventDefault();tap();} });
 </script>
 </body>
 </html>

@@ -467,22 +467,30 @@ a.work-card:hover .work-arrow { opacity: 1; transform: translate(0, 0); stroke: 
     0%   { background-position: 0% 0%; }
     100% { background-position: 100% 100%; }
 }
-/* shadowsmith preview - a floating chip casting a layered shadow */
-.work-shadow {
-    background: radial-gradient(120% 120% at 50% 0%, #16161a, #0e0e12 70%) !important;
-    background-size: auto !important;
+/* component smith preview - a live mini button on a grid */
+.work-comp {
+    background-color: #0c0c0c !important;
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px) !important;
+    background-size: 18px 18px !important;
 }
-.work-shadow::after { content: '' !important; }
-.shadow-chip {
-    width: 46%; aspect-ratio: 1; max-width: 110px;
-    border-radius: 22px;
-    background: #e9e9ec;
-    box-shadow: 0 2px 4px rgba(0,0,0,.25), 0 10px 22px -4px rgba(0,0,0,.4), 0 24px 48px -10px rgba(0,0,0,.45);
-    transition: transform 500ms var(--ease), box-shadow 500ms var(--ease);
+.work-comp::after { content: '' !important; }
+.comp-chip {
+    padding: 11px 22px;
+    border-radius: 10px;
+    background: #f4f4f4;
+    color: #0b0b0b;
+    font-family: var(--fd, 'Geist', sans-serif);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    box-shadow: 0 8px 22px -6px rgba(0,0,0,.5);
+    transition: transform 400ms var(--ease), border-radius 400ms var(--ease);
 }
-a.work-card:hover .shadow-chip {
-    transform: translateY(-6px);
-    box-shadow: 0 4px 8px rgba(0,0,0,.3), 0 16px 32px -6px rgba(0,0,0,.45), 0 40px 70px -12px rgba(0,0,0,.5);
+a.work-card:hover .comp-chip {
+    transform: translateY(-3px);
+    border-radius: 999px;
 }
 /* reflex preview - green go-pad glow */
 .work-reflex {

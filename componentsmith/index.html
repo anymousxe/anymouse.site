@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>component smith / build & copy ui components</title>
+<meta name="description" content="design polished ui components in 20+ styles, tweak every field, copy the code. a free tool by anymousxe.">
+<meta property="og:title" content="component smith / build & copy ui components">
+<meta property="og:description" content="design polished ui components in 20+ styles, tweak every field, copy the code.">
+<link rel="icon" type="image/png" href="/assets/img/mouseicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grain"></div>
+
+<header class="top">
+  <a href="/" class="brand"><img src="/assets/img/anyrat.png" alt="" class="brand-pfp"> component smith</a>
+  <div class="top-right">
+    <span class="top-tag" id="topTag">button · minimal</span>
+    <a href="/" class="back">back to anymousxe.dev</a>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- left: component types + styles -->
+  <aside class="rail">
+    <div class="rail-group">
+      <span class="eyebrow">component</span>
+      <div class="type-list" id="typeList"></div>
+    </div>
+    <div class="rail-group">
+      <span class="eyebrow">style <span class="muted-count" id="styleCount"></span></span>
+      <div class="style-list" id="styleList"></div>
+    </div>
+  </aside>
+
+  <!-- center: live preview -->
+  <section class="stage-wrap">
+    <div class="stage" id="stage">
+      <div class="preview-mount" id="mount"></div>
+    </div>
+    <div class="stage-bar">
+      <div class="bg-swatches" id="bgSwatches"></div>
+      <div class="stage-meta" id="stageMeta"></div>
+    </div>
+  </section>
+
+  <!-- right: fields + code -->
+  <aside class="panel">
+    <div class="panel-head">
+      <span class="eyebrow">properties</span>
+      <button class="reset" id="reset">reset</button>
+    </div>
+    <div class="fields" id="fields"></div>
+    <div class="code-block">
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="html">html</button>
+        <button class="code-tab" data-tab="css">css</button>
+        <button class="code-tab" data-tab="all">html + css</button>
+        <button class="copy" id="copy">copy</button>
+      </div>
+      <pre class="code" id="code"></pre>
+    </div>
+  </aside>
+</main>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
