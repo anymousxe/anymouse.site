@@ -342,6 +342,30 @@ const STYLES = {
 };
 
 // ============================================================
+// FONTS — global, flows into preview + exported code
+// ============================================================
+const FONTS = {
+  'Geist':       { stack:"'Geist', system-ui, sans-serif", import:"@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap');" },
+  'Inter':       { stack:"'Inter', system-ui, sans-serif", import:"@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');" },
+  'system':      { stack:"system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif", import:"" },
+  'mono':        { stack:"'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace", import:"@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap');" },
+  'serif':       { stack:"'Fraunces', Georgia, 'Times New Roman', serif", import:"@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap');" },
+  'Space Grotesk':{ stack:"'Space Grotesk', system-ui, sans-serif", import:"@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');" },
+  'Sora':        { stack:"'Sora', system-ui, sans-serif", import:"@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');" },
+  'DM Sans':     { stack:"'DM Sans', system-ui, sans-serif", import:"@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');" },
+};
+let curFont = 'Geist';
+function fontStack(){ return FONTS[curFont].stack; }
+function loadFont(name){
+  const f=FONTS[name]; if(!f||!f.import) return;
+  const id='csfont-'+name.replace(/\W/g,'');
+  if(document.getElementById(id)) return;
+  const url=f.import.replace("@import url('","").replace("');","");
+  const l=document.createElement('link'); l.id=id; l.rel='stylesheet'; l.href=url; document.head.append(l);
+}
+Object.keys(FONTS).forEach(loadFont);
+
+// ============================================================
 // STATE + ENGINE
 // ============================================================
 let curType='button', curStyle='minimal', vals={};
@@ -370,6 +394,7 @@ let _structural = true; // animate the preview only on type/style change, not on
 
 function rerender(){
   const mount=$('#mount'); mount.innerHTML='';
+  mount.style.fontFamily = fontStack();
   const node = TYPES[curType].render(vals);
   mount.append(node);
   $('#topTag').textContent=`${TYPES[curType].label} · ${curStyle}`;
@@ -444,14 +469,64 @@ function normHex(h){ if(typeof h!=='string')return '#000000'; let x=h.replace('#
 
 // ---------- code ----------
 let codeTab='html';
+// the root selector for each component (so we can inject font-family into the CSS)
+const ROOT_SEL = { button:'.btn', card:'.card', input:'.field', badge:'.badge', toggle:'.switch', alert:'.alert' };
+
+function cssWithFont(){
+  const T=TYPES[curType];
+  let css=T.css(vals);
+  const sel=ROOT_SEL[curType];
+  // inject font-family into the first rule for this component if not already there
+  if(sel && css.includes(sel+' {') && !css.includes('font-family')){
+    css=css.replace(sel+' {', sel+' {\n  font-family: '+fontStack()+';');
+  }
+  return css;
+}
+
 function updateCode(){
   const T=TYPES[curType];
-  const html=T.html(vals), css=T.css(vals);
+  const html=T.html(vals);
+  const css=cssWithFont();
+  const fontImport=FONTS[curFont].import;
   let out;
-  if(codeTab==='html')out=html;
-  else if(codeTab==='css')out=css;
-  else out=html+'\n\n<style>\n'+css+'\n</style>';
+  if(codeTab==='html'){
+    out=html;
+  } else if(codeTab==='css'){
+    out=(fontImport?fontImport+'\n\n':'')+css;
+  } else if(codeTab==='all'){
+    out=html+'\n\n<style>\n'+(fontImport?fontImport+'\n\n':'')+css+'\n</style>';
+  } else { // 'page' — full runnable doc
+    out=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${curType} — made with component smith</title>
+<style>
+${fontImport?fontImport+'\n':''}
+  body { margin:0; min-height:100vh; display:grid; place-items:center;
+    background:#0b0b0b; font-family:${fontStack()}; }
+${css.split('\n').map(l=>'  '+l).join('\n')}
+</style>
+</head>
+<body>
+${html.split('\n').map(l=>'  '+l).join('\n')}
+</body>
+</html>`;
+  }
   $('#code').textContent=out;
+}
+
+// ---------- font picker ----------
+function buildFontList(){
+  const c=$('#fontList'); if(!c) return; c.innerHTML='';
+  Object.keys(FONTS).forEach(name=>{
+    const b=el('button','font-btn'+(name===curFont?' active':''));
+    b.textContent=name;
+    b.style.fontFamily=FONTS[name].stack;
+    b.onclick=()=>{ curFont=name; loadFont(name); c.querySelectorAll('.font-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); rerender(); };
+    c.append(b);
+  });
 }
 
 // ---------- stage bg ----------
@@ -469,7 +544,7 @@ $('#copy').onclick=async()=>{ await navigator.clipboard.writeText($('#code').tex
 $('#reset').onclick=()=>{ vals=applyStyle(curType,curStyle); buildFields(); rerender(); toast('reset to '+curStyle); };
 
 // ---------- init ----------
-buildTypeList(); buildStyleList(); buildBgs();
+buildTypeList(); buildStyleList(); buildFontList(); buildBgs();
 vals=applyStyle(curType,curStyle);
 _structural=true;
 buildFields(); rerender();
