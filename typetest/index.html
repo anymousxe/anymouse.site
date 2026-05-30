@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>typetest — how fast can you type?</title>
+<meta name="description" content="a clean, minimal typing speed test. measure your wpm and accuracy. by anymousxe.">
+<meta property="og:title" content="typetest — typing speed test">
+<meta property="og:description" content="how fast can you type? clean minimal wpm test.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0d10;--panel:#13161b;--border:rgba(255,255,255,.08);--border-h:rgba(255,255,255,.22);
+  --text:#e8eaed;--muted:#8b9099;--dim:#565c66;--correct:#e8eaed;--wrong:#ff6b6b;--cursor:#7dd3fc;
+  --accent:#7dd3fc;--fm:'Geist Mono',ui-monospace,monospace;--fd:'Geist',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--fd);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+::selection{background:rgba(125,211,252,.25)}
+.bgglow{position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(125,211,252,.05),transparent 60%);pointer-events:none;z-index:0}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;position:relative;z-index:2}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.02em;font-size:1.05rem}
+.brand .m{width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,#7dd3fc,#818cf8)}
+.by{font-family:var(--fm);font-size:.74rem;color:var(--muted);text-decoration:none}
+.by:hover{color:#fff}
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 24px 80px;position:relative;z-index:2}
+.modes{display:flex;gap:8px;margin-bottom:36px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:5px}
+.mode{padding:8px 16px;border-radius:8px;font-family:var(--fm);font-size:.8rem;color:var(--muted);cursor:pointer;border:none;background:none;transition:all .2s}
+.mode.active{background:rgba(125,211,252,.12);color:var(--accent)}
+.mode:hover:not(.active){color:var(--text)}
+.stats{display:flex;gap:40px;margin-bottom:28px;opacity:0;transition:opacity .3s}
+.stats.show{opacity:1}
+.stat{text-align:center}
+.stat .num{font-family:var(--fd);font-size:1.9rem;font-weight:600;letter-spacing:-.02em;line-height:1}
+.stat .lbl{font-family:var(--fm);font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-top:6px}
+.stat .num.acc{color:var(--accent)}
+/* text area */
+.wrap{max-width:840px;width:100%;position:relative}
+.words{font-family:var(--fm);font-size:1.5rem;line-height:2.1;color:var(--dim);letter-spacing:.01em;user-select:none;cursor:text;position:relative;max-height:6.3em;overflow:hidden}
+.words.blur{filter:blur(4px);opacity:.5;transition:filter .25s,opacity .25s}
+.word{display:inline-block;margin-right:.6em}
+.char{position:relative;transition:color .08s}
+.char.correct{color:var(--correct)}
+.char.wrong{color:var(--wrong)}
+.char.wrong.space{background:rgba(255,107,107,.25);border-radius:2px}
+.caret{position:absolute;width:2px;height:1.5em;background:var(--cursor);border-radius:2px;transition:left .08s linear,top .08s linear;animation:blink 1s steps(1) infinite;z-index:3}
+@keyframes blink{50%{opacity:0}}
+.focus-msg{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--fm);font-size:.9rem;color:var(--muted);cursor:pointer}
+#hidden{position:absolute;opacity:0;pointer-events:none;left:-9999px}
+.foot{margin-top:40px;display:flex;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:11px;font-family:var(--fd);font-size:.88rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--panel);color:var(--text);transition:all .2s}
+.btn:hover{border-color:var(--border-h);transform:translateY(-1px)}
+.hint{font-family:var(--fm);font-size:.74rem;color:var(--dim)}
+/* result */
+.result{text-align:center;animation:pop .4s cubic-bezier(.22,1,.36,1)}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.result .big{font-family:var(--fd);font-size:5rem;font-weight:700;letter-spacing:-.04em;line-height:1;background:linear-gradient(180deg,#fff,#7dd3fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.result .unit{font-family:var(--fm);font-size:1rem;color:var(--muted);margin-top:6px}
+.result-row{display:flex;gap:48px;justify-content:center;margin:36px 0}
+footer{text-align:center;padding:24px;font-family:var(--fm);font-size:.74rem;color:var(--dim);position:relative;z-index:2}
+footer a{color:var(--muted);text-decoration:none}footer a:hover{color:#fff}
+.hide{display:none!important}
+@media(max-width:560px){.words{font-size:1.2rem;line-height:2}.stats{gap:24px}.result .big{font-size:3.4rem}.result-row{gap:28px}.modes{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="bgglow"></div>
+<nav>
+  <div class="brand"><span class="m"></span> typetest</div>
+  <a href="https://anymousxe.dev" target="_blank" rel="noopener" class="by">by anymousxe →</a>
+</nav>
+
+<main>
+  <div id="game">
+    <div class="modes" id="modes">
+      <button class="mode active" data-mode="15">15s</button>
+      <button class="mode" data-mode="30">30s</button>
+      <button class="mode" data-mode="60">60s</button>
+      <button class="mode" data-mode="words">words</button>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat"><div class="num" id="liveTime">15</div><div class="lbl">time</div></div>
+      <div class="stat"><div class="num" id="liveWpm">0</div><div class="lbl">wpm</div></div>
+      <div class="stat"><div class="num acc" id="liveAcc">100%</div><div class="lbl">acc</div></div>
+    </div>
+
+    <div class="wrap">
+      <div class="words" id="words" tabindex="0"></div>
+      <div class="focus-msg" id="focusMsg">click here or start typing to focus</div>
+      <input id="hidden" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    </div>
+
+    <div class="foot">
+      <button class="btn" id="restart">↻ restart <span class="hint">tab</span></button>
+      <span class="hint">just start typing</span>
+    </div>
+  </div>
+
+  <div id="resultScreen" class="hide">
+    <div class="result">
+      <div class="big" id="rWpm">0</div>
+      <div class="unit">words per minute</div>
+      <div class="result-row">
+        <div class="stat"><div class="num acc" id="rAcc">0%</div><div class="lbl">accuracy</div></div>
+        <div class="stat"><div class="num" id="rChars">0</div><div class="lbl">characters</div></div>
+        <div class="stat"><div class="num" id="rRaw">0</div><div class="lbl">raw wpm</div></div>
+      </div>
+      <button class="btn" id="again" style="margin:0 auto">↻ go again</button>
+    </div>
+  </div>
+</main>
+
+<footer>built by <a href="https://anymousxe.dev" target="_blank" rel="noopener">anymousxe</a> — <a href="https://discord.com/users/anymousxe" target="_blank" rel="noopener">need something built?</a></footer>
+
+<script>
+const WORDS = "the be to of and a in that have it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us is are was been has had were said did get made find".split(" ");
+const $ = s=>document.querySelector(s);
+let mode='15', timeLimit=15, wordCount=30;
+let words=[], chars=[], idx=0, typed=[], started=false, timer=null, remaining=15, correctChars=0, totalTyped=0, startTime=0;
+
+function genWords(n){ let a=[]; for(let i=0;i<n;i++) a.push(WORDS[Math.floor(Math.random()*WORDS.length)]); return a; }
+
+function build(){
+  words = genWords(mode==='words'?wordCount:60);
+  const c = $('#words'); c.innerHTML='';
+  chars=[];
+  words.forEach((w,wi)=>{
+    const we=document.createElement('span'); we.className='word';
+    [...w].forEach(ch=>{
+      const s=document.createElement('span'); s.className='char'; s.textContent=ch; we.appendChild(s); chars.push(s);
+    });
+    c.appendChild(we);
+    if(wi<words.length-1){ const sp=document.createElement('span'); sp.className='char space'; sp.textContent=' '; we.appendChild(sp); chars.push(sp); }
+  });
+  const caret=document.createElement('div'); caret.className='caret'; caret.id='caret'; c.appendChild(caret);
+  idx=0; typed=[]; correctChars=0; totalTyped=0; started=false;
+  remaining = mode==='words'? 0 : timeLimit;
+  updateCaret(); updateLiveStats();
+  $('#liveTime').textContent = mode==='words'? '0' : timeLimit;
+}
+
+function updateCaret(){
+  const caret=$('#caret'); if(!caret)return;
+  const target = chars[idx];
+  const wrap = $('#words').getBoundingClientRect();
+  if(target){
+    const r=target.getBoundingClientRect();
+    caret.style.left=(r.left-wrap.left)+'px';
+    caret.style.top=(r.top-wrap.top)+'px';
+  } else if(chars[idx-1]){
+    const r=chars[idx-1].getBoundingClientRect();
+    caret.style.left=(r.right-wrap.left)+'px';
+    caret.style.top=(r.top-wrap.top)+'px';
+  }
+  // scroll: keep current line near top
+  const lineH = parseFloat(getComputedStyle($('#words')).lineHeight);
+  if(target){
+    const r=target.getBoundingClientRect();
+    const rel=r.top-wrap.top;
+    if(rel>lineH*1.5){ const off=Math.floor(rel/lineH)-1; $('#words').scrollTop = off*lineH; }
+  }
+}
+
+function start(){
+  started=true; startTime=Date.now();
+  $('#stats').classList.add('show');
+  if(mode!=='words'){
+    timer=setInterval(()=>{
+      remaining--; $('#liveTime').textContent=remaining;
+      updateLiveStats();
+      if(remaining<=0) finish();
+    },1000);
+  } else {
+    timer=setInterval(()=>{ $('#liveTime').textContent=((Date.now()-startTime)/1000).toFixed(0); updateLiveStats(); },250);
+  }
+}
+
+function updateLiveStats(){
+  const elapsed = started? (Date.now()-startTime)/1000/60 : 0;
+  const wpm = elapsed>0? Math.round((correctChars/5)/elapsed) : 0;
+  const acc = totalTyped>0? Math.round(correctChars/totalTyped*100) : 100;
+  $('#liveWpm').textContent = wpm;
+  $('#liveAcc').textContent = acc+'%';
+}
+
+function handleKey(e){
+  if(e.key==='Tab'){ e.preventDefault(); reset(); return; }
+  if($('#resultScreen').classList.contains('hide')===false) return;
+  if(e.key==='Backspace'){
+    if(idx>0){ idx--; const c=chars[idx]; if(c.classList.contains('wrong')||c.classList.contains('correct')){ if(c.classList.contains('correct'))correctChars--; totalTyped--; } c.classList.remove('correct','wrong'); updateCaret(); }
+    return;
+  }
+  if(e.key.length!==1) return;
+  if(!started) start();
+  const c=chars[idx]; if(!c)return;
+  const expected = c.textContent;
+  totalTyped++;
+  if(e.key===expected){ c.classList.add('correct'); correctChars++; }
+  else { c.classList.add('wrong'); }
+  idx++;
+  // extend words if running out in timed mode
+  if(mode!=='words' && idx>chars.length-30){ extend(); }
+  if(mode==='words' && idx>=chars.length){ finish(); }
+  updateCaret(); updateLiveStats();
+}
+
+function extend(){
+  const more=genWords(30); const c=$('#words');
+  const caret=$('#caret');
+  more.forEach(w=>{
+    const we=document.createElement('span'); we.className='word';
+    [...w].forEach(ch=>{const s=document.createElement('span');s.className='char';s.textContent=ch;we.appendChild(s);chars.push(s);});
+    const sp=document.createElement('span');sp.className='char space';sp.textContent=' ';we.appendChild(sp);chars.push(sp);
+    c.insertBefore(we,caret);
+  });
+}
+
+function finish(){
+  clearInterval(timer); started=false;
+  const elapsed=(Date.now()-startTime)/1000/60;
+  const wpm=Math.round((correctChars/5)/elapsed)||0;
+  const raw=Math.round((totalTyped/5)/elapsed)||0;
+  const acc=totalTyped>0?Math.round(correctChars/totalTyped*100):100;
+  $('#rWpm').textContent=wpm; $('#rAcc').textContent=acc+'%';
+  $('#rChars').textContent=correctChars; $('#rRaw').textContent=raw;
+  $('#game').classList.add('hide'); $('#resultScreen').classList.remove('hide');
+}
+
+function reset(){
+  clearInterval(timer);
+  $('#game').classList.remove('hide'); $('#resultScreen').classList.add('hide');
+  $('#stats').classList.remove('show');
+  build();
+  $('#hidden').focus();
+}
+
+// focus handling
+const hidden=$('#hidden');
+$('#words').addEventListener('click',()=>hidden.focus());
+$('#focusMsg').addEventListener('click',()=>hidden.focus());
+hidden.addEventListener('focus',()=>{$('#words').classList.remove('blur');$('#focusMsg').style.opacity='0';$('#focusMsg').style.pointerEvents='none';});
+hidden.addEventListener('blur',()=>{if(started){$('#words').classList.add('blur');$('#focusMsg').style.opacity='1';$('#focusMsg').style.pointerEvents='auto';}});
+document.addEventListener('keydown',e=>{
+  if(['Tab'].includes(e.key)){handleKey(e);return;}
+  if(document.activeElement!==hidden && e.key.length===1){ hidden.focus(); }
+});
+hidden.addEventListener('keydown',handleKey);
+$('#restart').onclick=reset; $('#again').onclick=reset;
+
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); mode=b.dataset.mode;
+  if(mode!=='words') timeLimit=+mode;
+  reset();
+});
+
+window.addEventListener('resize',updateCaret);
+build();
+setTimeout(()=>hidden.focus(),200);
+</script>
+</body>
+</html>
