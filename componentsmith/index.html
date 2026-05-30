@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/componentsmith/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
 <div class="grain"></div>
@@ -28,11 +29,9 @@
   <!-- left: component types + styles -->
   <aside class="rail">
     <div class="rail-group">
-      <span class="eyebrow">component</span>
       <div class="type-list" id="typeList"></div>
     </div>
     <div class="rail-group">
-      <span class="eyebrow">style <span class="muted-count" id="styleCount"></span></span>
       <div class="style-list" id="styleList"></div>
     </div>
   </aside>
@@ -51,7 +50,6 @@
   <!-- right: fields + code -->
   <aside class="panel">
     <div class="panel-head">
-      <span class="eyebrow">properties</span>
       <button class="reset" id="reset">reset</button>
     </div>
     <div class="fields" id="fields"></div>

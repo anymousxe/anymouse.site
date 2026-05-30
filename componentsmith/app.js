@@ -360,17 +360,25 @@ function applyStyle(type,styleName){
   return merged;
 }
 
-function selectType(type){ curType=type; vals=applyStyle(type,curStyle); buildTypeList(); buildFields(); rerender(); }
-function selectStyle(name){ curStyle=name; vals=applyStyle(curType,name); buildFields(); rerender(); }
+function selectType(type){ curType=type; vals=applyStyle(type,curStyle); _structural=true; buildTypeList(); buildFields(); rerender(); }
+function selectStyle(name){ curStyle=name; vals=applyStyle(curType,name); _structural=true; buildFields(); rerender(); }
 
 window.__rerender = () => { rerender(); };
 
+const G = typeof gsap !== 'undefined' ? gsap : null;
+let _structural = true; // animate the preview only on type/style change, not on every slider tick
+
 function rerender(){
   const mount=$('#mount'); mount.innerHTML='';
-  mount.append(TYPES[curType].render(vals));
+  const node = TYPES[curType].render(vals);
+  mount.append(node);
   $('#topTag').textContent=`${TYPES[curType].label} · ${curStyle}`;
   $('#stageMeta').textContent=`${TYPES[curType].label} / ${Object.keys(vals).length} props`;
   updateCode();
+  if(G && _structural && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    G.fromTo(node, {scale:0.94, opacity:0, y:8}, {scale:1, opacity:1, y:0, duration:0.5, ease:'power3.out'});
+  }
+  _structural = false;
 }
 
 // ---------- UI builders ----------
@@ -387,7 +395,7 @@ function buildTypeList(){
 function buildStyleList(){
   const list=$('#styleList'); list.innerHTML='';
   const names=Object.keys(STYLES);
-  $('#styleCount').textContent=names.length;
+  const sc=$('#styleCount'); if(sc) sc.textContent=names.length;
   names.forEach(n=>{
     const b=el('button','style-btn'+(n===curStyle?' active':''));
     b.textContent=n;
@@ -463,4 +471,13 @@ $('#reset').onclick=()=>{ vals=applyStyle(curType,curStyle); buildFields(); rere
 // ---------- init ----------
 buildTypeList(); buildStyleList(); buildBgs();
 vals=applyStyle(curType,curStyle);
+_structural=true;
 buildFields(); rerender();
+
+// gsap entrance for the shell
+if(G && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  G.from('.top', {y:-14, opacity:0, duration:0.6, ease:'power3.out'});
+  G.from('.rail .type-btn', {x:-12, opacity:0, duration:0.4, stagger:0.04, ease:'power2.out', delay:0.1});
+  G.from('.style-btn', {opacity:0, y:8, duration:0.35, stagger:0.015, ease:'power2.out', delay:0.2});
+  G.from('.panel', {x:16, opacity:0, duration:0.55, ease:'power3.out', delay:0.15});
+}

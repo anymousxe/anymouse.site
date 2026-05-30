@@ -51,6 +51,43 @@ a { color: inherit; text-decoration: none; }
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* moving background — slow drifting dot grid + a faint roaming light. monochrome, subtle. */
+.bg-fx {
+    position: fixed;
+    inset: -10%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.bg-fx::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: gridDrift 60s linear infinite;
+}
+.bg-fx::after {
+    content: '';
+    position: absolute;
+    width: 60vw; height: 60vw;
+    top: -10%; left: -10%;
+    background: radial-gradient(circle, rgba(255,255,255,0.045), transparent 60%);
+    animation: lightRoam 34s ease-in-out infinite alternate;
+}
+@keyframes gridDrift {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(30px, 30px); }
+}
+@keyframes lightRoam {
+    0%   { transform: translate(0, 0); }
+    50%  { transform: translate(70vw, 30vh); }
+    100% { transform: translate(20vw, 60vh); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .bg-fx::before, .bg-fx::after { animation: none; }
+}
+
 /* nav */
 .nav {
     position: fixed;
@@ -107,7 +144,7 @@ a { color: inherit; text-decoration: none; }
 
 /* layout */
 main { position: relative; z-index: 2; }
-.section { padding: 110px 0; position: relative; }
+.section { padding: 84px 0; position: relative; }
 .section-inner { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
 
 .eyebrow {
@@ -130,10 +167,10 @@ main { position: relative; z-index: 2; }
 
 /* hero */
 .hero {
-    min-height: 100vh;
+    min-height: 86vh;
     display: flex;
     align-items: center;
-    padding: 120px 0 80px;
+    padding: 116px 0 56px;
     position: relative;
     overflow: hidden;
 }
@@ -279,10 +316,8 @@ main { position: relative; z-index: 2; }
 .marquee-track {
     display: flex;
     align-items: center;
-    gap: 28px;
-    padding-right: 28px;
     width: max-content;
-    animation: scroll 38s linear infinite;
+    animation: scroll 40s linear infinite;
     will-change: transform;
     backface-visibility: hidden;
 }
@@ -294,8 +329,10 @@ main { position: relative; z-index: 2; }
     letter-spacing: -0.02em;
     color: var(--muted);
     white-space: nowrap;
+    /* spacing baked into each item so the loop stays seamless */
+    padding: 0 14px;
 }
-.marquee-track .m-dot { color: var(--dim); font-size: 0.7rem; }
+.marquee-track .m-dot { color: var(--dim); font-size: 0.7rem; padding: 0 14px; }
 @keyframes scroll {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
