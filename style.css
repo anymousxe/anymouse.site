@@ -86,7 +86,6 @@ a { color: inherit; text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) {
     .bg-fx::before, .bg-fx::after { animation: none; }
-    .services-grid .svc-card.in { animation: none; }
 }
 
 /* nav */
@@ -141,7 +140,7 @@ a { color: inherit; text-decoration: none; }
     font-weight: 500;
     transition: transform 250ms var(--ease), background 250ms var(--ease);
 }
-.nav-cta:hover { transform: translateY(-1px); background: #fff; }
+.nav-cta:hover { background: #fff; }
 
 /* layout */
 main { position: relative; z-index: 2; }
@@ -292,11 +291,11 @@ main { position: relative; z-index: 2; }
 }
 .btn svg { width: 17px; height: 17px; stroke-width: 1.9; }
 .btn-primary { background: var(--white); color: #080808; border-color: var(--white); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255, 255, 255, 0.12); }
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1); }
 .btn-primary i { transition: transform 250ms var(--ease); }
 .btn-primary:hover i { transform: translateX(3px); }
 .btn-ghost { background: var(--card); color: var(--text); }
-.btn-ghost:hover { transform: translateY(-2px); border-color: var(--border-hover); background: var(--card-hover); }
+.btn-ghost:hover { border-color: var(--border-on, rgba(255,255,255,.4)); background: var(--card-hover); }
 
 .hero-meta { margin-top: 52px; display: flex; align-items: center; gap: 26px; }
 .meta-item { display: flex; flex-direction: column; gap: 4px; }
@@ -370,22 +369,13 @@ main { position: relative; z-index: 2; }
     border: 1px solid var(--border);
     border-radius: var(--r);
     padding: 28px;
-    transition: transform 450ms var(--ease), border-color 350ms var(--ease), background 350ms var(--ease), box-shadow 450ms var(--ease);
+    transition: border-color 300ms var(--ease), background 300ms var(--ease);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
 }
-/* float only starts after the reveal so the two don't fight */
-.services-grid .svc-card.in { animation: svcFloat 7s ease-in-out infinite; }
-.services-grid .svc-card.in:nth-child(1) { animation-delay: 0s; }
-.services-grid .svc-card.in:nth-child(2) { animation-delay: -2.3s; }
-.services-grid .svc-card.in:nth-child(3) { animation-delay: -4.6s; }
-@keyframes svcFloat {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-7px); }
-}
-/* light sweep that crosses the card on hover */
+/* light sweep that crosses the card on hover (no card transform) */
 .svc-card::after {
     content: '';
     position: absolute;
@@ -397,11 +387,8 @@ main { position: relative; z-index: 2; }
     pointer-events: none;
 }
 .svc-card:hover {
-    animation-play-state: paused;
-    transform: translateY(-6px);
-    border-color: var(--border-hover);
+    border-color: var(--border-on, rgba(255,255,255,.4));
     background: var(--card-hover);
-    box-shadow: 0 18px 44px rgba(0,0,0,0.4);
 }
 .svc-card:hover::after { left: 130%; }
 .svc-no {
@@ -447,14 +434,10 @@ main { position: relative; z-index: 2; }
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transform-style: preserve-3d;
-    will-change: transform;
-    transition: transform 180ms var(--ease), border-color 350ms var(--ease), box-shadow 350ms var(--ease), background 350ms var(--ease);
+    transition: border-color 300ms var(--ease), background 300ms var(--ease);
 }
 a.work-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--border-hover);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    border-color: var(--border-on, rgba(255,255,255,.4));
     background: var(--card-hover);
 }
 .work-preview {
@@ -467,15 +450,19 @@ a.work-card:hover {
     place-items: center;
     position: relative;
 }
+.work-preview { transition: background-position 600ms var(--ease); }
+a.work-card:hover .work-preview { background-position: 7px 7px; }
 .work-preview::after {
     content: attr(data-glyph);
     font-family: var(--fm);
-    font-size: 1.7rem;
+    font-size: 2.1rem;
+    font-weight: 500;
     color: var(--dim);
-    opacity: 0.55;
-    transition: opacity 350ms var(--ease), color 350ms var(--ease);
+    opacity: 0.5;
+    letter-spacing: 0.06em;
+    transition: opacity 400ms var(--ease), color 400ms var(--ease), transform 500ms var(--ease), letter-spacing 500ms var(--ease);
 }
-a.work-card:hover .work-preview::after { opacity: 0.95; color: var(--muted); }
+a.work-card:hover .work-preview::after { opacity: 0.92; color: var(--text); transform: translateY(-2px); letter-spacing: 0.12em; }
 .work-dashed { background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px); }
 .work-status {
     position: absolute; top: 12px; right: 12px;
@@ -504,9 +491,6 @@ a.work-card:hover .work-arrow { opacity: 1; transform: translate(0, 0); stroke: 
 .work-soon h3 { color: var(--muted); }
 .work-inline { margin-top: 16px; font-family: var(--fm); font-size: 0.78rem; color: var(--text); transition: color 250ms var(--ease); }
 .work-inline:hover { color: var(--white); }
-/* offset the last work card too */
-.work-grid .work-card:nth-child(2) { transform: translateY(-20px); }
-.work-grid a.work-card:nth-child(2):hover { transform: translateY(-24px); }
 /* live mesh preview for the meshgen card - smooth, slowly drifting */
 .work-mesh {
     background-color: #181820 !important;
@@ -613,15 +597,6 @@ a.work-card:hover .comp-chip {
     position: relative;
     overflow: hidden;
 }
-.cta-box::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: 50%;
-    transform: translateX(-50%);
-    width: 600px; height: 400px;
-    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.06), transparent 60%);
-    pointer-events: none;
-}
 .cta-box .eyebrow { position: relative; }
 .cta-title {
     font-family: var(--fd);
@@ -643,7 +618,7 @@ a.work-card:hover .comp-chip {
     color: var(--muted);
     transition: all 250ms var(--ease);
 }
-.socials a:hover { color: var(--white); border-color: var(--border-hover); transform: translateY(-2px); background: var(--card-hover); }
+.socials a:hover { color: var(--white); border-color: var(--border-on, rgba(255,255,255,.4)); background: var(--card-hover); }
 .socials svg { width: 17px; height: 17px; }
 .socials a:not(:has(svg)) i, .socials i { width: 17px; height: 17px; }
 
@@ -661,19 +636,28 @@ footer { border-top: 1px solid var(--border); padding: 40px 0; position: relativ
 /* reveal */
 [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
 [data-reveal].in { opacity: 1; transform: translateY(0); }
-/* keep the intentional card offsets after reveal (override the .in translateY:0) */
-.services-grid .svc-card.in:nth-child(2) { transform: translateY(22px); }
-.work-grid .work-card.in:nth-child(2) { transform: translateY(-20px); }
-.services-grid [data-reveal].in:nth-child(2), .work-grid [data-reveal].in:nth-child(2), .process-list [data-reveal].in:nth-child(2) { transition-delay: 90ms; }
-.services-grid [data-reveal].in:nth-child(3), .work-grid [data-reveal].in:nth-child(3), .process-list [data-reveal].in:nth-child(3) { transition-delay: 180ms; }
+
+/* work + service cards get a richer entrance: rise + slight scale + clip wipe */
+.work-card[data-reveal], .svc-card[data-reveal] {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+    clip-path: inset(0 0 8% 0 round var(--r));
+    transition: opacity 650ms var(--ease), transform 650ms var(--ease), clip-path 650ms var(--ease);
+}
+.work-card[data-reveal].in, .svc-card[data-reveal].in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    clip-path: inset(0 0 0 0 round var(--r));
+}
+/* stagger across each grid row */
+.services-grid [data-reveal].in:nth-child(2), .work-grid [data-reveal].in:nth-child(2), .process-list [data-reveal].in:nth-child(2) { transition-delay: 80ms; }
+.services-grid [data-reveal].in:nth-child(3), .work-grid [data-reveal].in:nth-child(3), .process-list [data-reveal].in:nth-child(3) { transition-delay: 160ms; }
+.work-grid [data-reveal].in:nth-child(4) { transition-delay: 80ms; }
+.work-grid [data-reveal].in:nth-child(5) { transition-delay: 160ms; }
 
 /* responsive */
 @media (max-width: 880px) {
     .services-grid, .work-grid { grid-template-columns: 1fr; }
-    .services-grid .svc-card:nth-child(2),
-    .services-grid .svc-card.in:nth-child(2),
-    .work-grid .work-card:nth-child(2),
-    .work-grid .work-card.in:nth-child(2) { transform: none; }
     .nav-links a:not(.nav-cta) { display: none; }
     .section { padding: 80px 0; }
     .hero-ghost { font-size: 30vw; bottom: -8%; }

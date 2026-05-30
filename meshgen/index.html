@@ -149,20 +149,23 @@ function buildGradient(){
   return layers.join(',\n              ');
 }
 
-function render(){
+// paint = update gradient + code only. does NOT rebuild the stops list,
+// so the native color picker stays open while you drag it.
+function paint(){
   const g = $('#grad');
   const css = buildGradient();
   const base = stops[0] ? stops[0].color : '#222';
   g.style.background = `${base}`;
   g.style.backgroundImage = css;
   g.style.filter = blur ? `blur(${blur}px)` : 'none';
-  // grain overlay
-  if(grain>0){
-    g.style.boxShadow = 'none';
-  }
-  renderStops();
   renderCode();
   renderGrain();
+}
+
+// render = full rebuild, only for structural changes (add/remove a stop)
+function render(){
+  paint();
+  renderStops();
 }
 
 function renderGrain(){
@@ -190,8 +193,24 @@ function renderStops(){
       <button class="del" data-i="${i}" title="remove">x</button>`;
     c.appendChild(el);
   });
-  c.querySelectorAll('.col').forEach(inp=>inp.oninput=e=>{stops[e.target.dataset.i].color=e.target.value;render();});
-  c.querySelectorAll('.hex').forEach(inp=>inp.onchange=e=>{let v=e.target.value;if(!/^#/.test(v))v='#'+v;if(/^#[0-9a-fA-F]{6}$/.test(v)){stops[e.target.dataset.i].color=v;render();}});
+  c.querySelectorAll('.col').forEach(inp=>inp.oninput=e=>{
+    const i=e.target.dataset.i;
+    stops[i].color=e.target.value;
+    // update the sibling hex field in place, repaint gradient only (no rebuild)
+    const hex=e.target.parentElement.querySelector('.hex');
+    if(hex) hex.value=e.target.value;
+    paint();
+  });
+  c.querySelectorAll('.hex').forEach(inp=>inp.oninput=e=>{
+    let v=e.target.value.trim();if(!/^#/.test(v))v='#'+v;
+    if(/^#[0-9a-fA-F]{6}$/.test(v)){
+      const i=e.target.dataset.i;
+      stops[i].color=v;
+      const col=e.target.parentElement.querySelector('.col');
+      if(col) col.value=v;
+      paint();
+    }
+  });
   c.querySelectorAll('.del').forEach(b=>b.onclick=e=>{if(stops.length>1){stops.splice(e.target.dataset.i,1);render();}});
 }
 
@@ -213,8 +232,8 @@ function randomize(){
 }
 
 $('#addStop').onclick = ()=>{ stops.push({color:randHex(),x:ri(10,90),y:ri(10,90),spread:ri(40,70)}); render(); };
-$('#blur').oninput = e=>{ blur=+e.target.value; $('#blurVal').textContent=blur+'px'; render(); };
-$('#grain').oninput = e=>{ grain=+e.target.value; $('#grainVal').textContent=grain===0?'off':grain+'%'; render(); };
+$('#blur').oninput = e=>{ blur=+e.target.value; $('#blurVal').textContent=blur+'px'; paint(); };
+$('#grain').oninput = e=>{ grain=+e.target.value; $('#grainVal').textContent=grain===0?'off':grain+'%'; paint(); };
 $('#randBtn').onclick = randomize;
 
 $('#copyBtn').onclick = async ()=>{
