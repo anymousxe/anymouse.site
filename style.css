@@ -280,9 +280,13 @@ main { position: relative; z-index: 2; }
     display: flex;
     align-items: center;
     gap: 28px;
+    padding-right: 28px;
     width: max-content;
-    animation: scroll 26s linear infinite;
+    animation: scroll 38s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
 }
+.marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-track span {
     font-family: var(--fd);
     font-size: 1.35rem;

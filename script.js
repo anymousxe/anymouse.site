@@ -92,13 +92,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // marquee nudges faster while scrolling
-    const track = document.querySelector('.marquee-track');
-    if (track && !reduceMotion) {
-        let to = null;
-        window.addEventListener('scroll', () => {
-            track.style.animationDuration = '14s';
-            clearTimeout(to);
-            to = setTimeout(() => { track.style.animationDuration = '26s'; }, 250);
-        }, { passive: true });
-    }
 });
