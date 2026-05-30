@@ -287,20 +287,7 @@ body {
     display: inline-block;
 }
 
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--accent);
-    transition: width 600ms var(--ease);
-}
-
-.section.visible .section-title::after {
-    width: 24px;
-}
+/* underline accent removed - read as a generic decorative tell */
 
 .section-count {
     font-family: var(--font-mono);
@@ -697,6 +684,4 @@ footer {
 
     a.card:hover { transform: none; }
     a.card:hover .card-preview img { transform: none; }
-
-    .section-title::after { width: 24px; }
 }
