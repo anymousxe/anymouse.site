@@ -24,8 +24,10 @@
     <meta property="twitter:description" content="web dev and game dev. i build sites, bots, and games.">
     <meta property="twitter:image" content="https://anymousxe.dev/assets/img/anyrat.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -55,7 +57,6 @@
                         <p class="hero-sub">web dev / game dev</p>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -65,7 +66,7 @@
                     <p>hi i'm anymousxe. i build websites, bots, games, and custom tools for people who want something that actually feels theirs.</p>
                 </div>
 
-                <div class="hero-actions intro-actions">
+                <div class="hero-actions">
                     <a href="/commissions/" class="hero-cta hero-cta-primary">
                         <i data-lucide="briefcase"></i>
                         <span>start a commission</span>
@@ -80,34 +81,40 @@
 
         <section id="work" class="section">
             <div class="section-inner">
-                <h2 class="section-title">work</h2>
+                <div class="section-head">
+                    <h2 class="section-title">work</h2>
+                    <span class="section-count">selected</span>
+                </div>
                 <div class="work-grid stagger">
 
                     <a href="https://www.softworks-tycoon.xyz" target="_blank" rel="noopener" class="card">
-                        <div class="card-header">
-                            <i data-lucide="layout-grid"></i>
-                            <span class="card-tag">website</span>
+                        <div class="card-preview gen" data-glyph="ST">
+                            <span class="card-status">live</span>
                         </div>
-                        <h3>Softworks Tycoon</h3>
-                        <p>tycoon game hub. designed and built the entire site from scratch.</p>
+                        <div class="card-body">
+                            <div class="card-top">
+                                <span class="card-tag">website</span>
+                                <i data-lucide="arrow-up-right" class="card-arrow"></i>
+                            </div>
+                            <h3>Softworks Tycoon</h3>
+                            <p>tycoon game hub. designed and built the entire site from scratch.</p>
+                            <div class="card-stack">
+                                <span class="stack-tag">html</span>
+                                <span class="stack-tag">css</span>
+                                <span class="stack-tag">js</span>
+                            </div>
+                        </div>
                     </a>
 
-                    <div class="card card-static">
-                        <div class="card-header">
-                            <i data-lucide="bot"></i>
-                            <span class="card-tag">bots</span>
+                    <div class="card card-soon">
+                        <div class="card-preview gen dashed" data-glyph="+"></div>
+                        <div class="card-body">
+                            <div class="card-top">
+                                <span class="card-tag">soon</span>
+                            </div>
+                            <h3>more work</h3>
+                            <p>new client work and projects going here as they ship. check back.</p>
                         </div>
-                        <h3>Discord Bots</h3>
-                        <p>moderation, utility, and a few weird ones. i keep building new ones whenever i need something specific.</p>
-                    </div>
-
-                    <div class="card card-static">
-                        <div class="card-header">
-                            <i data-lucide="globe"></i>
-                            <span class="card-tag">web</span>
-                        </div>
-                        <h3>Client Sites</h3>
-                        <p>various sites built for people who needed something quick, clean, and theirs.</p>
                     </div>
 
                 </div>
@@ -116,26 +123,47 @@
 
         <section id="side" class="section">
             <div class="section-inner">
-                <h2 class="section-title">side projects</h2>
+                <div class="section-head">
+                    <h2 class="section-title">side projects</h2>
+                    <span class="section-count">building</span>
+                </div>
                 <div class="work-grid stagger">
 
                     <a href="/Voxelith/" class="card">
-                        <div class="card-header">
-                            <i data-lucide="box"></i>
-                            <span class="card-tag">game</span>
+                        <div class="card-preview gen" data-glyph="◳">
+                            <span class="card-status">early</span>
                         </div>
-                        <h3>Voxelith</h3>
-                        <p>voxel engine i've been building from scratch. still early but it's getting somewhere.</p>
+                        <div class="card-body">
+                            <div class="card-top">
+                                <span class="card-tag">game</span>
+                                <i data-lucide="arrow-up-right" class="card-arrow"></i>
+                            </div>
+                            <h3>Voxelith</h3>
+                            <p>voxel engine i've been building from scratch. still early but it's getting somewhere.</p>
+                            <div class="card-stack">
+                                <span class="stack-tag">three.js</span>
+                                <span class="stack-tag">webgl</span>
+                            </div>
+                        </div>
                     </a>
 
-                    <div class="card card-soon">
-                        <div class="card-header">
-                            <i data-lucide="sparkles"></i>
-                            <span class="card-tag">in progress</span>
+                    <a href="https://iamanymousxe.itch.io" target="_blank" rel="noopener" class="card">
+                        <div class="card-preview gen" data-glyph="▶">
+                            <span class="card-status">itch.io</span>
                         </div>
-                        <h3>more stuff</h3>
-                        <p>a few smaller things i'm putting together. nothing public yet.</p>
-                    </div>
+                        <div class="card-body">
+                            <div class="card-top">
+                                <span class="card-tag">games</span>
+                                <i data-lucide="arrow-up-right" class="card-arrow"></i>
+                            </div>
+                            <h3>itch.io stuff</h3>
+                            <p>smaller games and experiments i put out. some good, some weird.</p>
+                            <div class="card-stack">
+                                <span class="stack-tag">js</span>
+                                <span class="stack-tag">canvas</span>
+                            </div>
+                        </div>
+                    </a>
 
                 </div>
             </div>
@@ -143,7 +171,9 @@
 
         <section id="links" class="section">
             <div class="section-inner">
-                <h2 class="section-title">contact</h2>
+                <div class="section-head">
+                    <h2 class="section-title">contact</h2>
+                </div>
                 <div class="contact-row">
                     <a href="/commissions/" class="contact-btn contact-btn-primary">
                         <i data-lucide="briefcase"></i>
@@ -168,7 +198,7 @@
                         <span>@anymousxe</span>
                     </a>
                     <a href="https://discord.com/users/anymousxe" target="_blank" rel="noopener" class="social" aria-label="Discord">
-                        <i data-lucide="message-circle"></i>
+                        <svg class="brand-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.331c-1.182 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                         <span>@anymousxe</span>
                     </a>
                     <a href="https://iamanymousxe.itch.io" target="_blank" rel="noopener" class="social" aria-label="itch.io">
@@ -184,6 +214,7 @@
     <footer>
         <div class="footer-inner">
             <p>anymousxe.dev</p>
+            <img src="assets/img/anyrat.png" alt="" class="footer-rat">
         </div>
     </footer>
 
