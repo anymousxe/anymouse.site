@@ -283,22 +283,23 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #0a0a0a;
-    background: var(--text);
-    border: 1px solid var(--text);
+    color: var(--text);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 11px 16px;
     margin: 18px 0 12px;
     font-size: 0.88rem;
     font-weight: 500;
     text-decoration: none;
-    transition: transform 250ms var(--ease), background 250ms var(--ease), border-color 250ms var(--ease);
+    transition: transform 250ms var(--ease), background 250ms var(--ease), border-color 250ms var(--ease), color 250ms var(--ease);
 }
 
 .dm-btn:hover {
     transform: translateY(-1px);
-    background: #fff;
-    border-color: #fff;
+    background: #f4f4f4;
+    border-color: #f4f4f4;
+    color: #0a0a0a;
 }
 
 .dm-btn svg {
