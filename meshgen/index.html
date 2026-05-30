@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -187,7 +187,7 @@ function renderStops(){
     el.innerHTML = `
       <input type="color" value="${s.color}" data-i="${i}" class="col">
       <input type="text" class="hex" value="${s.color}" data-i="${i}" maxlength="7">
-      <button class="del" data-i="${i}" title="remove">×</button>`;
+      <button class="del" data-i="${i}" title="remove">x</button>`;
     c.appendChild(el);
   });
   c.querySelectorAll('.col').forEach(inp=>inp.oninput=e=>{stops[e.target.dataset.i].color=e.target.value;render();});
