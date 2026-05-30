@@ -39,4 +39,66 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = window.matchMedia('(pointer:fine)').matches;
+
+    // hero headline word-by-word rise (split reveal, not generic fade-up)
+    const title = document.querySelector('.hero-title');
+    if (title && !reduceMotion) {
+        const lines = title.innerHTML.split('<br>');
+        title.innerHTML = lines.map(line => {
+            // preserve the .hl span if present
+            const wrap = document.createElement('div');
+            wrap.innerHTML = line.trim();
+            const out = [];
+            wrap.childNodes.forEach(node => {
+                if (node.nodeType === 3) {
+                    node.textContent.trim().split(/\s+/).filter(Boolean).forEach(w => out.push(`<span class="w"><span class="wi">${w}</span></span>`));
+                } else {
+                    const cls = node.className ? ' ' + node.className : '';
+                    node.textContent.trim().split(/\s+/).filter(Boolean).forEach(w => out.push(`<span class="w${cls}"><span class="wi">${w}</span></span>`));
+                }
+            });
+            return `<span class="line">${out.join(' ')}</span>`;
+        }).join('');
+        const wis = title.querySelectorAll('.wi');
+        wis.forEach((el, i) => { el.style.transitionDelay = (i * 55) + 'ms'; });
+        requestAnimationFrame(() => requestAnimationFrame(() => title.classList.add('lit')));
+    }
+
+    // magnetic primary buttons (desktop only, subtle)
+    if (fine && !reduceMotion) {
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const r = btn.getBoundingClientRect();
+                const mx = e.clientX - r.left - r.width / 2;
+                const my = e.clientY - r.top - r.height / 2;
+                btn.style.transform = `translate(${mx * 0.18}px, ${my * 0.22}px)`;
+            });
+            btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+        });
+
+        // gentle tilt on work cards
+        document.querySelectorAll('.work-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const r = card.getBoundingClientRect();
+                const px = (e.clientX - r.left) / r.width - 0.5;
+                const py = (e.clientY - r.top) / r.height - 0.5;
+                card.style.transform = `perspective(900px) rotateX(${-py * 4}deg) rotateY(${px * 5}deg) translateY(-4px)`;
+            });
+            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+        });
+    }
+
+    // marquee nudges faster while scrolling
+    const track = document.querySelector('.marquee-track');
+    if (track && !reduceMotion) {
+        let to = null;
+        window.addEventListener('scroll', () => {
+            track.style.animationDuration = '14s';
+            clearTimeout(to);
+            to = setTimeout(() => { track.style.animationDuration = '26s'; }, 250);
+        }, { passive: true });
+    }
 });

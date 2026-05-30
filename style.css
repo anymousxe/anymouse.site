@@ -216,6 +216,22 @@ main { position: relative; z-index: 2; }
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+/* word-rise reveal */
+.hero-title .line { display: block; }
+.hero-title .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.04em; }
+.hero-title .w.hl .wi {
+    background: linear-gradient(110deg, #fff 30%, #777 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #999;
+}
+.hero-title .wi {
+    display: inline-block;
+    transform: translateY(110%);
+    transition: transform 720ms var(--ease);
+}
+.hero-title.lit .wi { transform: translateY(0); }
 .hero-lead {
     margin-top: 26px;
     font-size: 1.12rem;
@@ -369,7 +385,9 @@ main { position: relative; z-index: 2; }
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 350ms var(--ease), border-color 350ms var(--ease), box-shadow 350ms var(--ease), background 350ms var(--ease);
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 180ms var(--ease), border-color 350ms var(--ease), box-shadow 350ms var(--ease), background 350ms var(--ease);
 }
 a.work-card:hover {
     transform: translateY(-4px);
@@ -427,16 +445,57 @@ a.work-card:hover .work-arrow { opacity: 1; transform: translate(0, 0); stroke: 
 /* offset the last work card too */
 .work-grid .work-card:nth-child(2) { transform: translateY(-20px); }
 .work-grid a.work-card:nth-child(2):hover { transform: translateY(-24px); }
-/* live mesh preview for the meshgen card */
+/* live mesh preview for the meshgen card - smooth, slowly drifting */
 .work-mesh {
-    background-color: #1a1a1f !important;
+    background-color: #181820 !important;
     background-image:
-        radial-gradient(at 20% 25%, #7c5cff 0px, transparent 55%),
-        radial-gradient(at 80% 20%, #ff5c9d 0px, transparent 50%),
-        radial-gradient(at 65% 80%, #5cc8ff 0px, transparent 55%) !important;
-    filter: saturate(0.85) brightness(0.92);
+        radial-gradient(60% 60% at 22% 28%, rgba(140, 110, 255, 0.85), transparent 70%),
+        radial-gradient(55% 55% at 80% 22%, rgba(255, 110, 170, 0.75), transparent 70%),
+        radial-gradient(65% 65% at 65% 82%, rgba(110, 200, 255, 0.8), transparent 72%),
+        radial-gradient(50% 50% at 40% 60%, rgba(255, 200, 120, 0.55), transparent 70%) !important;
+    background-size: 180% 180% !important;
+    background-position: 0% 0% !important;
+    filter: saturate(0.92) brightness(0.95);
+    animation: meshDrift 14s ease-in-out infinite alternate;
 }
 .work-mesh::after { content: '' !important; }
+@keyframes meshDrift {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+/* shadowsmith preview - a floating chip casting a layered shadow */
+.work-shadow {
+    background: radial-gradient(120% 120% at 50% 0%, #16161a, #0e0e12 70%) !important;
+    background-size: auto !important;
+}
+.work-shadow::after { content: '' !important; }
+.shadow-chip {
+    width: 46%; aspect-ratio: 1; max-width: 110px;
+    border-radius: 22px;
+    background: #e9e9ec;
+    box-shadow: 0 2px 4px rgba(0,0,0,.25), 0 10px 22px -4px rgba(0,0,0,.4), 0 24px 48px -10px rgba(0,0,0,.45);
+    transition: transform 500ms var(--ease), box-shadow 500ms var(--ease);
+}
+a.work-card:hover .shadow-chip {
+    transform: translateY(-6px);
+    box-shadow: 0 4px 8px rgba(0,0,0,.3), 0 16px 32px -6px rgba(0,0,0,.45), 0 40px 70px -12px rgba(0,0,0,.5);
+}
+/* reflex preview - green go-pad glow */
+.work-reflex {
+    background: #15171a !important;
+    background-size: auto !important;
+}
+.work-reflex::after {
+    color: #3ddc84 !important;
+    opacity: 0.9 !important;
+    font-weight: 700;
+    text-shadow: 0 0 22px rgba(61,220,132,0.55);
+    animation: reflexPulse 2.2s var(--ease) infinite;
+}
+@keyframes reflexPulse {
+    0%, 100% { opacity: 0.5; text-shadow: 0 0 14px rgba(61,220,132,0.35); }
+    50%      { opacity: 0.95; text-shadow: 0 0 28px rgba(61,220,132,0.65); }
+}
 .work-note {
     margin-top: 26px;
     font-family: var(--fm);
